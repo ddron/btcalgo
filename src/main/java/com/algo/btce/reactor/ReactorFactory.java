@@ -6,9 +6,9 @@ import reactor.core.spec.Reactors;
 
 public class ReactorFactory {
 
-    public static Reactor createReactor() {
+    public static Reactor createReactor(Environment environment) {
         return Reactors.reactor()
-                .env(new Environment())
+                .env(environment)
                 .dispatcher(Environment.THREAD_POOL)
                 .get();
     }
