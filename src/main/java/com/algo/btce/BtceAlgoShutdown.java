@@ -1,10 +1,13 @@
 package com.algo.btce;
 
 import com.algo.btce.reactor.NameableConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.Environment;
 import reactor.event.Event;
 
 public class BtceAlgoShutdown implements NameableConsumer<Event<Void>> {
+    private static Logger log = LoggerFactory.getLogger(BtceAlgoShutdown.class);
 
     private Environment env;
 
@@ -18,11 +21,11 @@ public class BtceAlgoShutdown implements NameableConsumer<Event<Void>> {
     }
 
     private void doShutdown() {
-        System.out.println("Shutdown process started...");
+        log.info("Shutdown process started...");
         env.shutdown();  // reactor shutdown
         BtceAlgo.stop(); // app shutdown
 
-        System.out.println("Shutdown process completed. Exiting...");
+        log.info("Shutdown process completed. Exiting...");
         System.exit(0);
     }
 

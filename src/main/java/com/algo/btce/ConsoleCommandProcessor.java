@@ -2,6 +2,8 @@ package com.algo.btce;
 
 import com.algo.btce.reactor.NameableConsumer;
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.Reactor;
 import reactor.event.Event;
 
@@ -10,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ConsoleCommandProcessor  implements NameableConsumer<Event<Void>> {
+
+    private static final Logger log = LoggerFactory.getLogger(ConsoleCommandProcessor.class);
 
     private static enum CommandEnum {
         STOP("stop"),
@@ -52,7 +56,7 @@ public class ConsoleCommandProcessor  implements NameableConsumer<Event<Void>> {
 
             if (!Strings.isNullOrEmpty(line)) {
                 if (command == CommandEnum.NONE) {
-                    System.out.println("Unknown command");
+                   log.info("Unknown command");
                 } else {
                     reactor.notify(command.commandText);
                 }

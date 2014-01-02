@@ -1,6 +1,8 @@
 package com.algo.btce;
 
 import com.algo.btce.reactor.NameableConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import reactor.core.Reactor;
@@ -8,6 +10,8 @@ import reactor.core.Reactor;
 import static reactor.event.selector.Selectors.$;
 
 public class BtceAlgo {
+    private static Logger log = LoggerFactory.getLogger(BtceAlgo.class);
+
     private AbstractApplicationContext context;
 
     private final Object lock = new Object();
@@ -21,12 +25,15 @@ public class BtceAlgo {
     }
 
     private void start() throws InterruptedException {
+        log.info("Starting btce algo...");
+
         context = new ClassPathXmlApplicationContext("btce-algo-config.xml");
         context.registerShutdownHook();
 
         makeConsumerRegistrations();
         invokeCommandLineProcessor();
 
+        log.info("btce algo started!");
         while (!finished) {
             synchronized (lock) {
                 lock.wait();
