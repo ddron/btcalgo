@@ -17,6 +17,7 @@ public class ConsoleCommandProcessor  implements NameableConsumer<Event<Void>> {
 
     private static enum CommandEnum {
         STOP("stop"),
+        INFO("info"),
         NONE("");
 
         private String commandText;
@@ -52,9 +53,9 @@ public class ConsoleCommandProcessor  implements NameableConsumer<Event<Void>> {
     public void accept(Event<Void> voidEvent) {
         try {
             String line = br.readLine();
-            CommandEnum command = CommandEnum.valueByCommandText(line);
 
             if (!Strings.isNullOrEmpty(line)) {
+                CommandEnum command = CommandEnum.valueByCommandText(line);
                 if (command == CommandEnum.NONE) {
                    log.info("Unknown command");
                 } else {

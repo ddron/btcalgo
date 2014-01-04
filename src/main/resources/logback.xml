@@ -23,6 +23,9 @@
     </appender>
 
     <logger name="org.springframework" level="INFO"/>
+    <!--<logger name="org.springframework.web" level="ALL"/>-->
+
+    <logger name="com.algo.btce.service" level="DEBUG"/>
 
     <root level="info">
         <appender-ref ref="ASYNC_FILE"/>

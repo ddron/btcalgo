@@ -7,6 +7,13 @@
 <context:annotation-config />
 <context:component-scan base-package="com.algo.btce"/>
 
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:config.properties"/>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="ignoreUnresolvablePlaceholders" value="false"/>
+        <property name="valueSeparator" value="?"/>
+    </bean>
+
     <bean id="env" class="reactor.core.Environment"/>
     <bean id="reactor" class="com.algo.btce.reactor.ReactorFactory" factory-method="createReactor" scope="singleton">
         <constructor-arg name="environment" ref="env"/>
@@ -26,6 +33,16 @@
     </bean>
 
     <task:scheduler id="scheduler" pool-size="10" />
+
+    <bean id="auth.service" class="com.algo.btce.service.AuthService">
+        <constructor-arg name="key" value="${btce.key}"/>
+        <constructor-arg name="secret" value="${btce.secret}"/>
+        <constructor-arg name="baseUrl" value="${base.url}"/>
+    </bean>
+
+    <bean id="info.service" class="com.algo.btce.service.InfoAction">
+        <constructor-arg name="authService" ref="auth.service"/>
+    </bean>
 
 
 </beans>

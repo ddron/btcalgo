@@ -1,6 +1,7 @@
 package com.algo.btce;
 
 import com.algo.btce.reactor.NameableConsumer;
+import com.algo.btce.reactor.ThrowableHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -8,6 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import reactor.core.Reactor;
 
 import static reactor.event.selector.Selectors.$;
+import static reactor.event.selector.Selectors.T;
 
 public class BtceAlgo {
     private static Logger log = LoggerFactory.getLogger(BtceAlgo.class);
@@ -58,10 +60,12 @@ public class BtceAlgo {
     }
 
     private void makeConsumerRegistrations() {
-        Reactor reactor = context.getBean(Reactor.class);
+        Reactor r = context.getBean(Reactor.class);
 
         for (NameableConsumer consumer : context.getBeansOfType(NameableConsumer.class).values()) {
-            reactor.on($(consumer.getId()), consumer);
+            r.on($(consumer.getId()), consumer);
         }
+
+        r.on(T(Throwable.class), new ThrowableHandler());
     }
 }
