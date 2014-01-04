@@ -1,9 +1,9 @@
 package com.algo.btce.templates;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class InfoTemplate extends LoginTemplate {
-    @JsonProperty(value = "return")
+    @SerializedName(value = "return")
     private Info info;
 
     public Info getInfo() {
