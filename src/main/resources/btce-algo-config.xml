@@ -34,15 +34,19 @@
 
     <task:scheduler id="scheduler" pool-size="10" />
 
-    <bean id="auth.service" class="com.algo.btce.service.AuthService">
+    <bean id="api.service" class="com.algo.btce.service.api.service.ApiService">
         <constructor-arg name="key" value="${btce.key}"/>
         <constructor-arg name="secret" value="${btce.secret}"/>
-        <constructor-arg name="baseUrl" value="${base.url}"/>
+        <constructor-arg name="authBaseUrl" value="${auth.base.url}"/>
+        <constructor-arg name="publicBaseUrl" value="${public.base.url}"/>
     </bean>
 
-    <bean id="info.service" class="com.algo.btce.service.InfoAction">
-        <constructor-arg name="authService" ref="auth.service"/>
+    <bean id="info.request" class="com.algo.btce.service.api.service.InfoRequest">
+        <constructor-arg name="apiService" ref="api.service"/>
     </bean>
 
+    <bean id="ticker.request" class="com.algo.btce.service.api.service.TickerRequest">
+        <constructor-arg name="apiService" ref="api.service"/>
+    </bean>
 
 </beans>

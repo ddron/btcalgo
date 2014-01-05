@@ -1,4 +1,6 @@
 package com.algo.btce.model;
 
-public class Direction {
+public enum Direction {
+    BID,
+    ASK
 }

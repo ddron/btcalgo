@@ -1,4 +1,4 @@
-package com.algo.btce.templates;
+package com.algo.btce.service.api.templates;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,5 +1,6 @@
-package com.algo.btce.service;
+package com.algo.btce.service.api.service;
 
+import com.algo.btce.service.api.templates.TickerTemplate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -17,11 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AuthService {
+public class ApiService {
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     private String key;
-    private String baseUrl;
+    private String authBaseUrl;
+    private String publicBaseUrl;
 
     private static Mac mac;
     /*
@@ -32,9 +34,10 @@ public class AuthService {
 
     private Gson gson = new GsonBuilder().create();
 
-    public AuthService(String key, String secret, String baseUrl) {
+    public ApiService(String key, String secret, String authBaseUrl, String publicBaseUrl) {
         this.key = key;
-        this.baseUrl = baseUrl;
+        this.authBaseUrl = authBaseUrl;
+        this.publicBaseUrl = publicBaseUrl;
 
         log.debug("key: {}", key);
         log.debug("secret: {}", secret);
@@ -65,11 +68,42 @@ public class AuthService {
         }
     }
 
-    protected <T> T auth(String method, Class<T> clazz) {
+    public TickerTemplate getTicker(String symbol) {
+        return request(symbol, "ticker", TickerTemplate.class);
+    }
+
+    private <T> T request(String symbol, String method, Class<T> clazz) {
+        log.debug("request() invoked. symbol: {}, method: {}, clazz: {}", symbol, method, clazz);
+
+        StringBuilder response = new StringBuilder();
+        try {
+            URL url = new URL(publicBaseUrl + symbol + "/" + method);
+            URLConnection c = url.openConnection();
+            c.setUseCaches(false);
+
+            // read
+            BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+            in.close();
+        } catch (IOException e) {
+            log.error("Request error: ", e);
+            return null;
+        }
+
+        T result = gson.fromJson(response.toString(), clazz);
+        log.debug("request() completed. Result: {}", result);
+
+        return result;
+    }
+
+    public <T> T auth(String method, Class<T> clazz) {
         return auth(method, null, clazz);
     }
 
-    protected <T> T auth(String method, Map<String, String> args, Class<T> clazz) {
+    public <T> T auth(String method, Map<String, String> args, Class<T> clazz) {
         log.debug("auth() invoked. method: {}, args: {}, clazz: {}", method, args, clazz);
 
         // add method and nonce to args
@@ -89,27 +123,24 @@ public class AuthService {
             postData += entry.getKey() + "=" + entry.getValue();
         }
 
-        // create connection
-        URLConnection conn;
         StringBuilder response = new StringBuilder();
-
         try {
-            URL url = new URL(baseUrl);
-            conn = url.openConnection();
-            conn.setUseCaches(false);
-            conn.setDoOutput(true);
+            URL url = new URL(authBaseUrl);
+            URLConnection c = url.openConnection();
+            c.setUseCaches(false);
+            c.setDoOutput(true);
 
-            conn.setRequestProperty("Key", key);
-            conn.setRequestProperty("Sign", toHex(mac.doFinal(postData.getBytes("UTF-8"))));
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            c.setRequestProperty("Key", key);
+            c.setRequestProperty("Sign", toHex(mac.doFinal(postData.getBytes("UTF-8"))));
+            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             // write
-            OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+            OutputStreamWriter out = new OutputStreamWriter(c.getOutputStream());
             out.write(postData);
             out.close();
 
             // read
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
             String line;
             while ((line = in.readLine()) != null) {
                 response.append(line);

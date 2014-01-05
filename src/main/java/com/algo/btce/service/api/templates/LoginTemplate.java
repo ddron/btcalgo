@@ -1,4 +1,4 @@
-package com.algo.btce.templates;
+package com.algo.btce.service.api.templates;
 
 public class LoginTemplate {
     private int success;
