@@ -2,6 +2,8 @@ package com.algo.btce.service.api.templates;
 
 import com.algo.btce.model.BestOrderBook;
 
+import java.util.Date;
+
 public class Ticker {
     private static final String MARKET = "BTCE";
 
@@ -13,8 +15,18 @@ public class Ticker {
     private double vol;
     private double vol_cur;
     private double last;
-    private double buy; // highest buy price currently on market (best for us). i.e. 'market buys' at this price
-    private double sell; // lowest sell price currently on market (best for us) i.e. 'market sells' at this price
+
+    /**
+     * lowest sell price currently on market i.e. 'market sells' at this price.<br></br>
+     * So it's the best price for us to BUY (when doing BID)
+     */
+    private double buy;
+
+    /**
+     * highest buy price currently on market i.e. 'market buys' at this price<br></br>
+     * So it's the best price for us to SELL (when doing ASK)
+     */
+    private double sell;
 
     private long updated;
     private long server_time;
@@ -105,5 +117,22 @@ public class Ticker {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Ticker{");
+        sb.append("high=").append(high);
+        sb.append(", low=").append(low);
+        sb.append(", avg=").append(avg);
+        sb.append(", vol=").append(vol);
+        sb.append(", vol_cur=").append(vol_cur);
+        sb.append(", last=").append(last);
+        sb.append(", buy=").append(buy);
+        sb.append(", sell=").append(sell);
+        sb.append(", updated=").append(new Date(updated));
+        sb.append(", server_time=").append(new Date(server_time));
+        sb.append('}');
+        return sb.toString();
     }
 }

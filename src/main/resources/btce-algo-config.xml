@@ -49,4 +49,18 @@
         <constructor-arg name="apiService" ref="api.service"/>
     </bean>
 
+    <bean id="market.data.provider" class="com.algo.btce.service.marketdata.MarketDataProvider">
+        <constructor-arg name="reactor" ref="reactor"/>
+    </bean>
+
+    <bean id="market.data.source" class="com.algo.btce.service.marketdata.BtcBestMarketDataSource">
+        <constructor-arg name="tickerRequest" ref="ticker.request"/>
+        <constructor-arg name="reactor" ref="reactor"/>
+        <property name="listeners">
+            <set>
+                <ref bean="market.data.provider"/>
+            </set>
+        </property>
+    </bean>
+
 </beans>

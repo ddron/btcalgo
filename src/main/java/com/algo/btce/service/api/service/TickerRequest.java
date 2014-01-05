@@ -2,9 +2,8 @@ package com.algo.btce.service.api.service;
 
 import com.algo.btce.reactor.NameableConsumer;
 import com.algo.btce.service.api.templates.TickerTemplate;
+import com.algo.btce.service.marketdata.SymbolEnum;
 import reactor.event.Event;
-
-import static com.algo.btce.service.InstrumentService.SymbolEnum;
 
 public class TickerRequest implements NameableConsumer<Event<Void>> {
 

@@ -73,7 +73,7 @@ public class ApiService {
     }
 
     private <T> T request(String symbol, String method, Class<T> clazz) {
-        log.debug("request() invoked. symbol: {}, method: {}, clazz: {}", symbol, method, clazz);
+        log.debug("request() invoked. symbol: {}, method: {}", symbol, method);
 
         StringBuilder response = new StringBuilder();
         try {
@@ -104,7 +104,7 @@ public class ApiService {
     }
 
     public <T> T auth(String method, Map<String, String> args, Class<T> clazz) {
-        log.debug("auth() invoked. method: {}, args: {}, clazz: {}", method, args, clazz);
+        log.debug("auth() invoked. method: {}, args: {}", method, args);
 
         // add method and nonce to args
         if (args == null) {

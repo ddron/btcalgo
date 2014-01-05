@@ -3,6 +3,8 @@ package com.algo.btce.service.marketdata;
 import com.algo.btce.model.IOrderBook;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.Reactor;
 import reactor.event.Event;
 
@@ -10,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MarketDataProvider implements IMarketDataProvider, IMarketDataListener {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private Reactor reactor;
 
@@ -28,6 +32,8 @@ public class MarketDataProvider implements IMarketDataProvider, IMarketDataListe
     @Override
     public void accept(Event<IOrderBook> iOrderBookEvent) {
         IOrderBook book = iOrderBookEvent.getData();
+        log.debug("MD update received: {}", book);
+
         String key = buildKey(book.getMarket(), book.getSymbol());
         booksCache.put(key, book);
         notifyListeners(book);

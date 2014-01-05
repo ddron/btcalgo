@@ -1,12 +1,18 @@
 package com.algo.btce;
 
 import com.algo.btce.reactor.NameableConsumer;
+import com.algo.btce.reactor.Scheduler;
 import com.algo.btce.reactor.ThrowableHandler;
+import com.algo.btce.service.marketdata.BtcBestMarketDataSource;
+import com.algo.btce.service.marketdata.SymbolEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import reactor.core.Reactor;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static reactor.event.selector.Selectors.$;
 import static reactor.event.selector.Selectors.T;
@@ -21,6 +27,9 @@ public class BtceAlgo {
 
     private static BtceAlgo app;
 
+    private static final long MD_UPDATE_RATE_MS = 200;
+    private List<SymbolEnum> symbols = Arrays.asList(SymbolEnum.BTCUSD/*SymbolEnum.values()*/);
+
     public static void main(String[] args) throws InterruptedException {
         app = new BtceAlgo();
         app.start();
@@ -34,6 +43,7 @@ public class BtceAlgo {
 
         makeConsumerRegistrations();
         invokeCommandLineProcessor();
+        setUpMarketDataUpdating();
 
         log.info("btce algo started!");
         while (!finished) {
@@ -49,6 +59,15 @@ public class BtceAlgo {
 
         synchronized (app.lock) {
             app.lock.notify();
+        }
+    }
+
+    private void setUpMarketDataUpdating() {
+        BtcBestMarketDataSource marketDataSource = context.getBean(BtcBestMarketDataSource.class);
+        Scheduler scheduler = context.getBean(Scheduler.class);
+
+        for (SymbolEnum symbolEnum : symbols) {
+            scheduler.scheduleAtFixedRate(marketDataSource.getId(), symbolEnum, MD_UPDATE_RATE_MS);
         }
     }
 
