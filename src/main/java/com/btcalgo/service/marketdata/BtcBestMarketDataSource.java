@@ -40,14 +40,18 @@ public class BtcBestMarketDataSource implements IMarketDataSource {
 
         // we do not need to request MD update if we're already in progress for the same symbol
         if (processing.get(symbol).compareAndSet(false, true)) {
-            TickerTemplate tickerTemplate = tickerRequest.getTicker(symbol);
-            IOrderBook book = tickerTemplate.convertToBestOrderBook();
+            try {
+                TickerTemplate tickerTemplate = tickerRequest.getTicker(symbol);
+                if (tickerTemplate != null) {
+                    IOrderBook book = tickerTemplate.convertToBestOrderBook();
 
-            for (IMarketDataListener listener : listeners) {
-                reactor.notify(listener.getId(), Event.wrap(book));
+                    for (IMarketDataListener listener : listeners) {
+                        reactor.notify(listener.getId(), Event.wrap(book));
+                    }
+                }
+            } finally {
+                processing.get(symbol).set(false);
             }
-
-            processing.get(symbol).set(false);
         }
     }
 

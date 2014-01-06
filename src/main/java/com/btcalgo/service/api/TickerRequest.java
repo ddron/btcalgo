@@ -20,14 +20,18 @@ public class TickerRequest implements NameableConsumer<Event<Void>> {
 
     @Override
     public void accept(Event<Void> voidEvent) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public TickerTemplate getTicker(SymbolEnum symbol) {
         TickerTemplate tickerTemplate = apiService.getTicker(symbol.getValue());
-        tickerTemplate.getTicker().setSymbol(symbol.getValue());
 
-        return tickerTemplate;
+        if (tickerTemplate == null) {
+            return null;
+        } else {
+            tickerTemplate.getTicker().setSymbol(symbol.getValue());
+            return tickerTemplate;
+        }
+
     }
 }
 
