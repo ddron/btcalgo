@@ -15,45 +15,45 @@
     </bean>
 
     <bean id="env" class="reactor.core.Environment"/>
-    <bean id="reactor" class="com.algo.btce.reactor.ReactorFactory" factory-method="createReactor" scope="singleton">
+    <bean id="reactor" class="com.btcalgo.reactor.ReactorFactory" factory-method="createReactor" scope="singleton">
         <constructor-arg name="environment" ref="env"/>
     </bean>
 
-    <bean id="btce.shutdown" class="com.algo.btce.BtceAlgoShutdown">
+    <bean id="btce.shutdown" class="com.btcalgo.BtceAlgoShutdown">
         <constructor-arg name="env" ref="env"/>
     </bean>
 
-    <bean id="command.processor" class="com.algo.btce.ConsoleCommandProcessor">
+    <bean id="command.processor" class="com.btcalgo.ConsoleCommandProcessor">
         <constructor-arg ref="reactor"/>
     </bean>
 
-    <bean id="reactor.scheduler" class="com.algo.btce.reactor.Scheduler">
+    <bean id="reactor.scheduler" class="com.btcalgo.reactor.Scheduler">
         <constructor-arg name="reactor" ref="reactor"/>
         <constructor-arg name="taskScheduler" ref="scheduler"/>
     </bean>
 
     <task:scheduler id="scheduler" pool-size="10" />
 
-    <bean id="api.service" class="com.algo.btce.service.api.service.ApiService">
+    <bean id="api.service" class="com.btcalgo.service.api.ApiService">
         <constructor-arg name="key" value="${btce.key}"/>
         <constructor-arg name="secret" value="${btce.secret}"/>
         <constructor-arg name="authBaseUrl" value="${auth.base.url}"/>
         <constructor-arg name="publicBaseUrl" value="${public.base.url}"/>
     </bean>
 
-    <bean id="info.request" class="com.algo.btce.service.api.service.InfoRequest">
+    <bean id="info.request" class="com.btcalgo.service.api.InfoRequest">
         <constructor-arg name="apiService" ref="api.service"/>
     </bean>
 
-    <bean id="ticker.request" class="com.algo.btce.service.api.service.TickerRequest">
+    <bean id="ticker.request" class="com.btcalgo.service.api.TickerRequest">
         <constructor-arg name="apiService" ref="api.service"/>
     </bean>
 
-    <bean id="market.data.provider" class="com.algo.btce.service.marketdata.MarketDataProvider">
+    <bean id="market.data.provider" class="com.btcalgo.service.marketdata.MarketDataProvider">
         <constructor-arg name="reactor" ref="reactor"/>
     </bean>
 
-    <bean id="market.data.source" class="com.algo.btce.service.marketdata.BtcBestMarketDataSource">
+    <bean id="market.data.source" class="com.btcalgo.service.marketdata.BtcBestMarketDataSource">
         <constructor-arg name="tickerRequest" ref="ticker.request"/>
         <constructor-arg name="reactor" ref="reactor"/>
         <property name="listeners">
