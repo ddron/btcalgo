@@ -3,7 +3,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<GridPane fx:controller="com.btcalgo.SinglePageController"
+<GridPane fx:id="view"
+            fx:controller="com.btcalgo.ui.SinglePageController"
           xmlns:fx="http://javafx.com/fxml"
           alignment="CENTER"
           hgap="10"
@@ -31,7 +32,7 @@
 
     <HBox spacing="10" alignment="bottom_right"
           GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button text="Sign In"
+        <Button fx:id="loginButton" text="Sign In"
                 onAction="#handleSubmitButtonAction"/>
     </HBox>
 

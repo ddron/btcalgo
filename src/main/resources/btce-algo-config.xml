@@ -19,9 +19,7 @@
         <constructor-arg name="environment" ref="env"/>
     </bean>
 
-    <bean id="btce.shutdown" class="com.btcalgo.BtceAlgoShutdown">
-        <constructor-arg name="env" ref="env"/>
-    </bean>
+    <bean id="btce.shutdown" class="com.btcalgo.BtceAlgoShutdown"/>
 
     <bean id="command.processor" class="com.btcalgo.ConsoleCommandProcessor">
         <constructor-arg ref="reactor"/>
@@ -61,6 +59,12 @@
                 <ref bean="market.data.provider"/>
             </set>
         </property>
+    </bean>
+
+    <bean id="controller.factory" class="com.btcalgo.ui.ControllerFactory"/>
+
+    <bean id="uiController" factory-bean="controller.factory" factory-method="createController">
+        <constructor-arg value="/ui/btcealgo.fxml"/>
     </bean>
 
 </beans>
