@@ -27,6 +27,7 @@
 
     <!--<logger name="com.btcalgo.service.api.ApiService" level="DEBUG"/>-->
     <logger name="com.btcalgo.service.marketdata" level="DEBUG"/>
+    <logger name="com.btcalgo.service.api.InfoRequest" level="DEBUG"/>
 
     <root level="info">
         <appender-ref ref="ASYNC_FILE"/>
