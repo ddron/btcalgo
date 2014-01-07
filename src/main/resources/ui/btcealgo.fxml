@@ -4,7 +4,7 @@
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
 <GridPane fx:id="view"
-            fx:controller="com.btcalgo.ui.SinglePageController"
+          fx:controller="com.btcalgo.ui.SinglePageController"
           xmlns:fx="http://javafx.com/fxml"
           alignment="CENTER"
           hgap="10"
@@ -14,32 +14,21 @@
         <Insets top="25" right="25" bottom="10" left="25"/>
     </padding>
 
-    <Text id="welcome-text" text="Welcome"
-          GridPane.columnIndex="0" GridPane.rowIndex="0"
-          GridPane.columnSpan="2"/>
+    <Text id="welcome-text" text="Welcome" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
 
-    <Label text="User Name:"
-           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <Label text="Key:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="key" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-    <TextField
-            GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Label text="Secret:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <PasswordField fx:id="secret" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-    <Label text="Password:"
-           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-
-    <PasswordField fx:id="passwordField"
-                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-    <HBox spacing="10" alignment="bottom_right"
-          GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button fx:id="loginButton" text="Sign In"
-                onAction="#handleSubmitButtonAction"/>
+    <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Button fx:id="validate" text="Validate keys" onAction="#handleValidateOnClick"/>
     </HBox>
 
-    <Text fx:id="actiontarget"
-          GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+    <Text fx:id="status" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
     <stylesheets>
-        <URL value="@btcealgo.css" />
+        <URL value="@btcealgo.css"/>
     </stylesheets>
 </GridPane>
