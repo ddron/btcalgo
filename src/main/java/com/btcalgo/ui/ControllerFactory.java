@@ -1,11 +1,18 @@
 package com.btcalgo.ui;
 
+import com.btcalgo.service.api.ApiService;
+import com.btcalgo.ui.model.KeysStatusHolder;
 import javafx.fxml.FXMLLoader;
+import reactor.core.Reactor;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class ControllerFactory {
+
+    private Reactor reactor;
+    private ApiService apiService;
+    private KeysStatusHolder keysStatusHolder;
 
     public SinglePageController createController(String url) throws IOException {
         InputStream fxmlStream = null;
@@ -14,11 +21,31 @@ public class ControllerFactory {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(url));
             loader.load(fxmlStream);
-            return loader.getController();
+
+            SinglePageController controller = loader.getController();
+            controller.setReactor(reactor);
+            controller.setApiService(apiService);
+            controller.setKeysStatus(keysStatusHolder);
+
+            controller.initBindings();
+
+            return controller;
         } finally {
             if (fxmlStream != null) {
                 fxmlStream.close();
             }
         }
+    }
+
+    public void setReactor(Reactor reactor) {
+        this.reactor = reactor;
+    }
+
+    public void setApiService(ApiService apiService) {
+        this.apiService = apiService;
+    }
+
+    public void setKeysStatusHolder(KeysStatusHolder keysStatusHolder) {
+        this.keysStatusHolder = keysStatusHolder;
     }
 }

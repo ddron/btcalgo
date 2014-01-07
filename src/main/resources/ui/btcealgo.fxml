@@ -17,16 +17,17 @@
     <Text id="welcome-text" text="Welcome" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
 
     <Label text="Key:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="key" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextField fx:id="key" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
     <Label text="Secret:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <PasswordField fx:id="secret" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <PasswordField fx:id="secret" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
     <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Text fx:id="keysStatus"/>
         <Button fx:id="validate" text="Validate keys" onAction="#handleValidateOnClick"/>
     </HBox>
 
-    <Text fx:id="status" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
 
     <stylesheets>
         <URL value="@btcealgo.css"/>

@@ -15,27 +15,6 @@ public class ConsoleCommandProcessor  implements NameableConsumer<Event<Void>> {
 
     private static final Logger log = LoggerFactory.getLogger(ConsoleCommandProcessor.class);
 
-    private static enum CommandEnum {
-        STOP("stop"),
-        INFO("info"),
-        NONE("");
-
-        private String commandText;
-
-        private CommandEnum(String commandText) {
-            this.commandText = commandText;
-        }
-
-        private static CommandEnum valueByCommandText(String text) {
-            for (CommandEnum command : CommandEnum.values()) {
-                if (command.commandText.equalsIgnoreCase(text)) {
-                    return command;
-                }
-            }
-            return NONE;
-        }
-    }
-
     private Reactor reactor;
     private BufferedReader br;
 
@@ -59,7 +38,7 @@ public class ConsoleCommandProcessor  implements NameableConsumer<Event<Void>> {
                 if (command == CommandEnum.NONE) {
                    log.info("Unknown command");
                 } else {
-                    reactor.notify(command.commandText);
+                    reactor.notify(command.getCommandText());
                 }
             }
             reactor.notify(getId());

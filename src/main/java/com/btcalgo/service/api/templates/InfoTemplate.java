@@ -14,6 +14,18 @@ public class InfoTemplate extends LoginTemplate {
         this.info = info;
     }
 
+    public boolean hasAllRights() {
+        return (getSuccess() == 1) && hasInfoRights() && hasTradeRights();
+    }
+
+    public boolean hasInfoRights() {
+        return info.hasInfoRights();
+    }
+
+    public boolean hasTradeRights() {
+        return info.hasTradeRights();
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("InfoTemplate{");

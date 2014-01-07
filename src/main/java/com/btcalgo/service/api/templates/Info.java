@@ -46,4 +46,12 @@ public class Info {
     public void setServer_time(long server_time) {
         this.server_time = server_time;
     }
+
+    public boolean hasInfoRights() {
+        return rights.getInfo() == 1;
+    }
+
+    public boolean hasTradeRights() {
+        return rights.getTrade() == 1;
+    }
 }

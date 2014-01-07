@@ -5,11 +5,11 @@ import com.btcalgo.service.api.templates.TickerTemplate;
 import com.btcalgo.service.marketdata.SymbolEnum;
 import reactor.event.Event;
 
-public class TickerRequest implements NameableConsumer<Event<Void>> {
+public class TickerService implements NameableConsumer<Event<Void>> {
 
     private ApiService apiService;
 
-    public TickerRequest(ApiService apiService) {
+    public TickerService(ApiService apiService) {
         this.apiService = apiService;
     }
 

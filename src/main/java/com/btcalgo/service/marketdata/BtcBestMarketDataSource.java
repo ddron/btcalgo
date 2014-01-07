@@ -1,7 +1,7 @@
 package com.btcalgo.service.marketdata;
 
 import com.btcalgo.model.IOrderBook;
-import com.btcalgo.service.api.TickerRequest;
+import com.btcalgo.service.api.TickerService;
 import com.btcalgo.service.api.templates.TickerTemplate;
 import reactor.core.Reactor;
 import reactor.event.Event;
@@ -17,11 +17,11 @@ public class BtcBestMarketDataSource implements IMarketDataSource {
     private Set<IMarketDataListener> listeners = new CopyOnWriteArraySet<>();
     private Map<SymbolEnum, AtomicBoolean> processing = new ConcurrentHashMap<>();
 
-    private TickerRequest tickerRequest;
+    private TickerService tickerService;
     private Reactor reactor;
 
-    public BtcBestMarketDataSource(TickerRequest tickerRequest, Reactor reactor) {
-        this.tickerRequest = tickerRequest;
+    public BtcBestMarketDataSource(TickerService tickerService, Reactor reactor) {
+        this.tickerService = tickerService;
         this.reactor = reactor;
 
         for (SymbolEnum symbolEnum : SymbolEnum.values()) {
@@ -41,7 +41,7 @@ public class BtcBestMarketDataSource implements IMarketDataSource {
         // we do not need to request MD update if we're already in progress for the same symbol
         if (processing.get(symbol).compareAndSet(false, true)) {
             try {
-                TickerTemplate tickerTemplate = tickerRequest.getTicker(symbol);
+                TickerTemplate tickerTemplate = tickerService.getTicker(symbol);
                 if (tickerTemplate != null) {
                     IOrderBook book = tickerTemplate.convertToBestOrderBook();
 

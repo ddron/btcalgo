@@ -1,6 +1,7 @@
 package com.btcalgo.service.api;
 
 import com.btcalgo.service.api.templates.TickerTemplate;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ public class ApiService {
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     private String key;
+
     private String authBaseUrl;
     private String publicBaseUrl;
 
@@ -35,12 +37,22 @@ public class ApiService {
     private Gson gson = new GsonBuilder().create();
 
     public ApiService(String key, String secret, String authBaseUrl, String publicBaseUrl) {
-        this.key = key;
         this.authBaseUrl = authBaseUrl;
         this.publicBaseUrl = publicBaseUrl;
 
-        log.debug("key: {}", key);
-        log.debug("secret: {}", secret);
+        initKeys(key, secret);
+    }
+
+    public synchronized void updateKeys(String key, String secret) {
+        initKeys(key, secret);
+    }
+
+    private void initKeys(String key, String secret) {
+        if (Strings.isNullOrEmpty(key) || Strings.isNullOrEmpty(secret)) {
+            return;
+        }
+
+        this.key = key;
 
         // Create a new secret key
         SecretKeySpec secretKeySpec;
