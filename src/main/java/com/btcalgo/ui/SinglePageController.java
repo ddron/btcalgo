@@ -9,10 +9,7 @@ import com.btcalgo.ui.model.MarketDataToShow;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import reactor.core.Reactor;
@@ -34,6 +31,8 @@ public class SinglePageController {
     @FXML private TextField stopPrice;
     @FXML private TextField limitPrice;
     @FXML private Button submit;
+
+    @FXML private TableView ordersView;
 
     private Reactor reactor;
     private ApiService apiService;
