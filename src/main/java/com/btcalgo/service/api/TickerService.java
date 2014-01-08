@@ -28,7 +28,7 @@ public class TickerService implements NameableConsumer<Event<Void>> {
         if (tickerTemplate == null) {
             return null;
         } else {
-            tickerTemplate.getTicker().setSymbol(symbol.getValue());
+            tickerTemplate.getTicker().setSymbol(symbol);
             return tickerTemplate;
         }
 

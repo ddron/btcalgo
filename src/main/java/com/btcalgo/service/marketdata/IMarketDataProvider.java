@@ -5,9 +5,11 @@ import com.google.common.base.Predicate;
 
 public interface IMarketDataProvider {
 
-    void addListener(IMarketDataListener listener, String market, String symbol, Predicate<IOrderBook> predicate);
+    void addListener(IMarketDataListener listener, String market, SymbolEnum symbol, Predicate<IOrderBook> predicate);
 
-    void addListener(IMarketDataListener listener, String market, String symbol);
+    void addListener(IMarketDataListener listener, String market, SymbolEnum symbol);
 
-    IOrderBook getIOrderBook(String market, String symbol);
+    void removeListener(IMarketDataListener listener, String market, SymbolEnum symbol);
+
+    IOrderBook getIOrderBook(String market, SymbolEnum symbol);
 }

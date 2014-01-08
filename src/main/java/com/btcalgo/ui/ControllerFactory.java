@@ -2,6 +2,7 @@ package com.btcalgo.ui;
 
 import com.btcalgo.service.api.ApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
+import com.btcalgo.ui.model.MarketDataToShow;
 import javafx.fxml.FXMLLoader;
 import reactor.core.Reactor;
 
@@ -13,6 +14,7 @@ public class ControllerFactory {
     private Reactor reactor;
     private ApiService apiService;
     private KeysStatusHolder keysStatusHolder;
+    private MarketDataToShow marketDataToShow;
 
     public SinglePageController createController(String url) throws IOException {
         InputStream fxmlStream = null;
@@ -26,8 +28,9 @@ public class ControllerFactory {
             controller.setReactor(reactor);
             controller.setApiService(apiService);
             controller.setKeysStatus(keysStatusHolder);
+            controller.setMarketDataToShow(marketDataToShow);
 
-            controller.initBindings();
+            controller.initController();
 
             return controller;
         } finally {
@@ -47,5 +50,9 @@ public class ControllerFactory {
 
     public void setKeysStatusHolder(KeysStatusHolder keysStatusHolder) {
         this.keysStatusHolder = keysStatusHolder;
+    }
+
+    public void setMarketDataToShow(MarketDataToShow marketDataToShow) {
+        this.marketDataToShow = marketDataToShow;
     }
 }

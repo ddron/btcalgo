@@ -1,9 +1,11 @@
 package com.btcalgo.model;
 
+import com.btcalgo.service.marketdata.SymbolEnum;
+
 public class BestOrderBook implements IOrderBook {
 
     private String market;
-    private String symbol;
+    private SymbolEnum symbol;
 
     /**
      * lowest sell price currently on market i.e. 'market sells' at this price.<br></br>
@@ -17,7 +19,7 @@ public class BestOrderBook implements IOrderBook {
      */
     private double bestSell;
 
-    public BestOrderBook(String market, String symbol, double bestBuy, double bestSell) {
+    public BestOrderBook(String market, SymbolEnum symbol, double bestBuy, double bestSell) {
         this.market = market;
         this.symbol = symbol;
         this.bestBuy = bestBuy;
@@ -30,7 +32,7 @@ public class BestOrderBook implements IOrderBook {
     }
 
     @Override
-    public String getSymbol() {
+    public SymbolEnum getSymbol() {
         return symbol;
     }
 

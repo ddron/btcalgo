@@ -1,13 +1,14 @@
 package com.btcalgo.service.api.templates;
 
 import com.btcalgo.model.BestOrderBook;
+import com.btcalgo.service.marketdata.SymbolEnum;
 
 import java.util.Date;
 
 public class Ticker {
     private static final String MARKET = "BTCE";
 
-    private String symbol;
+    private SymbolEnum symbol;
 
     private double high;
     private double low;
@@ -115,7 +116,7 @@ public class Ticker {
         this.server_time = server_time;
     }
 
-    public void setSymbol(String symbol) {
+    public void setSymbol(SymbolEnum symbol) {
         this.symbol = symbol;
     }
 

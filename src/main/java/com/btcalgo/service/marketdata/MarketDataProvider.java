@@ -3,6 +3,7 @@ package com.btcalgo.service.marketdata;
 import com.btcalgo.model.IOrderBook;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Reactor;
@@ -40,7 +41,7 @@ public class MarketDataProvider implements IMarketDataProvider, IMarketDataListe
     }
 
     @Override
-    public void addListener(IMarketDataListener listener, String market, String symbol, Predicate<IOrderBook> predicate) {
+    public void addListener(IMarketDataListener listener, String market, SymbolEnum symbol, Predicate<IOrderBook> predicate) {
         String key = buildKey(market, symbol);
         Map<IMarketDataListener, Predicate<IOrderBook>> listenersForKey = listeners.get(key);
 
@@ -56,19 +57,31 @@ public class MarketDataProvider implements IMarketDataProvider, IMarketDataListe
     }
 
     @Override
-    public void addListener(IMarketDataListener listener, String market, String symbol) {
+    public void addListener(IMarketDataListener listener, String market, SymbolEnum symbol) {
         addListener(listener, market, symbol, Predicates.<IOrderBook>alwaysTrue());
     }
 
     @Override
-    public IOrderBook getIOrderBook(String market, String symbol) {
+    public IOrderBook getIOrderBook(String market, SymbolEnum symbol) {
         return booksCache.get(buildKey(market, symbol));
     }
 
-    private String buildKey(String market, String symbol) {
-        return market + '#' + symbol;
+    @Override
+    public void removeListener(IMarketDataListener listener, String market, SymbolEnum symbol) {
+        if (listener == null || Strings.isNullOrEmpty(market) || symbol == null) {
+            return;
+        }
+
+        String key = buildKey(market, symbol);
+        Map<IMarketDataListener, Predicate<IOrderBook>> listenersForKey = listeners.get(key);
+        if (listenersForKey != null) {
+            listenersForKey.remove(listener);
+        }
     }
 
+    private String buildKey(String market, SymbolEnum symbol) {
+        return market + '#' + symbol.name();
+    }
 
     private void notifyListeners(IOrderBook book) {
         String key = buildKey(book.getMarket(), book.getSymbol());

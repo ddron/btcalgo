@@ -32,8 +32,8 @@ public class BtceAlgo extends Application {
 
     private static BtceAlgo app;
 
-    private static final long MD_UPDATE_RATE_MS = 200;
-    private List<SymbolEnum> symbols = Arrays.asList(SymbolEnum.BTCUSD/*SymbolEnum.values()*/);
+    private static final long MD_UPDATE_RATE_MS = 400;
+    private List<SymbolEnum> symbols = Arrays.asList(/*SymbolEnum.BTCUSD*/SymbolEnum.values());
 
     public static void main(String[] args) throws InterruptedException {
         launch(args);

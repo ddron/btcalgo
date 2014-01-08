@@ -1,9 +1,11 @@
 package com.btcalgo.model;
 
+import com.btcalgo.service.marketdata.SymbolEnum;
+
 public interface IOrderBook {
     String getMarket();
 
-    String getSymbol();
+    SymbolEnum getSymbol();
 
     /**
      * @param direction direction of our side<br></br>
