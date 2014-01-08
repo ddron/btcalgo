@@ -1,8 +1,8 @@
 package com.btcalgo.service.api;
 
+import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.reactor.NameableConsumer;
 import com.btcalgo.service.api.templates.TickerTemplate;
-import com.btcalgo.service.marketdata.SymbolEnum;
 import reactor.event.Event;
 
 public class TickerService implements NameableConsumer<Event<Void>> {

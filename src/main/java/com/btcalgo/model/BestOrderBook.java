@@ -1,7 +1,5 @@
 package com.btcalgo.model;
 
-import com.btcalgo.service.marketdata.SymbolEnum;
-
 public class BestOrderBook implements IOrderBook {
 
     private String market;

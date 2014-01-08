@@ -1,6 +1,7 @@
 package com.btcalgo.service.marketdata;
 
 import com.btcalgo.model.IOrderBook;
+import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.api.TickerService;
 import com.btcalgo.service.api.templates.TickerTemplate;
 import reactor.core.Reactor;

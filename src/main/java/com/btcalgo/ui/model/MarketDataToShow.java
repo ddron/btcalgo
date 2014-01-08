@@ -1,9 +1,9 @@
 package com.btcalgo.ui.model;
 
 import com.btcalgo.model.IOrderBook;
+import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.marketdata.IMarketDataListener;
 import com.btcalgo.service.marketdata.IMarketDataProvider;
-import com.btcalgo.service.marketdata.SymbolEnum;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -12,7 +12,7 @@ import reactor.event.Event;
 
 import static com.btcalgo.util.DoubleFormatter.fmt;
 
-public class MarketDataToShow implements IMarketDataListener, ChangeListener<SymbolEnum> {
+public class MarketDataToShow implements IMarketDataListener, ChangeListener<String> {
     private static final String MARKET = "BTCE";
 
     private StringProperty bestBidPrice = new SimpleStringProperty(); // best price for us to BUY
@@ -40,7 +40,8 @@ public class MarketDataToShow implements IMarketDataListener, ChangeListener<Sym
     }
 
     @Override
-    public void changed(ObservableValue<? extends SymbolEnum> observableValue, SymbolEnum oldSymbolEnum, SymbolEnum newSymbolEnum) {
+    public void changed(ObservableValue<? extends String> observableValue, String oldDisplayValue, String newDisplayValue) {
+        SymbolEnum newSymbolEnum = SymbolEnum.valueByDisplayName(newDisplayValue);
         if (newSymbolEnum != selectedSymbol) {
             bestBidPrice.set("");
             bestAskPrice.set("");

@@ -1,6 +1,7 @@
 package com.btcalgo.service.marketdata;
 
 import com.btcalgo.model.IOrderBook;
+import com.btcalgo.model.SymbolEnum;
 import com.google.common.base.Predicate;
 
 public interface IMarketDataProvider {

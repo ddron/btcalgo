@@ -1,4 +1,7 @@
-package com.btcalgo.service.marketdata;
+package com.btcalgo.model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum SymbolEnum {
     BTCUSD("btc_usd", "BTC/USD"),
@@ -23,6 +26,14 @@ public enum SymbolEnum {
     private String value;
     private String displayName;
 
+    private static List<String> displayNames = new ArrayList<>();
+
+    static {
+        for (SymbolEnum type : SymbolEnum.values()) {
+            displayNames.add(type.displayName);
+        }
+    }
+
     private SymbolEnum(String value, String displayName) {
         this.value = value;
         this.displayName = displayName;
@@ -34,5 +45,18 @@ public enum SymbolEnum {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public static SymbolEnum valueByDisplayName(String displayName) {
+        for (SymbolEnum type : SymbolEnum.values()) {
+            if (type.displayName.equals(displayName)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    public static List<String> getDisplayNames() {
+        return displayNames;
     }
 }

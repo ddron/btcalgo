@@ -1,10 +1,10 @@
 package com.btcalgo;
 
+import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.reactor.NameableConsumer;
 import com.btcalgo.reactor.Scheduler;
 import com.btcalgo.reactor.ThrowableHandler;
 import com.btcalgo.service.marketdata.BtcBestMarketDataSource;
-import com.btcalgo.service.marketdata.SymbolEnum;
 import com.btcalgo.ui.SinglePageController;
 import javafx.application.Application;
 import javafx.scene.Scene;

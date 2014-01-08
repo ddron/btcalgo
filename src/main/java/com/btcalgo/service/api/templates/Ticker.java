@@ -1,7 +1,7 @@
 package com.btcalgo.service.api.templates;
 
 import com.btcalgo.model.BestOrderBook;
-import com.btcalgo.service.marketdata.SymbolEnum;
+import com.btcalgo.model.SymbolEnum;
 
 import java.util.Date;
 
