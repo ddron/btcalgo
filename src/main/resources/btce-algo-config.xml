@@ -67,6 +67,7 @@
         <property name="apiService" ref="api.service"/>
         <property name="keysStatusHolder" ref="keys.status.holder"/>
         <property name="marketDataToShow" ref="market.data.to.show"/>
+        <property name="ordersManager" ref="order.manager"/>
     </bean>
 
     <bean id="uiController" factory-bean="controller.factory" factory-method="createController">
@@ -76,6 +77,11 @@
     <bean id="keys.status.holder" class="com.btcalgo.ui.model.KeysStatusHolder"/>
 
     <bean id="market.data.to.show" class="com.btcalgo.ui.model.MarketDataToShow">
+        <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
+    </bean>
+
+    <bean id="order.manager" class="com.btcalgo.execution.OrdersManager">
+        <constructor-arg name="apiService" ref="api.service"/>
         <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
     </bean>
 

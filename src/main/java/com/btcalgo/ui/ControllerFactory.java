@@ -1,5 +1,6 @@
 package com.btcalgo.ui;
 
+import com.btcalgo.execution.OrdersManager;
 import com.btcalgo.service.api.ApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
@@ -13,6 +14,8 @@ public class ControllerFactory {
 
     private Reactor reactor;
     private ApiService apiService;
+    private OrdersManager ordersManager;
+
     private KeysStatusHolder keysStatusHolder;
     private MarketDataToShow marketDataToShow;
 
@@ -27,6 +30,8 @@ public class ControllerFactory {
             SinglePageController controller = loader.getController();
             controller.setReactor(reactor);
             controller.setApiService(apiService);
+            controller.setOrdersManager(ordersManager);
+
             controller.setKeysStatus(keysStatusHolder);
             controller.setMarketDataToShow(marketDataToShow);
 
@@ -54,5 +59,9 @@ public class ControllerFactory {
 
     public void setMarketDataToShow(MarketDataToShow marketDataToShow) {
         this.marketDataToShow = marketDataToShow;
+    }
+
+    public void setOrdersManager(OrdersManager ordersManager) {
+        this.ordersManager = ordersManager;
     }
 }
