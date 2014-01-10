@@ -41,11 +41,16 @@ public class Order implements IMarketDataListener {
         IOrderBook book = iOrderBookEvent.getData();
         if (book != null && status.compareAndSet(OrderStatus.WAITING, OrderStatus.SENDING)) {
             log.info("Order {} was triggered by {} update", this, book);
-
             marketDataProvider.removeListener(this, market, symbol);
 
-            // TODO: send order to btce
+            // TODO: remove next line. And uncomment code block below
             status.set(OrderStatus.SENT);
+            /*NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(symbol, direction, limitPrice, amount);
+            if (newOrderTemplate.isSuccess()) {
+                status.set(OrderStatus.SENT);
+            } else {
+                status.set(OrderStatus.ERROR);
+            }*/
         }
     }
 

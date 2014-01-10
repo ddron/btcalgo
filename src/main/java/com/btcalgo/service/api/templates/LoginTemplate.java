@@ -12,6 +12,10 @@ public class LoginTemplate {
         this.success = success;
     }
 
+    public boolean isSuccess() {
+        return success == 1;
+    }
+
     public String getError() {
         return error;
     }

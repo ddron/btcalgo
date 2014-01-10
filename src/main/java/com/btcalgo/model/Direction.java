@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Direction {
-    NONE("-Select-"),
-    BID("Buy"),
-    ASK("Sell");
+    NONE("", "-Select-"),
+    BID("buy", "Buy"),
+    ASK("sell", "Sell");
 
+    private String apiValue;
     private String displayName;
     private static List<String> displayNames = new ArrayList<>();
 
@@ -17,7 +18,8 @@ public enum Direction {
         }
     }
 
-    private Direction(String displayName) {
+    private Direction(String apiValue, String displayName) {
+        this.apiValue = apiValue;
         this.displayName = displayName;
     }
 
@@ -28,6 +30,10 @@ public enum Direction {
             }
         }
         return null;
+    }
+
+    public String getApiValue() {
+        return apiValue;
     }
 
     public static List<String> getDisplayNames() {

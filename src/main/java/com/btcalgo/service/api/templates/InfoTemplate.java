@@ -15,7 +15,7 @@ public class InfoTemplate extends LoginTemplate {
     }
 
     public boolean hasAllRights() {
-        return (getSuccess() == 1) && hasInfoRights() && hasTradeRights();
+        return isSuccess() && hasInfoRights() && hasTradeRights();
     }
 
     public boolean hasInfoRights() {

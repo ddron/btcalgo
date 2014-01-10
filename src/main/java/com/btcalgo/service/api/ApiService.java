@@ -1,5 +1,9 @@
 package com.btcalgo.service.api;
 
+import com.btcalgo.model.Direction;
+import com.btcalgo.model.SymbolEnum;
+import com.btcalgo.service.api.templates.LoginTemplate;
+import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.api.templates.TickerTemplate;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
@@ -26,6 +30,8 @@ public class ApiService {
 
     private String authBaseUrl;
     private String publicBaseUrl;
+
+    private static final int ATTEMPTS_NUMBER = 4;
 
     private static Mac mac;
     /*
@@ -80,42 +86,76 @@ public class ApiService {
         }
     }
 
+    /////////////////////////////////////////
+    // NON AUTH REQUESTS START             //
+    /////////////////////////////////////////
+
+
     public TickerTemplate getTicker(String symbol) {
         return request(symbol, "ticker", TickerTemplate.class);
     }
 
     private <T> T request(String symbol, String method, Class<T> clazz) {
-        log.debug("request() invoked. symbol: {}, method: {}", symbol, method);
+        T result;
+        int i = 0;
+        do {
+            log.debug("request() invoked. Attempt: {}. symbol: {}, method: {}", i, symbol, method);
+            StringBuilder response = new StringBuilder();
+            try {
+                URL url = new URL(publicBaseUrl + symbol + "/" + method);
+                URLConnection c = url.openConnection();
+                c.setUseCaches(false);
 
-        StringBuilder response = new StringBuilder();
-        try {
-            URL url = new URL(publicBaseUrl + symbol + "/" + method);
-            URLConnection c = url.openConnection();
-            c.setUseCaches(false);
-
-            // read
-            BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                response.append(line);
+                // read
+                BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                String line;
+                while ((line = in.readLine()) != null) {
+                    response.append(line);
+                }
+                in.close();
+                result = gson.fromJson(response.toString(), clazz);
+            } catch (IOException e) {
+                log.error("Request error: ", e);
+                result = null;
             }
-            in.close();
-        } catch (IOException e) {
-            log.error("Request error: ", e);
-            return null;
-        }
+        } while ((++i < ATTEMPTS_NUMBER) && result == null);
 
-        T result = gson.fromJson(response.toString(), clazz);
-        log.debug("request() completed. Result: {}", result);
+        log.debug("request() completed. Attempts taken: {}. Result: {}", i, result);
+        return result;
+    }
+
+    /////////////////////////////////////////
+    // NON AUTH REQUESTS END               //
+    /////////////////////////////////////////
+
+
+    /////////////////////////////////////////
+    //     AUTH REQUESTS START             //
+    /////////////////////////////////////////
+
+    public NewOrderTemplate sendNewOrder(SymbolEnum symbol, Direction direction, double price, double amount) {
+        Map<String,String> args = new HashMap<>() ;
+        args.put("pair", symbol.getValue()) ;
+        args.put("type", direction.getApiValue()) ;
+        args.put("rate", String.valueOf(price)) ;
+        args.put("amount", String.valueOf(amount)) ;
+
+        NewOrderTemplate result = auth("Trade", args, NewOrderTemplate.class);
+
+        if (result.isSuccess()) {
+            log.info("order was sent to market. Result: {}");
+        } else {
+            log.error("order was NOT sent to market. Result: {}");
+        }
 
         return result;
     }
 
-    public <T> T auth(String method, Class<T> clazz) {
+    public <T extends LoginTemplate> T auth(String method, Class<T> clazz) {
         return auth(method, null, clazz);
     }
 
-    public <T> T auth(String method, Map<String, String> args, Class<T> clazz) {
+    public <T extends LoginTemplate> T auth(String method, Map<String, String> args, Class<T> clazz) {
         log.debug("auth() invoked. method: {}, args: {}", method, args);
 
         // add method and nonce to args
@@ -123,52 +163,58 @@ public class ApiService {
             args = new HashMap<>();
         }
 
-        args.put("method", method);
-        args.put("nonce", String.valueOf(nonce.getAndIncrement()));
+        T result;
+        int i = 0;
+        do {
+            args.put("method", method);
+            args.put("nonce", String.valueOf(nonce.getAndIncrement()));
 
-        // create url form encoded post data
-        String postData = "";
-        for (Map.Entry<String, String> entry : args.entrySet()) {
-            if (postData.length() > 0) {
-                postData += "&";
+            // create url form encoded post data
+            String postData = "";
+            for (Map.Entry<String, String> entry : args.entrySet()) {
+                if (postData.length() > 0) {
+                    postData += "&";
+                }
+                postData += entry.getKey() + "=" + entry.getValue();
             }
-            postData += entry.getKey() + "=" + entry.getValue();
-        }
 
-        StringBuilder response = new StringBuilder();
-        try {
-            URL url = new URL(authBaseUrl);
-            URLConnection c = url.openConnection();
-            c.setUseCaches(false);
-            c.setDoOutput(true);
+            StringBuilder response = new StringBuilder();
+            try {
+                URL url = new URL(authBaseUrl);
+                URLConnection c = url.openConnection();
+                c.setUseCaches(false);
+                c.setDoOutput(true);
 
-            c.setRequestProperty("Key", key);
-            c.setRequestProperty("Sign", toHex(mac.doFinal(postData.getBytes("UTF-8"))));
-            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                c.setRequestProperty("Key", key);
+                c.setRequestProperty("Sign", toHex(mac.doFinal(postData.getBytes("UTF-8"))));
+                c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-            // write
-            OutputStreamWriter out = new OutputStreamWriter(c.getOutputStream());
-            out.write(postData);
-            out.close();
+                // write
+                OutputStreamWriter out = new OutputStreamWriter(c.getOutputStream());
+                out.write(postData);
+                out.close();
 
-            // read
-            BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                response.append(line);
+                // read
+                BufferedReader in = new BufferedReader(new InputStreamReader(c.getInputStream()));
+                String line;
+                while ((line = in.readLine()) != null) {
+                    response.append(line);
+                }
+                in.close();
+                result = gson.fromJson(response.toString(), clazz);
+            } catch (IOException e) {
+                log.error("Authentication request error: ", e);
+                result = null;
             }
-            in.close();
+        } while ((++i < ATTEMPTS_NUMBER) && (result == null || !result.isSuccess()));
 
-        } catch (IOException e) {
-            log.error("Authentication request error: ", e);
-            return null;
-        }
-
-        T result = gson.fromJson(response.toString(), clazz);
-        log.debug("auth() completed. Result: {}", result);
-
+        log.debug("auth() completed. Attempts taken: {}. Result: {}", i, result);
         return result;
     }
+
+    /////////////////////////////////////////
+    //     AUTH REQUESTS END               //
+    /////////////////////////////////////////
 
     private String toHex(byte[] b) throws UnsupportedEncodingException {
         return String.format("%040x", new BigInteger(1,b));

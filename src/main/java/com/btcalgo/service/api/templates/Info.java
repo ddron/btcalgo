@@ -1,25 +1,25 @@
 package com.btcalgo.service.api.templates;
 
 public class Info {
-    private FundsTemplate funds;
-    private RightsTemplate rights;
+    private Funds funds;
+    private Rights rights;
     private int transaction_count;
     private int open_orders;
     private long server_time;
 
-    public FundsTemplate getFunds() {
+    public Funds getFunds() {
         return funds;
     }
 
-    public void setFunds(FundsTemplate funds) {
+    public void setFunds(Funds funds) {
         this.funds = funds;
     }
 
-    public RightsTemplate getRights() {
+    public Rights getRights() {
         return rights;
     }
 
-    public void setRights(RightsTemplate rights) {
+    public void setRights(Rights rights) {
         this.rights = rights;
     }
 
@@ -53,5 +53,17 @@ public class Info {
 
     public boolean hasTradeRights() {
         return rights.getTrade() == 1;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Info{");
+        sb.append("funds=").append(funds);
+        sb.append(", rights=").append(rights);
+        sb.append(", transaction_count=").append(transaction_count);
+        sb.append(", open_orders=").append(open_orders);
+        sb.append(", server_time=").append(server_time);
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -3,7 +3,7 @@ package com.btcalgo.service.api.templates;
 import com.btcalgo.model.BestOrderBook;
 
 public class TickerTemplate {
-    Ticker ticker;
+    private Ticker ticker;
 
     public BestOrderBook convertToBestOrderBook() {
         return ticker.convertToBestOrderBook();
@@ -21,4 +21,6 @@ public class TickerTemplate {
     public String toString() {
         return ticker.toString();
     }
+
+
 }

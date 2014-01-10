@@ -1,6 +1,6 @@
 package com.btcalgo.service.api.templates;
 
-public class FundsTemplate {
+public class Funds {
     private double btc;
     private double ltc;
     private double nmc;
@@ -99,5 +99,23 @@ public class FundsTemplate {
 
     public void setEur(double eur) {
         this.eur = eur;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Funds{");
+        sb.append("btc=").append(btc);
+        sb.append(", ltc=").append(ltc);
+        sb.append(", nmc=").append(nmc);
+        sb.append(", nvc=").append(nvc);
+        sb.append(", trc=").append(trc);
+        sb.append(", ppc=").append(ppc);
+        sb.append(", ftc=").append(ftc);
+        sb.append(", xpm=").append(xpm);
+        sb.append(", usd=").append(usd);
+        sb.append(", rur=").append(rur);
+        sb.append(", eur=").append(eur);
+        sb.append('}');
+        return sb.toString();
     }
 }
