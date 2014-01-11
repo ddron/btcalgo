@@ -6,21 +6,29 @@ import com.btcalgo.service.marketdata.MarketDataProvider;
 import com.btcalgo.service.marketdata.PriceIsWorseOrEqualThanCondition;
 import com.btcalgo.ui.model.OrderDataHolder;
 import com.google.common.base.Predicate;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import reactor.core.Reactor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static reactor.event.selector.Selectors.$;
 
 public class OrdersManager {
 
     /** 'internalOrderId' to 'order' map*/
     private Map<String, Order> orders = new ConcurrentHashMap<>();
+    private ObservableList<Order> ordersView = FXCollections.observableArrayList(orders.values());
 
     private ApiService apiService;
     private MarketDataProvider marketDataProvider;
+    private Reactor reactor;
 
-    public OrdersManager(ApiService apiService, MarketDataProvider marketDataProvider) {
+    public OrdersManager(ApiService apiService, MarketDataProvider marketDataProvider, Reactor reactor) {
         this.apiService = apiService;
         this.marketDataProvider = marketDataProvider;
+        this.reactor = reactor;
     }
 
     public void createNew(OrderDataHolder holder) {
@@ -38,19 +46,24 @@ public class OrdersManager {
                 .build();
 
 
+        // store reference to internal map
+        orders.put(order.getInternalOrderId(), order);
+        ordersView.add(order);
+
+        // register in reactor
+        reactor.on($(order.getId()), order);
+
         // register new order as market data listener
         Predicate<IOrderBook> condition =
                 new PriceIsWorseOrEqualThanCondition(order.getStopPrice(), order.getDirection());
         marketDataProvider.addListener(order, order.getMarket(), order.getSymbol(), condition);
-
-        // store reference to internal map
-        orders.put(order.getInternalOrderId(), order);
     }
 
     public void cancel(String internalOrderId) {
         Order order = orders.get(internalOrderId);
         if (order != null) {
             if (order.getStatusReference().compareAndSet(OrderStatus.WAITING, OrderStatus.CANCELLED)) {
+                order.updateDisplayStatusAndAction();
                 marketDataProvider.removeListener(order, order.getMarket(), order.getSymbol());
             }
         }
@@ -61,8 +74,12 @@ public class OrdersManager {
         if (order != null) {
             if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.SENT) {
                 orders.remove(internalOrderId);
+                ordersView.remove(order);
             }
         }
     }
 
+    public ObservableList<Order> getOrdersView() {
+        return ordersView;
+    }
 }

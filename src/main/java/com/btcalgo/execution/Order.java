@@ -6,6 +6,8 @@ import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.api.ApiService;
 import com.btcalgo.service.marketdata.IMarketDataListener;
 import com.btcalgo.service.marketdata.MarketDataProvider;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.event.Event;
@@ -30,6 +32,8 @@ public class Order implements IMarketDataListener {
     private MarketDataProvider marketDataProvider;
 
     private final AtomicReference<OrderStatus> status = new AtomicReference<>(OrderStatus.WAITING);
+    private ObjectProperty<OrderStatus> displayStatus = new SimpleObjectProperty<>(status.get());
+    private ObjectProperty<Action> validAction = new SimpleObjectProperty<>(status.get().getValidAction());
 
     @Override
     public String getId() {
@@ -41,17 +45,25 @@ public class Order implements IMarketDataListener {
         IOrderBook book = iOrderBookEvent.getData();
         if (book != null && status.compareAndSet(OrderStatus.WAITING, OrderStatus.SENDING)) {
             log.info("Order {} was triggered by {} update", this, book);
+            updateDisplayStatusAndAction();
             marketDataProvider.removeListener(this, market, symbol);
 
             // TODO: remove next line. And uncomment code block below
             status.set(OrderStatus.SENT);
+            updateDisplayStatusAndAction();
             /*NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(symbol, direction, limitPrice, amount);
             if (newOrderTemplate.isSuccess()) {
                 status.set(OrderStatus.SENT);
             } else {
                 status.set(OrderStatus.ERROR);
-            }*/
+            }
+            updateDisplayStatusAndAction();*/
         }
+    }
+
+    public void updateDisplayStatusAndAction() {
+        displayStatus.set(status.get());
+        validAction.set(displayStatus.get().getValidAction());
     }
 
     public static class OrderBuilder {
@@ -159,18 +171,6 @@ public class Order implements IMarketDataListener {
         return strategyType;
     }
 
-    public double getAmount() {
-        return amount;
-    }
-
-    public double getStopPrice() {
-        return stopPrice;
-    }
-
-    public double getLimitPrice() {
-        return limitPrice;
-    }
-
     public OrderStatus getStatus() {
         return status.get();
     }
@@ -185,6 +185,54 @@ public class Order implements IMarketDataListener {
 
     public String getInternalOrderId() {
         return internalOrderId;
+    }
+
+    public String getDirectionAsString() {
+        return direction.getDisplayName();
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public double getStopPrice() {
+        return stopPrice;
+    }
+
+    public double getLimitPrice() {
+        return limitPrice;
+    }
+
+    public String getSymbolAsString() {
+        return symbol.getDisplayName();
+    }
+
+    public String getStrategyTypeAsString() {
+        return strategyType.getDisplayName();
+    }
+
+    public OrderStatus getDisplayStatus() {
+        return displayStatus.get();
+    }
+
+    public ObjectProperty<OrderStatus> displayStatusProperty() {
+        return displayStatus;
+    }
+
+    public void setDisplayStatus(OrderStatus displayStatus) {
+        this.displayStatus.set(displayStatus);
+    }
+
+    public Action getValidAction() {
+        return validAction.get();
+    }
+
+    public ObjectProperty<Action> validActionProperty() {
+        return validAction;
+    }
+
+    public void setValidAction(Action validAction) {
+        this.validAction.set(validAction);
     }
 
     @Override

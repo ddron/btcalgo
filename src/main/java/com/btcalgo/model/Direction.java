@@ -32,6 +32,10 @@ public enum Direction {
         return null;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public String getApiValue() {
         return apiValue;
     }

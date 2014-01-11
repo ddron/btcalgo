@@ -63,18 +63,7 @@
         <Button fx:id="submit" text="Submit" onAction="#handleSubmit"/>
     </HBox>
 
-    <TableView fx:id="ordersView" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="10">
-        <columns>
-            <TableColumn text="Side"/>
-            <TableColumn text="Currency"/>
-            <TableColumn text="Type"/>
-            <TableColumn text="Amount"/>
-            <TableColumn text="Stop Price"/>
-            <TableColumn text="Price"/>
-            <TableColumn text="Status"/>
-            <TableColumn text="Action"/>
-        </columns>
-    </TableView>
+    <TableView fx:id="ordersView" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="10"/>
 
     <stylesheets>
         <URL value="@btcealgo.css"/>

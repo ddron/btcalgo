@@ -83,6 +83,7 @@
     <bean id="order.manager" class="com.btcalgo.execution.OrdersManager">
         <constructor-arg name="apiService" ref="api.service"/>
         <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
+        <constructor-arg name="reactor" ref="reactor"/>
     </bean>
 
 </beans>

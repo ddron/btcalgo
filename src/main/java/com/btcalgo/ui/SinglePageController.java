@@ -1,6 +1,7 @@
 package com.btcalgo.ui;
 
 import com.btcalgo.CommandEnum;
+import com.btcalgo.execution.Order;
 import com.btcalgo.execution.OrdersManager;
 import com.btcalgo.execution.StrategyType;
 import com.btcalgo.model.Direction;
@@ -13,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import reactor.core.Reactor;
@@ -38,7 +40,7 @@ public class SinglePageController {
     @FXML private TextField amount;
     @FXML private Button submit;
 
-    @FXML private TableView ordersView;
+    @FXML private TableView<Order> ordersView;
 
     private Reactor reactor;
     private ApiService apiService;
@@ -68,6 +70,40 @@ public class SinglePageController {
         // direction (i.e. side)
         direction.setItems(FXCollections.<String>observableArrayList(Direction.getDisplayNames()));
         direction.getSelectionModel().selectFirst();
+
+        // init orders view table
+        initOrdersViewTable();
+    }
+
+    private void initOrdersViewTable() {
+        TableColumn<Order, String> directionCol = new TableColumn<>("Side");
+        directionCol.setCellValueFactory(new PropertyValueFactory<Order, String>("directionAsString"));
+
+        TableColumn<Order, String> symbolCol = new TableColumn<>("Currency");
+        symbolCol.setCellValueFactory(new PropertyValueFactory<Order, String>("symbolAsString"));
+
+        TableColumn<Order, String> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(new PropertyValueFactory<Order, String>("strategyTypeAsString"));
+
+        TableColumn<Order, String> amountCol = new TableColumn<>("Amount");
+        amountCol.setCellValueFactory(new PropertyValueFactory<Order, String>("amount"));
+
+        TableColumn<Order, String> stopPriceCol = new TableColumn<>("Stop Price");
+        stopPriceCol.setCellValueFactory(new PropertyValueFactory<Order, String>("stopPrice"));
+
+        TableColumn<Order, String> limitPriceCol = new TableColumn<>("Price");
+        limitPriceCol.setCellValueFactory(new PropertyValueFactory<Order, String>("limitPrice"));
+
+        TableColumn<Order, String> statusCol = new TableColumn<>("Status");
+        statusCol.setCellValueFactory(new PropertyValueFactory<Order, String>("displayStatus"));
+
+        TableColumn<Order, String> actionCol = new TableColumn<>("Action");
+        actionCol.setCellValueFactory(new PropertyValueFactory<Order, String>("validAction"));
+
+
+        ordersView.setItems(ordersManager.getOrdersView());
+        ordersView.getColumns().addAll(directionCol, symbolCol, typeCol,
+                amountCol, stopPriceCol, limitPriceCol, statusCol, actionCol);
     }
 
     @SuppressWarnings("UnusedParameters")
