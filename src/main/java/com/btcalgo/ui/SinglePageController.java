@@ -1,6 +1,7 @@
 package com.btcalgo.ui;
 
 import com.btcalgo.CommandEnum;
+import com.btcalgo.execution.Action;
 import com.btcalgo.execution.Order;
 import com.btcalgo.execution.OrdersManager;
 import com.btcalgo.execution.StrategyType;
@@ -10,13 +11,16 @@ import com.btcalgo.service.api.ApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
 import com.btcalgo.ui.model.OrderDataHolder;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import reactor.core.Reactor;
 
 public class SinglePageController {
@@ -97,13 +101,57 @@ public class SinglePageController {
         TableColumn<Order, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<Order, String>("displayStatus"));
 
+        //Insert Button
         TableColumn<Order, String> actionCol = new TableColumn<>("Action");
-        actionCol.setCellValueFactory(new PropertyValueFactory<Order, String>("validAction"));
-
+        actionCol.setSortable(false);
+        actionCol.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
+                    @Override
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> p) {
+                        return p.getValue().validActionProperty();
+                    }
+                });
+        actionCol.setCellFactory(
+                new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
+                    @Override
+                    public TableCell<Order, String> call(TableColumn<Order, String> p) {
+                        return new ButtonCell();
+                    }
+                });
 
         ordersView.setItems(ordersManager.getOrdersView());
         ordersView.getColumns().addAll(directionCol, symbolCol, typeCol,
                 amountCol, stopPriceCol, limitPriceCol, statusCol, actionCol);
+    }
+
+    private class ButtonCell extends TableCell<Order, String> {
+        final Button cellButton = new Button(Action.CANCEL.name());
+
+        ButtonCell(){
+            cellButton.textProperty().bind(itemProperty());
+
+            cellButton.setOnAction(new EventHandler<ActionEvent>(){
+                @Override
+                public void handle(ActionEvent t) {
+                    String id = ((Order) getTableRow().getItem()).getId();
+                    Action action = Action.valueOf(getItem());
+                    if (action == Action.CANCEL) {
+                        ordersManager.cancel(id);
+                    } else if (action == Action.REMOVE) {
+                        ordersManager.remove(id);
+                    }
+                }
+            });
+        }
+
+        //Display button if the row is not empty
+        @Override
+        protected void updateItem(String t, boolean empty) {
+            super.updateItem(t, empty);
+            if (!empty) {
+                setGraphic(cellButton);
+            }
+        }
     }
 
     @SuppressWarnings("UnusedParameters")

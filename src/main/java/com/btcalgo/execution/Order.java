@@ -8,6 +8,8 @@ import com.btcalgo.service.marketdata.IMarketDataListener;
 import com.btcalgo.service.marketdata.MarketDataProvider;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.event.Event;
@@ -33,7 +35,7 @@ public class Order implements IMarketDataListener {
 
     private final AtomicReference<OrderStatus> status = new AtomicReference<>(OrderStatus.WAITING);
     private ObjectProperty<OrderStatus> displayStatus = new SimpleObjectProperty<>(status.get());
-    private ObjectProperty<Action> validAction = new SimpleObjectProperty<>(status.get().getValidAction());
+    private StringProperty validAction = new SimpleStringProperty(status.get().getValidAction().name());
 
     @Override
     public String getId() {
@@ -63,7 +65,7 @@ public class Order implements IMarketDataListener {
 
     public void updateDisplayStatusAndAction() {
         displayStatus.set(status.get());
-        validAction.set(displayStatus.get().getValidAction());
+        validAction.set(displayStatus.get().getValidAction().name());
     }
 
     public static class OrderBuilder {
@@ -223,15 +225,15 @@ public class Order implements IMarketDataListener {
         this.displayStatus.set(displayStatus);
     }
 
-    public Action getValidAction() {
+    public String getValidAction() {
         return validAction.get();
     }
 
-    public ObjectProperty<Action> validActionProperty() {
+    public StringProperty validActionProperty() {
         return validAction;
     }
 
-    public void setValidAction(Action validAction) {
+    public void setValidAction(String validAction) {
         this.validAction.set(validAction);
     }
 
