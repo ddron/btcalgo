@@ -4,6 +4,7 @@ import com.btcalgo.model.IOrderBook;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.marketdata.IMarketDataListener;
 import com.btcalgo.service.marketdata.IMarketDataProvider;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -66,8 +67,13 @@ public class MarketDataToShow implements IMarketDataListener, ChangeListener<Str
         return bestBidPrice;
     }
 
-    public void setBestBidPrice(double bestBidPrice) {
-        this.bestBidPrice.set(fmt(bestBidPrice));
+    public void setBestBidPrice(final double price) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                bestBidPrice.set(fmt(price));
+            }
+        });
     }
 
     public String getBestAskPrice() {
@@ -78,8 +84,13 @@ public class MarketDataToShow implements IMarketDataListener, ChangeListener<Str
         return bestAskPrice;
     }
 
-    public void setBestAskPrice(double bestAskPrice) {
-        this.bestAskPrice.set(fmt(bestAskPrice));
+    public void setBestAskPrice(final double price) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                bestAskPrice.set(fmt(price));
+            }
+        });
     }
 
 }

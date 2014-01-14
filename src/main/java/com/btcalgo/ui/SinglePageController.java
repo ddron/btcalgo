@@ -27,31 +27,34 @@ public class SinglePageController {
 
     @FXML private GridPane view;
 
+    // credentials
     @FXML private TextField key;
     @FXML private PasswordField secret;
     @FXML private Text keysStatus;
     @FXML private Button validate;
+    private KeysStatusHolder keysStatusHolder;
 
+    // market data
     @FXML private ChoiceBox<String> pairs;
-    @FXML private TextField bestBuy;
-    @FXML private TextField bestSell;
+    @FXML private Label bestBuy;
+    @FXML private Label bestSell;
+    private MarketDataToShow marketDataToShow;
 
+    // place an order
     @FXML private ChoiceBox<String> strategyTypes;
     @FXML private ChoiceBox<String> direction;
-
+    @FXML private Label symbol;
+    @FXML private TextField amount;
     @FXML private TextField stopPrice;
     @FXML private TextField limitPrice;
-    @FXML private TextField amount;
     @FXML private Button submit;
 
+    // orders
     @FXML private TableView<Order> ordersView;
 
     private Reactor reactor;
     private ApiService apiService;
     private OrdersManager ordersManager;
-
-    private KeysStatusHolder keysStatusHolder;
-    private MarketDataToShow marketDataToShow;
 
     public void initController() {
         // keys
@@ -66,6 +69,7 @@ public class SinglePageController {
         pairs.setItems(FXCollections.<String>observableArrayList(SymbolEnum.getDisplayNames()));
         pairs.getSelectionModel().selectedItemProperty().addListener(marketDataToShow);
         pairs.getSelectionModel().selectFirst();
+        symbol.textProperty().bind(pairs.getSelectionModel().selectedItemProperty());
 
         // strategy types
         strategyTypes.setItems(FXCollections.<String>observableArrayList(StrategyType.getDisplayNames()));

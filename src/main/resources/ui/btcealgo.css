@@ -1,5 +1,8 @@
 .root {
     -fx-background-image: url("background.jpg");
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-alignment: center;
 }
 
 .label {
@@ -7,6 +10,30 @@
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 0, 0, 0, 1);
+}
+
+.block {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-border-color: #818181;
+    -fx-background-radius: 20;
+    -fx-alignment: center;
+}
+
+.small_block {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-border-color: #818181;
+    -fx-background-radius: 10;
+    -fx-alignment: center;
+}
+
+.market_price {
+
+}
+
+.market_price_label {
+
 }
 
 #welcome-text {

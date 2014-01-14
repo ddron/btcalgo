@@ -1,69 +1,115 @@
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<GridPane fx:id="view"
-          fx:controller="com.btcalgo.ui.SinglePageController"
-          xmlns:fx="http://javafx.com/fxml"
-          alignment="CENTER"
-          hgap="10"
-          vgap="10"
-          styleClass="root">
+<GridPane fx:id="view" fx:controller="com.btcalgo.ui.SinglePageController"
+          xmlns:fx="http://javafx.com/fxml" styleClass="root">
     <padding>
         <Insets top="25" right="25" bottom="10" left="25"/>
     </padding>
 
-    <Text id="welcome-text" text="Welcome" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
-
-    <Label text="Key:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="key" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-    <Label text="Secret:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <PasswordField fx:id="secret" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-    <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Text fx:id="keysStatus"/>
-        <Button fx:id="validate" text="Validate keys" onAction="#handleValidateOnClick"/>
+    <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" alignment="BOTTOM_RIGHT">
+        <VBox spacing="10" alignment="BASELINE_LEFT" prefWidth="150" style="-fx-border-color: #818181; -fx-border-radius: 10">
+            <Hyperlink text="www.btc-e.com"/>
+            <Hyperlink text="www.btcalgo.com"/>
+        </VBox>
     </HBox>
 
-    <HBox spacing="10" GridPane.columnIndex="0" GridPane.rowIndex="5">
-        <Label text="Market:"/><Label text="BTC-E"/>
-    </HBox>
+    <!-- credentials -->
+    <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" styleClass="block">
+        <padding>
+            <Insets top="25" right="25" bottom="10" left="25"/>
+        </padding>
+        <Label text="Key:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="key" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-    <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
-        <Label text="Currency:"/>
-        <ChoiceBox fx:id="pairs"/>
-    </HBox>
+        <Label text="Secret:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <PasswordField fx:id="secret" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-    <HBox spacing="10" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6">
-        <Label text="Best buy:"/>
-        <TextField fx:id="bestBuy" minWidth="20" editable="false"/>
-        <Label text="Best sell:"/>
-        <TextField fx:id="bestSell" minWidth="20" editable="false"/>
-    </HBox>
+        <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Text fx:id="keysStatus"/>
+            <Button fx:id="validate" text="Validate" onAction="#handleValidateOnClick"/>
+        </HBox>
+    </GridPane>
 
-    <HBox spacing="10" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="7" alignment="BOTTOM_LEFT">
-        <Label text="Strategy:"/>
-        <ChoiceBox fx:id="strategyTypes"/>
-        <Label text="Buy/Sell:"/>
-        <ChoiceBox fx:id="direction"/>
-    </HBox>
+    <!-- market data -->
+    <GridPane GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" styleClass="block">
+        <padding>
+            <Insets top="25" right="25" bottom="10" left="25"/>
+        </padding>
 
-    <HBox spacing="10" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="8" alignment="BOTTOM_LEFT">
-        <Label text="Stop price:"/>
-        <TextField fx:id="stopPrice"/>
-        <Label text="Order price:"/>
-        <TextField fx:id="limitPrice"/>
-        <Label text="Amount:"/>
-        <TextField fx:id="amount"/>
-    </HBox>
+        <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
+            <ChoiceBox fx:id="pairs"/>
+            <Label text="on"/>
+            <Label text="BTC-E" style="-fx-font-weight: bold"/>
+            <Label text="market"/>
+        </HBox>
 
-    <HBox spacing="10" alignment="BOTTOM_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="9">
-        <Button fx:id="submit" text="Submit" onAction="#handleSubmit"/>
-    </HBox>
+        <VBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <Label text="Best buy:"/>
+            <Label fx:id="bestBuy" minWidth="20"/>
+        </VBox>
 
-    <TableView fx:id="ordersView" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="10"/>
+        <VBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <Label text="Best sell:"/>
+            <Label fx:id="bestSell" minWidth="20"/>
+        </VBox>
+
+        <Label GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.rowSpan="2">
+            Note:
+        </Label>
+    </GridPane>
+
+    <!-- place an order -->
+    <GridPane GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2"  styleClass="block">
+        <padding>
+            <Insets top="25" right="25" bottom="10" left="25"/>
+        </padding>
+
+        <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
+            <Label text="Order Type: "/>
+            <ChoiceBox fx:id="strategyTypes"/>
+            <Label text="on"/>
+            <Label text="BTC-E"/>
+        </HBox>
+
+        <VBox spacing="10" styleClass="small_block" GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <HBox spacing="10">
+                <ChoiceBox fx:id="direction"/>
+                <Label fx:id="symbol"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Amount: "/>
+                <TextField fx:id="amount"/>
+            </HBox>
+        </VBox>
+
+        <VBox spacing="10" styleClass="small_block" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <HBox spacing="10">
+                <Label text="Spot Price"/>
+                <TextField fx:id="stopPrice"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Price: "/>
+                <TextField fx:id="limitPrice"/>
+            </HBox>
+        </VBox>
+
+        <HBox spacing="10" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Button fx:id="submit" text="Submit" prefWidth="150" onAction="#handleSubmit"/>
+        </HBox>
+    </GridPane>
+
+    <!-- your orders -->
+    <GridPane GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2"  styleClass="block">
+        <padding>
+            <Insets top="25" right="25" bottom="10" left="25"/>
+        </padding>
+        <TableView fx:id="ordersView" GridPane.columnIndex="0" GridPane.rowIndex="0">
+
+        </TableView>
+    </GridPane>
 
     <stylesheets>
         <URL value="@btcealgo.css"/>
