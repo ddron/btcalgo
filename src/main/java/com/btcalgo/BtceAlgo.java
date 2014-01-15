@@ -51,7 +51,7 @@ public class BtceAlgo extends Application {
 /*        Parent root = FXMLLoader.load(getClass().getResource("/ui/btcealgo.fxml"));
         stage.setScene(new Scene(root, 300, 275));*/
         SinglePageController controller = context.getBean(SinglePageController.class);
-        stage.setScene(new Scene(controller.getView(), 640, 480));
+        stage.setScene(new Scene(controller.getView(), 640, 600));
         stage.setTitle("BtcAlgo");
         stage.show();
 

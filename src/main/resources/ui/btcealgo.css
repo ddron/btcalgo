@@ -16,15 +16,7 @@
     -fx-hgap: 10;
     -fx-vgap: 10;
     -fx-border-color: #818181;
-    -fx-background-radius: 20;
-    -fx-alignment: center;
-}
-
-.small_block {
-    -fx-hgap: 10;
-    -fx-vgap: 10;
-    -fx-border-color: #818181;
-    -fx-background-radius: 10;
+    -fx-border-radius: 10;
     -fx-alignment: center;
 }
 

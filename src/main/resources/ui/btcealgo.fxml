@@ -6,37 +6,40 @@
 <GridPane fx:id="view" fx:controller="com.btcalgo.ui.SinglePageController"
           xmlns:fx="http://javafx.com/fxml" styleClass="root">
     <padding>
-        <Insets top="25" right="25" bottom="10" left="25"/>
+        <Insets top="10" right="25" bottom="10" left="25"/>
     </padding>
 
-    <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" alignment="BOTTOM_RIGHT">
-        <VBox spacing="10" alignment="BASELINE_LEFT" prefWidth="150" style="-fx-border-color: #818181; -fx-border-radius: 10">
-            <Hyperlink text="www.btc-e.com"/>
+<!--    <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" alignment="BOTTOM_RIGHT">
+        <VBox spacing="10" alignment="BASELINE_LEFT" prefWidth="120" style="-fx-border-color: #818181; -fx-border-radius: 10">
+            <Hyperlink text="www.btc-e.com" onAction="#loadBtce"/>
             <Hyperlink text="www.btcalgo.com"/>
+            <padding>
+                <Insets bottom="5.0" top="-5.0" />
+            </padding>
         </VBox>
-    </HBox>
+    </HBox>-->
 
     <!-- credentials -->
     <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" styleClass="block">
         <padding>
-            <Insets top="25" right="25" bottom="10" left="25"/>
+            <Insets top="10" right="25" bottom="10" left="25"/>
         </padding>
         <Label text="Key:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="key" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <TextField fx:id="key" minWidth="400" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
         <Label text="Secret:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <PasswordField fx:id="secret" minWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <PasswordField fx:id="secret" minWidth="400" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
         <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <Text fx:id="keysStatus"/>
-            <Button fx:id="validate" text="Validate" onAction="#handleValidateOnClick"/>
+            <Button fx:id="validate" prefWidth="120" text="Validate" onAction="#handleValidateOnClick"/>
         </HBox>
     </GridPane>
 
     <!-- market data -->
     <GridPane GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" styleClass="block">
         <padding>
-            <Insets top="25" right="25" bottom="10" left="25"/>
+            <Insets top="10" right="25" bottom="10" left="25"/>
         </padding>
 
         <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
@@ -46,14 +49,14 @@
             <Label text="market"/>
         </HBox>
 
-        <VBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0">
+        <VBox spacing="10" minWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="0">
             <Label text="Best buy:"/>
-            <Label fx:id="bestBuy" minWidth="20"/>
+            <Label fx:id="bestBuy" alignment="CENTER" minWidth="20"/>
         </VBox>
 
-        <VBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1">
+        <VBox spacing="10" minWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="1">
             <Label text="Best sell:"/>
-            <Label fx:id="bestSell" minWidth="20"/>
+            <Label fx:id="bestSell" alignment="CENTER" minWidth="20"/>
         </VBox>
 
         <Label GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.rowSpan="2">
@@ -64,7 +67,7 @@
     <!-- place an order -->
     <GridPane GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2"  styleClass="block">
         <padding>
-            <Insets top="25" right="25" bottom="10" left="25"/>
+            <Insets top="10" right="25" bottom="10" left="25"/>
         </padding>
 
         <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
@@ -74,7 +77,7 @@
             <Label text="BTC-E"/>
         </HBox>
 
-        <VBox spacing="10" styleClass="small_block" GridPane.rowIndex="1" GridPane.columnIndex="0">
+        <VBox spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="0">
             <HBox spacing="10">
                 <ChoiceBox fx:id="direction"/>
                 <Label fx:id="symbol"/>
@@ -83,17 +86,23 @@
                 <Label text="Amount: "/>
                 <TextField fx:id="amount"/>
             </HBox>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
         </VBox>
 
-        <VBox spacing="10" styleClass="small_block" GridPane.rowIndex="1" GridPane.columnIndex="1">
+        <VBox spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="1">
             <HBox spacing="10">
-                <Label text="Spot Price"/>
+                <Label prefWidth="60" text="Spot Price"/>
                 <TextField fx:id="stopPrice"/>
             </HBox>
             <HBox spacing="10">
-                <Label text="Price: "/>
+                <Label prefWidth="60" text="Price: "/>
                 <TextField fx:id="limitPrice"/>
             </HBox>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
         </VBox>
 
         <HBox spacing="10" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3">
@@ -104,9 +113,9 @@
     <!-- your orders -->
     <GridPane GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2"  styleClass="block">
         <padding>
-            <Insets top="25" right="25" bottom="10" left="25"/>
+            <Insets top="10" right="25" bottom="10" left="25"/>
         </padding>
-        <TableView fx:id="ordersView" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <TableView fx:id="ordersView" GridPane.columnIndex="0" GridPane.rowIndex="0" minHeight="60">
 
         </TableView>
     </GridPane>
