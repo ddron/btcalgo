@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Direction {
-    NONE("", "-Select-"),
+    NONE("", "Buy/Sell?"),
     BID("buy", "Buy"),
     ASK("sell", "Sell");
 

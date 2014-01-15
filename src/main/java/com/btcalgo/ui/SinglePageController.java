@@ -84,26 +84,32 @@ public class SinglePageController {
     }
 
     private void initOrdersViewTable() {
+        TableColumn<Order, String> typeCol = new TableColumn<>("Order Type");
+        typeCol.setCellValueFactory(new PropertyValueFactory<Order, String>("strategyTypeAsString"));
+
         TableColumn<Order, String> directionCol = new TableColumn<>("Side");
         directionCol.setCellValueFactory(new PropertyValueFactory<Order, String>("directionAsString"));
+        directionCol.setPrefWidth(35);
 
         TableColumn<Order, String> symbolCol = new TableColumn<>("Currency");
         symbolCol.setCellValueFactory(new PropertyValueFactory<Order, String>("symbolAsString"));
-
-        TableColumn<Order, String> typeCol = new TableColumn<>("Type");
-        typeCol.setCellValueFactory(new PropertyValueFactory<Order, String>("strategyTypeAsString"));
+        symbolCol.setPrefWidth(70);
 
         TableColumn<Order, String> amountCol = new TableColumn<>("Amount");
         amountCol.setCellValueFactory(new PropertyValueFactory<Order, String>("amount"));
+        amountCol.setPrefWidth(70);
 
         TableColumn<Order, String> stopPriceCol = new TableColumn<>("Stop Price");
         stopPriceCol.setCellValueFactory(new PropertyValueFactory<Order, String>("stopPrice"));
+        stopPriceCol.setPrefWidth(70);
 
         TableColumn<Order, String> limitPriceCol = new TableColumn<>("Price");
         limitPriceCol.setCellValueFactory(new PropertyValueFactory<Order, String>("limitPrice"));
+        limitPriceCol.setPrefWidth(70);
 
         TableColumn<Order, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<Order, String>("displayStatus"));
+        statusCol.setPrefWidth(70);
 
         //Insert Button
         TableColumn<Order, String> actionCol = new TableColumn<>("Action");
@@ -122,10 +128,12 @@ public class SinglePageController {
                         return new ButtonCell();
                     }
                 });
+        actionCol.setPrefWidth(70);
 
         ordersView.setItems(ordersManager.getOrdersView());
-        ordersView.getColumns().addAll(directionCol, symbolCol, typeCol,
+        ordersView.getColumns().addAll(typeCol, directionCol, symbolCol,
                 amountCol, stopPriceCol, limitPriceCol, statusCol, actionCol);
+        ordersView.setPlaceholder(new Label("Your orders will be displayed here"));
     }
 
     private class ButtonCell extends TableCell<Order, String> {

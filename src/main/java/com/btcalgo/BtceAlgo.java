@@ -52,6 +52,7 @@ public class BtceAlgo extends Application {
         stage.setScene(new Scene(root, 300, 275));*/
         SinglePageController controller = context.getBean(SinglePageController.class);
         stage.setScene(new Scene(controller.getView(), 640, 600));
+        //controller.getView().setGridLinesVisible(true);
         stage.setTitle("BtcAlgo");
         stage.show();
 
