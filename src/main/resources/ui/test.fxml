@@ -14,15 +14,25 @@
         <padding>
             <Insets top="10" right="25" bottom="10" left="25"/>
         </padding>
-        <Label text="Key:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="key" minWidth="400" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-        <Label text="Secret:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <PasswordField fx:id="secret" minWidth="400" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <VBox spacing="10" >
+            <HBox spacing="10">
+                <Label text="Key:" minWidth="40" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="key" prefWidth="350" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            </HBox>
 
-        <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <HBox spacing="10">
+                <Label text="Secret:" minWidth="40" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <PasswordField fx:id="secret" prefWidth="350" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            </HBox>
+        </VBox>
+
+        <Button GridPane.rowIndex="0" GridPane.columnIndex="1" alignment="CENTER"
+                prefHeight="40" prefWidth="120"
+                fx:id="validate" text="Validate" onAction="#handleValidateOnClick"/>
+
+        <HBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="1">
             <Text fx:id="keysStatus"/>
-            <Button fx:id="validate" prefWidth="120" text="Validate" onAction="#handleValidateOnClick"/>
         </HBox>
     </GridPane>
 
@@ -50,11 +60,9 @@
         </VBox>
 
         <VBox alignment="TOP_LEFT" minWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="2">
-            <Label text="Note:"/>
-            <Label wrapText="true" textAlignment="JUSTIFY"
-                   text="'Best buy' - best price for you to buy at the moment"/>
-            <Label wrapText="false" maxWidth="160" textAlignment="JUSTIFY"
-                   text="'Best sell' - best price for you to sell at the moment"/>
+            <Label underline="true" text="Note:"/>
+            <Label wrapText="true" text="'Best buy' - best price for you to buy"/>
+            <Label wrapText="true" text="'Best sell' - best price for you to sell"/>
         </VBox>
     </GridPane>
 
@@ -87,7 +95,7 @@
 
         <VBox spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="1">
             <HBox spacing="10">
-                <Label prefWidth="60" text="Spot Price"/>
+                <Label prefWidth="60" text="Stop Price"/>
                 <TextField fx:id="stopPrice" prefWidth="80"/>
             </HBox>
             <HBox spacing="10">

@@ -15,15 +15,15 @@
             <Insets top="10" right="25" bottom="10" left="25"/>
         </padding>
 
-        <VBox spacing="10" >
+        <VBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0">
             <HBox spacing="10">
-                <Label text="Key:" minWidth="40" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <TextField fx:id="key" prefWidth="350" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Key:" minWidth="40"/>
+                <TextField fx:id="key" minHeight="22" prefWidth="350"/>
             </HBox>
 
             <HBox spacing="10">
-                <Label text="Secret:" minWidth="40" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <PasswordField fx:id="secret" prefWidth="350" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Secret:" minWidth="40"/>
+                <PasswordField fx:id="secret" minHeight="22" prefWidth="350"/>
             </HBox>
         </VBox>
 
@@ -31,7 +31,7 @@
                 prefHeight="40" prefWidth="120"
                 fx:id="validate" text="Validate" onAction="#handleValidateOnClick"/>
 
-        <HBox spacing="10" alignment="bottom_right" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <HBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="1">
             <Text fx:id="keysStatus"/>
         </HBox>
     </GridPane>
@@ -86,7 +86,7 @@
             </HBox>
             <HBox spacing="10">
                 <Label text="Amount: "/>
-                <TextField fx:id="amount" prefWidth="80"/>
+                <TextField fx:id="amount" minHeight="22" prefWidth="80"/>
             </HBox>
             <padding>
                 <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
@@ -96,11 +96,11 @@
         <VBox spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="1">
             <HBox spacing="10">
                 <Label prefWidth="60" text="Stop Price"/>
-                <TextField fx:id="stopPrice" prefWidth="80"/>
+                <TextField fx:id="stopPrice" minHeight="22" prefWidth="80"/>
             </HBox>
             <HBox spacing="10">
                 <Label prefWidth="60" text="Price: "/>
-                <TextField fx:id="limitPrice" prefWidth="80"/>
+                <TextField fx:id="limitPrice" minHeight="22" prefWidth="80"/>
             </HBox>
             <padding>
                 <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
