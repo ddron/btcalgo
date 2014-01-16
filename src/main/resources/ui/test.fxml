@@ -9,16 +9,6 @@
         <Insets top="10" right="25" bottom="10" left="25"/>
     </padding>
 
-    <!--    <HBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" alignment="BOTTOM_RIGHT">
-            <VBox spacing="10" alignment="BASELINE_LEFT" prefWidth="120" style="-fx-border-color: #818181; -fx-border-radius: 10">
-                <Hyperlink text="www.btc-e.com" onAction="#loadBtce"/>
-                <Hyperlink text="www.btcalgo.com"/>
-                <padding>
-                    <Insets bottom="5.0" top="-5.0" />
-                </padding>
-            </VBox>
-        </HBox>-->
-
     <!-- credentials -->
     <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" styleClass="block">
         <padding>
@@ -51,17 +41,21 @@
 
         <VBox spacing="10" alignment="CENTER" minWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="0">
             <Label text="Best buy:"/>
-            <Label fx:id="bestBuy" alignment="CENTER" minWidth="20"/>
+            <Label fx:id="bestBuy" styleClass="market_price" alignment="CENTER" minWidth="20"/>
         </VBox>
 
         <VBox spacing="10" alignment="CENTER" minWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="1">
             <Label text="Best sell:"/>
-            <Label fx:id="bestSell" alignment="CENTER" minWidth="20"/>
+            <Label fx:id="bestSell" styleClass="market_price" alignment="CENTER" minWidth="20"/>
         </VBox>
 
-        <Label GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.rowSpan="2">
-            Note:
-        </Label>
+        <VBox alignment="TOP_LEFT" minWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="2">
+            <Label text="Note:"/>
+            <Label wrapText="true" textAlignment="JUSTIFY"
+                   text="'Best buy' - best price for you to buy at the moment"/>
+            <Label wrapText="false" maxWidth="160" textAlignment="JUSTIFY"
+                   text="'Best sell' - best price for you to sell at the moment"/>
+        </VBox>
     </GridPane>
 
     <!-- place an order -->
@@ -77,7 +71,7 @@
             <Label text="BTC-E"/>
         </HBox>
 
-        <VBox spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="0">
+        <VBox spacing="10" minWidth="180" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="0">
             <HBox spacing="10">
                 <ChoiceBox fx:id="direction"/>
                 <Label fx:id="symbol"/>
@@ -105,7 +99,7 @@
             </padding>
         </VBox>
 
-        <HBox spacing="10" alignment="BASELINE_CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
+        <HBox spacing="10" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
             <Button fx:id="submit" prefHeight="40" text="Submit" prefWidth="120" onAction="#handleSubmit"/>
         </HBox>
     </GridPane>
