@@ -11,6 +11,8 @@ import com.btcalgo.service.api.ApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
 import com.btcalgo.ui.model.OrderDataHolder;
+import com.btcalgo.util.StringUtils;
+import com.google.common.base.Strings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -22,6 +24,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import reactor.core.Reactor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.btcalgo.ui.ValidationErrors.ErrorType.*;
+import static com.btcalgo.ui.ValidationErrors.Field.*;
+import static com.btcalgo.ui.ValidationErrors.getErrorValue;
 
 public class SinglePageController {
 
@@ -167,18 +176,24 @@ public class SinglePageController {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void handleValidateOnClick(ActionEvent actionEvent) {
-        keysStatusHolder.setValidateBtnDisabled(true);
-        keysStatusHolder.setValidatingStatus();
+    public void handleValidate(ActionEvent actionEvent) {
+        List<String> errors = validateKeys();
 
-        apiService.updateKeys(key.getText(), secret.getText());
-        reactor.notify(CommandEnum.INFO.getCommandText());
+        if (errors.isEmpty()) {
+            keysStatusHolder.setValidateBtnDisabled(true);
+            keysStatusHolder.setValidatingStatus();
+
+            apiService.updateKeys(key.getText(), secret.getText());
+            reactor.notify(CommandEnum.INFO.getCommandText());
+        } else {
+            showPopupWindow(errors);
+        }
     }
 
     public void handleSubmit(ActionEvent actionEvent) {
         submit.setDisable(true);
 
-        ValidationErrors errors = validateOrderFields();
+        List<String> errors = validateOrderFields();
         if (errors.isEmpty()) {
             OrderDataHolder orderDataHolder = OrderDataHolder.OrderDataHolderBuilder.newOrderDataHolder()
                     .setDirection(direction.getSelectionModel().getSelectedItem())
@@ -196,17 +211,60 @@ public class SinglePageController {
             limitPrice.clear();
             amount.clear();
         } else {
-            // TODO: implement 'else' case (display validation errors in pop up window)
+            showPopupWindow(errors);
         }
 
         submit.setDisable(false);
     }
 
-    private ValidationErrors validateOrderFields() {
-        // TODO: do implement
-        // TODO: check keys validity first
-        // TODO: check fields validity only in case of having valid keys
-        return new ValidationErrors();
+    private void showPopupWindow(List<String> errors) {
+
+    }
+
+    private List<String> validateOrderFields() {
+        List<String> result = validateKeys();
+        if (!result.isEmpty()) {
+            return result;
+        }
+
+        // check strategy type
+        if (StrategyType.valueByDisplayName(strategyTypes.getSelectionModel().getSelectedItem()) != StrategyType.STOP_LOSS) {
+            result.add(ValidationErrors.getErrorValue(STRATEGY_TYPE, INCORRECT_VALUE));
+        }
+
+        // check side
+        if (Direction.valueByDisplayName(direction.getSelectionModel().getSelectedItem()) == Direction.NONE) {
+            result.add(ValidationErrors.getErrorValue(DIRECTION, INCORRECT_VALUE));
+        }
+
+        // stop price
+        String stopPriceValue = stopPrice.getText();
+        if (Strings.isNullOrEmpty(stopPriceValue)) {
+            result.add(ValidationErrors.getErrorValue(STOP_PRICE, EMPTY));
+        } else if (!StringUtils.isNumber(stopPriceValue)) {
+            result.add(ValidationErrors.getErrorValue(STOP_PRICE, FORMAT));
+        }
+
+        // limit price
+        String limitPriceValue = limitPrice.getText();
+        if (Strings.isNullOrEmpty(limitPriceValue)) {
+            result.add(ValidationErrors.getErrorValue(LIMIT_PRICE, EMPTY));
+        } else if (!StringUtils.isNumber(limitPriceValue)) {
+            result.add(ValidationErrors.getErrorValue(LIMIT_PRICE, FORMAT));
+        }
+
+        return result;
+    }
+
+    private List<String> validateKeys() {
+        List<String> result = new ArrayList<>();
+        if (Strings.isNullOrEmpty(key.getText())) {
+            result.add(getErrorValue(KEY, EMPTY));
+        }
+        if (Strings.isNullOrEmpty(secret.getText())) {
+            result.add(getErrorValue(SECRET, EMPTY));
+        }
+        return result;
     }
 
     public GridPane getView() {
