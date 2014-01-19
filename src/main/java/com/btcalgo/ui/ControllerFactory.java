@@ -35,8 +35,6 @@ public class ControllerFactory {
             controller.setKeysStatus(keysStatusHolder);
             controller.setMarketDataToShow(marketDataToShow);
 
-            controller.initController();
-
             return controller;
         } finally {
             if (fxmlStream != null) {

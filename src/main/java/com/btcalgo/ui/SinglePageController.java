@@ -18,10 +18,16 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import reactor.core.Reactor;
 
@@ -61,6 +67,9 @@ public class SinglePageController {
     // orders
     @FXML private TableView<Order> ordersView;
 
+    private Stage popup;
+    private VBox errorsContent;
+
     private Reactor reactor;
     private ApiService apiService;
     private OrdersManager ordersManager;
@@ -90,6 +99,9 @@ public class SinglePageController {
 
         // init orders view table
         initOrdersViewTable();
+
+        // init popup
+        initPopup();
     }
 
     private void initOrdersViewTable() {
@@ -145,6 +157,43 @@ public class SinglePageController {
         ordersView.setPlaceholder(new Label("Your orders will be displayed here"));
     }
 
+    private void initPopup() {
+        popup = new Stage();
+        popup.initOwner(view.getScene().getWindow());
+        popup.initModality(Modality.WINDOW_MODAL);
+        //popup.setResizable(false);
+        popup.setTitle("Error!");
+
+        VBox popupVBox = new VBox();
+        popupVBox.setPadding(new Insets(20, 25, 10, 25));
+        popupVBox.setSpacing(10);
+        Label titleLabel = new Label("Following errors should be fixed:");
+        titleLabel.setPrefWidth(300);
+        titleLabel.setAlignment(Pos.CENTER);
+        popupVBox.getChildren().add(titleLabel);
+
+        errorsContent = new VBox();
+        errorsContent.setPadding(new Insets(10, 0, 15, 0));
+        errorsContent.setSpacing(10);
+        popupVBox.getChildren().add(errorsContent);
+
+        Button okBtn = new Button("OK");
+        okBtn.setPrefHeight(40);
+        okBtn.setPrefWidth(120);
+        okBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                popup.hide();
+            }
+        });
+        popupVBox.getChildren().add(okBtn);
+
+        Scene popupScene = new Scene(popupVBox);
+        popupScene.getStylesheets().add(
+                SinglePageController.class.getResource("/ui/btcealgo.css").toExternalForm());
+        popup.setScene(popupScene);
+    }
+
     private class ButtonCell extends TableCell<Order, String> {
         final Button cellButton = new Button(Action.CANCEL.name());
 
@@ -190,6 +239,7 @@ public class SinglePageController {
         }
     }
 
+    @SuppressWarnings("UnusedParameters")
     public void handleSubmit(ActionEvent actionEvent) {
         submit.setDisable(true);
 
@@ -218,7 +268,11 @@ public class SinglePageController {
     }
 
     private void showPopupWindow(List<String> errors) {
-
+        errorsContent.getChildren().clear();
+        for (String error : errors) {
+            errorsContent.getChildren().add(new Label(error));
+        }
+        popup.show();
     }
 
     private List<String> validateOrderFields() {
@@ -235,6 +289,14 @@ public class SinglePageController {
         // check side
         if (Direction.valueByDisplayName(direction.getSelectionModel().getSelectedItem()) == Direction.NONE) {
             result.add(ValidationErrors.getErrorValue(DIRECTION, INCORRECT_VALUE));
+        }
+
+        // check amount
+        String amountValue = amount.getText();
+        if (Strings.isNullOrEmpty(amountValue)) {
+            result.add(ValidationErrors.getErrorValue(AMOUNT, EMPTY));
+        } else if (!StringUtils.isNumber(amountValue)) {
+            result.add(ValidationErrors.getErrorValue(AMOUNT, FORMAT));
         }
 
         // stop price

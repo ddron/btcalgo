@@ -54,13 +54,14 @@ public class ValidationErrors {
             });
             put(DIRECTION, new HashMap<ErrorType, String>() {
                 {
-                    put(EMPTY, "Side (Bid/Ask) is empty");
-                    put(INCORRECT_VALUE, "Side (Bid/Ask) is incorrect");
+                    put(EMPTY, "Side (Buy/Sell) is empty");
+                    put(INCORRECT_VALUE, "Side (Buy/Sell) is incorrect");
                 }
             });
             put(AMOUNT, new HashMap<ErrorType, String>() {
                 {
                     put(EMPTY, "Amount is empty");
+                    put(FORMAT, "Amount is not a number");
                     put(INCORRECT_VALUE, "Amount is incorrect");
                 }
             });
@@ -104,11 +105,6 @@ public class ValidationErrors {
         }
 
         return result;
-    }
-
-    public boolean isEmpty() {
-        // TODO: do implement
-        return true;
     }
 
 }

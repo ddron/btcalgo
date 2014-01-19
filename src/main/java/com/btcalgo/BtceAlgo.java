@@ -16,9 +16,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import reactor.core.Environment;
 import reactor.core.Reactor;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static reactor.event.selector.Selectors.$;
 import static reactor.event.selector.Selectors.T;
 
@@ -31,9 +28,7 @@ public class BtceAlgo extends Application {
     private volatile boolean finished = false;*/
 
     private static BtceAlgo app;
-
     private static final long MD_UPDATE_RATE_MS = 400;
-    private List<SymbolEnum> symbols = Arrays.asList(/*SymbolEnum.BTCUSD*/SymbolEnum.values());
 
     public static void main(String[] args) throws InterruptedException {
         launch(args);
@@ -54,6 +49,7 @@ public class BtceAlgo extends Application {
         stage.setScene(new Scene(controller.getView(), 640, 600));
         //controller.getView().setGridLinesVisible(true);
         stage.setTitle("BtcAlgo");
+        controller.initController();
         stage.show();
 
 
@@ -96,7 +92,7 @@ public class BtceAlgo extends Application {
         BtcBestMarketDataSource marketDataSource = context.getBean(BtcBestMarketDataSource.class);
         Scheduler scheduler = context.getBean(Scheduler.class);
 
-        for (SymbolEnum symbolEnum : symbols) {
+        for (SymbolEnum symbolEnum : SymbolEnum.values()) {
             scheduler.scheduleAtFixedRate(marketDataSource.getId(), symbolEnum, MD_UPDATE_RATE_MS);
         }
     }
