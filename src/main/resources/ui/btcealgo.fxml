@@ -17,12 +17,16 @@
 
         <VBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0">
             <HBox spacing="10">
-                <Label text="Key:" minWidth="40"/>
+                <Label text="Key:" minWidth="40">
+                    <tooltip><Tooltip text="'Key' from btc-e 'API keys' profile section"/></tooltip>
+                </Label>
                 <TextField fx:id="key" minHeight="22" prefWidth="350"/>
             </HBox>
 
             <HBox spacing="10">
-                <Label text="Secret:" minWidth="40"/>
+                <Label text="Secret:" minWidth="40">
+                    <tooltip><Tooltip text="'Secret' from btc-e 'API keys' profile section"/></tooltip>
+                </Label>
                 <PasswordField fx:id="secret" minHeight="22" prefWidth="350"/>
             </HBox>
         </VBox>
@@ -43,7 +47,9 @@
         </padding>
 
         <HBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
-            <ChoiceBox fx:id="pairs"/>
+            <ChoiceBox fx:id="pairs">
+                <tooltip><Tooltip text="Select currency you want to trade to see prices"/></tooltip>
+            </ChoiceBox>
             <Label text="on"/>
             <Label text="BTC-E" style="-fx-font-weight: bold"/>
             <Label text="market"/>
@@ -81,8 +87,12 @@
 
         <VBox spacing="10" minWidth="180" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="0">
             <HBox spacing="10">
-                <ChoiceBox fx:id="direction"/>
-                <Label fx:id="symbol"/>
+                <ChoiceBox fx:id="direction">
+                    <tooltip><Tooltip text="Select 'Buy' or 'Sell'"/></tooltip>
+                </ChoiceBox>
+                <Label fx:id="symbol">
+                    <tooltip><Tooltip text="Currency for this order. To change use currency control above"/></tooltip>
+                </Label>
             </HBox>
             <HBox spacing="10">
                 <Label text="Amount: "/>
@@ -95,11 +105,15 @@
 
         <VBox spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="1">
             <HBox spacing="10">
-                <Label prefWidth="60" text="Stop Price"/>
+                <Label prefWidth="60" text="Stop Price">
+                    <tooltip><Tooltip text="Price to trigger order submission to market"/></tooltip>
+                </Label>
                 <TextField fx:id="stopPrice" minHeight="22" prefWidth="80"/>
             </HBox>
             <HBox spacing="10">
-                <Label prefWidth="60" text="Price: "/>
+                <Label prefWidth="60" text="Price: ">
+                    <tooltip><Tooltip text="Price of your future order"/></tooltip>
+                </Label>
                 <TextField fx:id="limitPrice" minHeight="22" prefWidth="80"/>
             </HBox>
             <padding>
