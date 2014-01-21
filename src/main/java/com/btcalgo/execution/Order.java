@@ -52,14 +52,13 @@ public class Order implements IMarketDataListener {
 
             // TODO: remove next line. And uncomment code block below
             status.set(OrderStatus.SENT);
-            updateDisplayStatusAndAction();
             /*NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(symbol, direction, limitPrice, amount);
             if (newOrderTemplate.isSuccess()) {
                 status.set(OrderStatus.SENT);
             } else {
                 status.set(OrderStatus.ERROR);
-            }
-            updateDisplayStatusAndAction();*/
+            }*/
+            updateDisplayStatusAndAction();
         }
     }
 
