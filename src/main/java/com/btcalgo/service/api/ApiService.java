@@ -28,6 +28,8 @@ public class ApiService {
 
     private String key;
 
+    private volatile boolean validKeys = false;
+
     private String authBaseUrl;
     private String publicBaseUrl;
 
@@ -42,11 +44,9 @@ public class ApiService {
 
     private Gson gson = new GsonBuilder().create();
 
-    public ApiService(String key, String secret, String authBaseUrl, String publicBaseUrl) {
+    public ApiService(String authBaseUrl, String publicBaseUrl) {
         this.authBaseUrl = authBaseUrl;
         this.publicBaseUrl = publicBaseUrl;
-
-        initKeys(key, secret);
     }
 
     public synchronized void updateKeys(String key, String secret) {
@@ -220,4 +220,11 @@ public class ApiService {
         return String.format("%040x", new BigInteger(1,b));
     }
 
+    public boolean hasValidKeys() {
+        return validKeys;
+    }
+
+    public void setValidKeys(boolean validKeys) {
+        this.validKeys = validKeys;
+    }
 }

@@ -276,8 +276,9 @@ public class SinglePageController {
     }
 
     private List<String> validateOrderFields() {
-        List<String> result = validateKeys();
-        if (!result.isEmpty()) {
+        List<String> result = new ArrayList<>();
+        if (!apiService.hasValidKeys()) {
+            result.add("Enter and validate correct keys before submitting an order");
             return result;
         }
 

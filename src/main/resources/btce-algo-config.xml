@@ -33,8 +33,6 @@
     <task:scheduler id="scheduler" pool-size="10" />
 
     <bean id="api.service" class="com.btcalgo.service.api.ApiService">
-        <constructor-arg name="key" value="${btce.key}"/>
-        <constructor-arg name="secret" value="${btce.secret}"/>
         <constructor-arg name="authBaseUrl" value="${auth.base.url}"/>
         <constructor-arg name="publicBaseUrl" value="${public.base.url}"/>
     </bean>

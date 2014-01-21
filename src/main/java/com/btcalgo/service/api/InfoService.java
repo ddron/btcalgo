@@ -29,6 +29,8 @@ public class InfoService implements NameableConsumer<Event<Void>> {
     @Override
     public void accept(Event<Void> voidEvent) {
         InfoTemplate infoTemplate = apiService.auth(API_METHOD_NAME, InfoTemplate.class);
+        apiService.setValidKeys(infoTemplate.hasAllRights());
+
         keysStatusHolder.updateStatus(infoTemplate);
 
         log.debug("{}", infoTemplate);

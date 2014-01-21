@@ -15,14 +15,14 @@ public class KeysStatusHolder {
         setValidateBtnDisabled(false);
         if (infoTemplate.hasAllRights()) {
             setKeysStatus("Key is valid");
-        } else if (infoTemplate.getSuccess() != 1) {
-            setKeysStatus("Invalid key or secret");
+        } else if (!infoTemplate.isSuccess()) {
+            setKeysStatus("Invalid key or secret (or no 'info' right)!");
         } else if (!infoTemplate.hasInfoRights() && !infoTemplate.hasTradeRights()) {
-            setKeysStatus("Key does not have 'ino' and 'trade' rights");
+            setKeysStatus("Key does not have 'info' and 'trade' rights!");
         } else if (!infoTemplate.hasInfoRights()) {
-            setKeysStatus("Key does not have 'info' right");
+            setKeysStatus("Key does not have 'info' right!");
         } else if (!infoTemplate.hasTradeRights()) {
-            setKeysStatus("Key does not have 'trade' right");
+            setKeysStatus("Key does not have 'trade' right!");
         }
     }
 
