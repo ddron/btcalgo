@@ -5,7 +5,7 @@ import com.btcalgo.reactor.NameableConsumer;
 import com.btcalgo.reactor.Scheduler;
 import com.btcalgo.reactor.ThrowableHandler;
 import com.btcalgo.service.marketdata.BtcBestMarketDataSource;
-import com.btcalgo.ui.SinglePageController;
+import com.btcalgo.ui.MainPageController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -45,7 +45,7 @@ public class BtceAlgo extends Application {
         // start ui frontend
 /*        Parent root = FXMLLoader.load(getClass().getResource("/ui/btcealgo.fxml"));
         stage.setScene(new Scene(root, 300, 275));*/
-        SinglePageController controller = context.getBean(SinglePageController.class);
+        MainPageController controller = context.getBean(MainPageController.class);
         stage.setScene(new Scene(controller.getView(), 640, 600));
         //controller.getView().setGridLinesVisible(true);
         stage.setTitle("BtcAlgo");

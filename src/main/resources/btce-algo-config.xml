@@ -66,6 +66,8 @@
         <property name="keysStatusHolder" ref="keys.status.holder"/>
         <property name="marketDataToShow" ref="market.data.to.show"/>
         <property name="ordersManager" ref="order.manager"/>
+        <property name="licenseController" ref="license.controller"/>
+        <property name="validationController" ref="validation.controller"/>
     </bean>
 
     <bean id="uiController" factory-bean="controller.factory" factory-method="createController">
@@ -82,6 +84,16 @@
         <constructor-arg name="apiService" ref="api.service"/>
         <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
         <constructor-arg name="reactor" ref="reactor"/>
+    </bean>
+
+    <bean id="license.server" class="com.btcalgo.service.LicenseService"/>
+
+    <bean id="license.controller" class="com.btcalgo.ui.LicenseController">
+        <property name="licenseService" ref="license.server"/>
+    </bean>
+
+    <bean id="validation.controller" class="com.btcalgo.ui.ValidationController">
+        <property name="apiService" ref="api.service"/>
     </bean>
 
 </beans>

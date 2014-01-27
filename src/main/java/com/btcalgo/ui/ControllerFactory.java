@@ -19,7 +19,10 @@ public class ControllerFactory {
     private KeysStatusHolder keysStatusHolder;
     private MarketDataToShow marketDataToShow;
 
-    public SinglePageController createController(String url) throws IOException {
+    private ValidationController validationController;
+    private LicenseController licenseController;
+
+    public MainPageController createController(String url) throws IOException {
         InputStream fxmlStream = null;
         try {
             fxmlStream = getClass().getResourceAsStream(url);
@@ -27,10 +30,13 @@ public class ControllerFactory {
             loader.setLocation(getClass().getResource(url));
             loader.load(fxmlStream);
 
-            SinglePageController controller = loader.getController();
+            MainPageController controller = loader.getController();
             controller.setReactor(reactor);
             controller.setApiService(apiService);
             controller.setOrdersManager(ordersManager);
+
+            controller.setValidationController(validationController);
+            controller.setLicenseController(licenseController);
 
             controller.setKeysStatus(keysStatusHolder);
             controller.setMarketDataToShow(marketDataToShow);
@@ -61,5 +67,13 @@ public class ControllerFactory {
 
     public void setOrdersManager(OrdersManager ordersManager) {
         this.ordersManager = ordersManager;
+    }
+
+    public void setValidationController(ValidationController validationController) {
+        this.validationController = validationController;
+    }
+
+    public void setLicenseController(LicenseController licenseController) {
+        this.licenseController = licenseController;
     }
 }

@@ -3,12 +3,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<GridPane fx:id="view" fx:controller="com.btcalgo.ui.SinglePageController"
+<GridPane fx:id="view" fx:controller="com.btcalgo.ui.MainPageController"
           xmlns:fx="http://javafx.com/fxml" styleClass="root">
 
     <MenuBar GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="10000" styleClass="menu">
         <Menu text="BtcAlgo">
-            <MenuItem text="BtcAlgo Licensing"/>
+            <MenuItem text="BtcAlgo Licensing" onAction="#handleLicensing"/>
         </Menu>
     </MenuBar>
 
