@@ -2,7 +2,7 @@ package com.btcalgo.ui;
 
 import com.btcalgo.service.LicenseService;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,11 +18,6 @@ public class LicenseController {
 
     private Stage popup;
     private VBox popupVBox;
-
-    // licensing
-    @FXML private Label licenseStatus;
-    @FXML private TextField licenseKey;
-    @FXML private Button validateLicense;
 
     private LicenseService licenseService;
 
@@ -55,15 +50,44 @@ public class LicenseController {
     private void showTrialLicensePage() {
         popupVBox.getChildren().clear();
 
+        // License type: TRIAL
         HBox hBox_1 = new HBox();
-        hBox_1.setAlignment(Pos.BASELINE_LEFT);
+        hBox_1.setAlignment(Pos.CENTER);
         hBox_1.getChildren().add(new Label("License type: "));
-
         Label trial = new Label("TRIAL");
         trial.getStyleClass().add("trial");
         hBox_1.getChildren().add(trial);
-
         popupVBox.getChildren().add(hBox_1);
+
+        VBox vBox1 = new VBox();
+        vBox1.setAlignment(Pos.BASELINE_LEFT);
+        vBox1.getChildren().add(new Label("Trial license has following restrictions:"));
+        vBox1.getChildren().add(new Label("1. Only 2 live orders could be run simultaneously"));
+        vBox1.getChildren().add(new Label("2. Application runtime is 30 minutes. Then program will exit."));
+        vBox1.getChildren().add(new Label("   You will need to re-run it and enter your orders again"));
+        popupVBox.getChildren().add(vBox1);
+
+        VBox vBox2 = new VBox();
+        vBox2.getChildren().add(new Label("To get Full BtcAlgo version enter license key below:"));
+        vBox2.setPadding(new Insets(20, 0, 10, 0));
+        vBox2.setAlignment(Pos.CENTER);
+        popupVBox.getChildren().add(vBox2);
+
+        final TextField licenseKey = new TextField();
+        licenseKey.setPromptText("Enter Licence Key");
+        popupVBox.getChildren().add(licenseKey);
+        licenseKey.getParent().requestFocus();
+
+        Button activate = new Button("Activate");
+        activate.setPrefHeight(40);
+        activate.setPrefWidth(120);
+        activate.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                licenseService.validate(licenseKey.getText());
+            }
+        });
+        popupVBox.getChildren().add(activate);
 
         popup.show();
     }
@@ -84,7 +108,7 @@ public class LicenseController {
         popup.show();
     }
 
-    public void handleValidateLicense(ActionEvent actionEvent) {
+    /*public void handleValidateLicense(ActionEvent actionEvent) {
         licenseStatus.setText("");
         String licenseKeyString = licenseKey.getText();
         boolean result = licenseService.validate(licenseKeyString);
@@ -94,7 +118,7 @@ public class LicenseController {
         } else {
             licenseStatus.setText("Not valid :-)");
         }
-    }
+    }*/
 
     public void setLicenseService(LicenseService licenseService) {
         this.licenseService = licenseService;

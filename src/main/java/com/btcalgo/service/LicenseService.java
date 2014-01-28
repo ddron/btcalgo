@@ -17,7 +17,7 @@ public class LicenseService {
     }
 
     public boolean hasValidLicense() {
-        return true;
+        return false;
     }
 
     public boolean validate(String licenseKey) {
