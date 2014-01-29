@@ -21,11 +21,13 @@ public class LicenseController {
 
     private LicenseService licenseService;
 
+    private String paymentUrl;
+
     public void initLicensePopup(MainPageController main) {
         popup = new Stage();
         popup.initOwner(main.getView().getScene().getWindow());
         popup.initModality(Modality.WINDOW_MODAL);
-        //popup.setResizable(false);
+        popup.setResizable(false);
         popup.setTitle("BtcAlgo License");
 
         popupVBox = new VBox();
@@ -69,11 +71,13 @@ public class LicenseController {
 
         VBox vBox2 = new VBox();
         vBox2.getChildren().add(new Label("To get Full BtcAlgo version enter license key below:"));
+        vBox2.getChildren().add(new Label("(to get key visit " + paymentUrl + ")"));
         vBox2.setPadding(new Insets(20, 0, 10, 0));
         vBox2.setAlignment(Pos.CENTER);
         popupVBox.getChildren().add(vBox2);
 
         final TextField licenseKey = new TextField();
+        licenseKey.setMaxWidth(300);
         licenseKey.setPromptText("Enter Licence Key");
         popupVBox.getChildren().add(licenseKey);
         licenseKey.getParent().requestFocus();
@@ -87,7 +91,13 @@ public class LicenseController {
                 licenseService.validate(licenseKey.getText());
             }
         });
-        popupVBox.getChildren().add(activate);
+
+        VBox vBox3 = new VBox();
+        vBox3.setPadding(new Insets(10, 0, 10, 0));
+        vBox3.setAlignment(Pos.CENTER);
+        vBox3.getChildren().add(activate);
+
+        popupVBox.getChildren().add(vBox3);
 
         popup.show();
     }
@@ -96,7 +106,8 @@ public class LicenseController {
         popupVBox.getChildren().clear();
 
         HBox hBox_1 = new HBox();
-        hBox_1.setAlignment(Pos.BASELINE_LEFT);
+        hBox_1.setAlignment(Pos.CENTER);
+        hBox_1.setPadding(new Insets(10, 0, 10, 0));
         hBox_1.getChildren().add(new Label("License type: "));
 
         Label trial = new Label("FULL");
@@ -104,6 +115,8 @@ public class LicenseController {
         hBox_1.getChildren().add(trial);
 
         popupVBox.getChildren().add(hBox_1);
+        popupVBox.getChildren().add(new Label("You have fully functional version of BtcAlgo"));
+        popupVBox.getChildren().add(new Label("License key: " + licenseService.getLicenseKey()));
 
         popup.show();
     }
@@ -122,5 +135,9 @@ public class LicenseController {
 
     public void setLicenseService(LicenseService licenseService) {
         this.licenseService = licenseService;
+    }
+
+    public void setPaymentUrl(String paymentUrl) {
+        this.paymentUrl = paymentUrl;
     }
 }

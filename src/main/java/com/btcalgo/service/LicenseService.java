@@ -12,12 +12,18 @@ public class LicenseService {
     private static String companyforValidation = null;
     private static int hardwareIDMethod = 0;
 
+    private String licenseKey = "1234567890";
+
     public void init() {
 
     }
 
     public boolean hasValidLicense() {
-        return false;
+        return true;
+    }
+
+    public String getLicenseKey() {
+        return licenseKey;
     }
 
     public boolean validate(String licenseKey) {

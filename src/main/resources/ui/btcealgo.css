@@ -13,13 +13,13 @@
 }
 
 .full {
-    -fx-font-size: 12px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #197e1f;
 }
 
 .trial {
-    -fx-font-size: 12px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #ff0000;
 }

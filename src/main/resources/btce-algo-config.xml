@@ -90,6 +90,7 @@
 
     <bean id="license.controller" class="com.btcalgo.ui.LicenseController">
         <property name="licenseService" ref="license.server"/>
+        <property name="paymentUrl" value="${payment.url}"/>
     </bean>
 
     <bean id="validation.controller" class="com.btcalgo.ui.ValidationController">
