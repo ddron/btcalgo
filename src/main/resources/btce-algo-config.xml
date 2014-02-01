@@ -86,11 +86,14 @@
         <constructor-arg name="reactor" ref="reactor"/>
     </bean>
 
-    <bean id="license.server" class="com.btcalgo.service.LicenseService"/>
+    <bean id="license.server" class="com.btcalgo.service.LicenseService" init-method="init">
+        <property name="configFile" value="${config.file}"/>
+    </bean>
 
     <bean id="license.controller" class="com.btcalgo.ui.LicenseController">
         <property name="licenseService" ref="license.server"/>
         <property name="paymentUrl" value="${payment.url}"/>
+        <property name="supportEmail" value="${support.email}"/>
     </bean>
 
     <bean id="validation.controller" class="com.btcalgo.ui.ValidationController">

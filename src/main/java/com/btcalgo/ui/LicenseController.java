@@ -1,6 +1,7 @@
 package com.btcalgo.ui;
 
 import com.btcalgo.service.LicenseService;
+import com.google.common.base.Strings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,22 +14,24 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class LicenseController {
 
-    private Stage popup;
+    private Stage licensePopup;
     private VBox popupVBox;
 
     private LicenseService licenseService;
 
     private String paymentUrl;
+    private String supportEmail;
 
     public void initLicensePopup(MainPageController main) {
-        popup = new Stage();
-        popup.initOwner(main.getView().getScene().getWindow());
-        popup.initModality(Modality.WINDOW_MODAL);
-        popup.setResizable(false);
-        popup.setTitle("BtcAlgo License");
+        licensePopup = new Stage();
+        licensePopup.initOwner(main.getView().getScene().getWindow());
+        licensePopup.initModality(Modality.WINDOW_MODAL);
+        licensePopup.setResizable(false);
+        licensePopup.setTitle("BtcAlgo License");
 
         popupVBox = new VBox();
         popupVBox.setPadding(new Insets(20, 25, 10, 25));
@@ -38,7 +41,7 @@ public class LicenseController {
         Scene popupScene = new Scene(popupVBox);
         popupScene.getStylesheets().add(
                 MainPageController.class.getResource("/ui/btcealgo.css").toExternalForm());
-        popup.setScene(popupScene);
+        licensePopup.setScene(popupScene);
     }
 
     public void showLicensePopup() {
@@ -47,6 +50,25 @@ public class LicenseController {
         } else {
             showTrialLicensePage();
         }
+    }
+
+    private void showActivatedLicensePage() {
+        popupVBox.getChildren().clear();
+
+        HBox hBox_1 = new HBox();
+        hBox_1.setAlignment(Pos.CENTER);
+        hBox_1.setPadding(new Insets(10, 0, 10, 0));
+        hBox_1.getChildren().add(new Label("License type: "));
+
+        Label trial = new Label("FULL");
+        trial.getStyleClass().add("full");
+        hBox_1.getChildren().add(trial);
+
+        popupVBox.getChildren().add(hBox_1);
+        popupVBox.getChildren().add(new Label("You have fully functional version of BtcAlgo"));
+        popupVBox.getChildren().add(new Label("License key: " + licenseService.getLicenseKey()));
+
+        licensePopup.show();
     }
 
     private void showTrialLicensePage() {
@@ -82,13 +104,25 @@ public class LicenseController {
         popupVBox.getChildren().add(licenseKey);
         licenseKey.getParent().requestFocus();
 
-        Button activate = new Button("Activate");
+        final Button activate = new Button("Activate");
         activate.setPrefHeight(40);
         activate.setPrefWidth(120);
         activate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                licenseService.validate(licenseKey.getText());
+                activate.setText("Activating. Please wait...");
+                activate.setDisable(true);
+                if (isLicenseKeyTextValid(licenseKey.getText())) {
+                    if (licenseService.activateLicense(licenseKey.getText())) {
+                        showActivationCompletedPopup();
+                    } else {
+                        showIncorrectKeyPopup();
+                    }
+                } else {
+                    showValidationPopup(licenseKey.getText());
+                }
+                activate.setText("Activate");
+                activate.setDisable(false);
             }
         });
 
@@ -99,39 +133,149 @@ public class LicenseController {
 
         popupVBox.getChildren().add(vBox3);
 
-        popup.show();
+        licensePopup.show();
     }
 
-    private void showActivatedLicensePage() {
-        popupVBox.getChildren().clear();
-
-        HBox hBox_1 = new HBox();
-        hBox_1.setAlignment(Pos.CENTER);
-        hBox_1.setPadding(new Insets(10, 0, 10, 0));
-        hBox_1.getChildren().add(new Label("License type: "));
-
-        Label trial = new Label("FULL");
-        trial.getStyleClass().add("full");
-        hBox_1.getChildren().add(trial);
-
-        popupVBox.getChildren().add(hBox_1);
-        popupVBox.getChildren().add(new Label("You have fully functional version of BtcAlgo"));
-        popupVBox.getChildren().add(new Label("License key: " + licenseService.getLicenseKey()));
-
-        popup.show();
+    private boolean isLicenseKeyTextValid(String key) {
+        return !Strings.isNullOrEmpty(key) && isLicenseKeyFormatValid(key);
     }
 
-    /*public void handleValidateLicense(ActionEvent actionEvent) {
-        licenseStatus.setText("");
-        String licenseKeyString = licenseKey.getText();
-        boolean result = licenseService.validate(licenseKeyString);
-
-        if (result) {
-            licenseStatus.setText("VALID!!! Congrats Andrey!");
-        } else {
-            licenseStatus.setText("Not valid :-)");
+    private boolean isLicenseKeyFormatValid(String key) {
+        String[] parts = key.split("-");
+        if (parts.length != 5) {
+            return false;
         }
-    }*/
+        for (String part : parts) {
+            if (part.length() != 5) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void showValidationPopup(String key) {
+        final Stage validationPopup = buildLicensePopupChild("Error!");
+        VBox popupVBox = (VBox) validationPopup.getScene().getRoot();
+
+        VBox vBox1 = new VBox();
+        vBox1.setPadding(new Insets(10, 0, 20, 0));
+        vBox1.setAlignment(Pos.CENTER);
+        if (Strings.isNullOrEmpty(key)) {
+            vBox1.getChildren().add(new Label("License key is empty"));
+        } else {
+            vBox1.getChildren().add(new Label("License key format is incorrect"));
+            vBox1.getChildren().add(new Label("Correct format is"));
+            vBox1.getChildren().add(new Label("XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"));
+        }
+
+        popupVBox.getChildren().add(vBox1);
+
+        final Button ok = new Button("OK");
+        ok.setMinHeight(40);
+        ok.setMinWidth(120);
+        ok.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                validationPopup.hide();
+            }
+        });
+        popupVBox.getChildren().add(ok);
+
+        validationPopup.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                licensePopup.hide();
+            }
+        });
+
+        validationPopup.show();
+    }
+
+    private void showIncorrectKeyPopup() {
+        final Stage incorrectKeyPopup = buildLicensePopupChild("Error!");
+        VBox popupVBox = (VBox) incorrectKeyPopup.getScene().getRoot();
+
+        VBox vBox1 = new VBox();
+        vBox1.setPadding(new Insets(10, 0, 20, 0));
+        vBox1.setAlignment(Pos.CENTER);
+        vBox1.getChildren().add(new Label("License key is incorrect!"));
+        vBox1.getChildren().add(new Label("Please note that the license key can be used only with one PC"));
+        vBox1.getChildren().add(new Label("In case of questions please contact " + supportEmail));
+
+        popupVBox.getChildren().add(vBox1);
+
+        final Button ok = new Button("OK");
+        ok.setMinHeight(40);
+        ok.setMinWidth(120);
+        ok.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                incorrectKeyPopup.hide();
+            }
+        });
+        popupVBox.getChildren().add(ok);
+
+        incorrectKeyPopup.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                licensePopup.hide();
+            }
+        });
+
+        incorrectKeyPopup.show();
+    }
+
+    private void showActivationCompletedPopup() {
+        final Stage completePopup = buildLicensePopupChild("Success!");
+        VBox popupVBox = (VBox) completePopup.getScene().getRoot();
+
+        VBox vBox1 = new VBox();
+        vBox1.setPadding(new Insets(10, 0, 20, 0));
+        vBox1.setAlignment(Pos.CENTER);
+        vBox1.getChildren().add(new Label("Activation completed!"));
+        popupVBox.getChildren().add(vBox1);
+
+        final Button ok = new Button("OK");
+        ok.setMinHeight(40);
+        ok.setMinWidth(120);
+        ok.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                completePopup.hide();
+                licensePopup.hide();
+            }
+        });
+        popupVBox.getChildren().add(ok);
+
+        completePopup.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                licensePopup.hide();
+            }
+        });
+
+        completePopup.show();
+    }
+
+    private Stage buildLicensePopupChild(String title) {
+        final Stage licensePopupChild = new Stage();
+        licensePopupChild.initOwner(licensePopup);
+        licensePopupChild.initModality(Modality.WINDOW_MODAL);
+        licensePopupChild.setResizable(false);
+        licensePopupChild.setTitle(title);
+
+        VBox popupVBox = new VBox();
+        popupVBox.setAlignment(Pos.CENTER);
+        popupVBox.setPadding(new Insets(20, 25, 10, 25));
+        popupVBox.setSpacing(10);
+
+        Scene popupScene = new Scene(popupVBox);
+        popupScene.getStylesheets().add(
+                MainPageController.class.getResource("/ui/btcealgo.css").toExternalForm());
+        licensePopupChild.setScene(popupScene);
+
+        return licensePopupChild;
+    }
 
     public void setLicenseService(LicenseService licenseService) {
         this.licenseService = licenseService;
@@ -139,5 +283,9 @@ public class LicenseController {
 
     public void setPaymentUrl(String paymentUrl) {
         this.paymentUrl = paymentUrl;
+    }
+
+    public void setSupportEmail(String supportEmail) {
+        this.supportEmail = supportEmail;
     }
 }
