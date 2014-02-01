@@ -62,6 +62,10 @@ public class Order implements IMarketDataListener {
         }
     }
 
+    public boolean isAlive() {
+        return status.get() == OrderStatus.WAITING;
+    }
+
     public void updateDisplayStatusAndAction() {
         displayStatus.set(status.get());
         validAction.set(displayStatus.get().getValidAction().name());

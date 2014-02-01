@@ -59,6 +59,17 @@ public class OrdersManager {
         marketDataProvider.addListener(order, order.getMarket(), order.getSymbol(), condition);
     }
 
+    public int getLiveOrdersCount() {
+        int result = 0;
+
+        for (Order order : orders.values()) {
+            if (order.isAlive()) {
+                result++;
+            }
+        }
+        return result;
+    }
+
     public void cancel(String internalOrderId) {
         Order order = orders.get(internalOrderId);
         if (order != null) {
