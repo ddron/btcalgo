@@ -2,6 +2,8 @@ package com.btcalgo.ui;
 
 import com.btcalgo.service.LicenseService;
 import com.google.common.base.Strings;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -110,19 +112,33 @@ public class LicenseController {
         activate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                activate.setText("Activating. Please wait...");
                 activate.setDisable(true);
+                activate.setText("Activating...");
                 if (isLicenseKeyTextValid(licenseKey.getText())) {
-                    if (licenseService.activateLicense(licenseKey.getText())) {
-                        showActivationCompletedPopup();
-                    } else {
-                        showIncorrectKeyPopup();
-                    }
+                    new Thread(new Task<Boolean>() {
+                        @Override
+                        protected Boolean call() throws Exception {
+                            final boolean validLicense = licenseService.activateLicense(licenseKey.getText());
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (validLicense) {
+                                        showActivationCompletedPopup();
+                                    } else {
+                                        showIncorrectKeyPopup();
+                                    }
+                                    activate.setText("Activate");
+                                    activate.setDisable(false);
+                                }
+                            });
+                            return validLicense;
+                        }
+                    }).start();
                 } else {
                     showValidationPopup(licenseKey.getText());
+                    activate.setText("Activate");
+                    activate.setDisable(false);
                 }
-                activate.setText("Activate");
-                activate.setDisable(false);
             }
         });
 
