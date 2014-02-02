@@ -12,25 +12,16 @@
         </Menu>
     </MenuBar>
 
-    <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER" vgap="10" hgap="10">
+    <GridPane fx:id="mainGrid" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER" vgap="10" hgap="10">
         <padding>
             <Insets top="0" right="25" bottom="10" left="25"/>
         </padding>
 
         <!-- credentials -->
-        <GridPane GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="block">
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="block">
             <padding>
                 <Insets top="10" right="25" bottom="10" left="25"/>
             </padding>
-
-            <!-- license -->
-<!--            <VBox spacing="10" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2">
-                <TextField fx:id="licenseKey" minHeight="22" prefWidth="350"/>
-                <Button fx:id="validateLicense" text="Validate license" alignment="CENTER"
-                        prefHeight="40" prefWidth="120" onAction="#handleValidateLicense"/>
-                <Label fx:id="licenseStatus"/>
-            </VBox>-->
-
 
             <VBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="0">
                 <HBox spacing="10">
@@ -58,7 +49,7 @@
         </GridPane>
 
         <!-- market data -->
-        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="block">
+        <GridPane GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="block">
             <padding>
                 <Insets top="10" right="25" bottom="10" left="25"/>
             </padding>
@@ -90,7 +81,7 @@
         </GridPane>
 
         <!-- place an order -->
-        <GridPane GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="block">
+        <GridPane GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="block">
             <padding>
                 <Insets top="10" right="25" bottom="10" left="25"/>
             </padding>
@@ -144,7 +135,7 @@
         </GridPane>
 
         <!-- your orders -->
-        <GridPane GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="block">
+        <GridPane GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="block">
             <padding>
                 <Insets top="10" right="25" bottom="10" left="25"/>
             </padding>

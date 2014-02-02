@@ -24,6 +24,12 @@
     -fx-text-fill: #ff0000;
 }
 
+.trial_title {
+    -fx-font-size: 12px;
+    /*-fx-font-weight: bold;*/
+    -fx-text-fill: #b00000;
+}
+
 .block {
     -fx-hgap: 10;
     -fx-vgap: 10;

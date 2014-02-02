@@ -68,6 +68,7 @@
         <property name="ordersManager" ref="order.manager"/>
         <property name="licenseController" ref="license.controller"/>
         <property name="validationController" ref="validation.controller"/>
+        <property name="runtimeMeter" ref="runtime.meter"/>
     </bean>
 
     <bean id="uiController" factory-bean="controller.factory" factory-method="createController">
@@ -92,6 +93,7 @@
 
     <bean id="license.controller" class="com.btcalgo.ui.LicenseController">
         <property name="licenseService" ref="license.server"/>
+        <property name="runtimeMeter" ref="runtime.meter"/>
         <property name="paymentUrl" value="${payment.url}"/>
         <property name="supportEmail" value="${support.email}"/>
     </bean>
@@ -99,5 +101,7 @@
     <bean id="validation.controller" class="com.btcalgo.ui.ValidationController">
         <property name="apiService" ref="api.service"/>
     </bean>
+
+    <bean id="runtime.meter" class="com.btcalgo.service.RuntimeMeter"/>
 
 </beans>

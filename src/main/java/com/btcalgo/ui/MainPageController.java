@@ -7,6 +7,7 @@ import com.btcalgo.execution.OrdersManager;
 import com.btcalgo.execution.StrategyType;
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.SymbolEnum;
+import com.btcalgo.service.RuntimeMeter;
 import com.btcalgo.service.api.ApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
@@ -16,9 +17,11 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import reactor.core.Reactor;
@@ -28,6 +31,10 @@ import java.util.List;
 public class MainPageController {
 
     @FXML private GridPane view;
+
+    // trial title
+    @FXML private GridPane mainGrid;
+    private VBox trialVBox;
 
     // credentials
     @FXML private TextField key;
@@ -60,6 +67,7 @@ public class MainPageController {
     private Reactor reactor;
     private ApiService apiService;
     private OrdersManager ordersManager;
+    private RuntimeMeter runtimeMeter;
 
     public void initController() {
         // keys
@@ -87,6 +95,10 @@ public class MainPageController {
         initOrdersViewTable();
         validationController.initValidationPopup(this);
         licenseController.initLicensePopup(this);
+
+        if (!licenseController.hasValidLicense()) {
+            addTrialTitle();
+        }
     }
 
     private void initOrdersViewTable() {
@@ -219,6 +231,20 @@ public class MainPageController {
         submit.setDisable(false);
     }
 
+    private void addTrialTitle() {
+        trialVBox = new VBox();
+        trialVBox.getStyleClass().add("block");
+        trialVBox.setPadding(new Insets(5, 0, 5, 0));
+        trialVBox.setId("trialVBox");
+
+        Label trialInfo = new Label();
+        trialInfo.getStyleClass().add("trial_title");
+        trialInfo.textProperty().bind(runtimeMeter.titleProperty());
+        trialVBox.getChildren().add(trialInfo);
+
+        mainGrid.getChildren().add(0, trialVBox);
+    }
+
     public GridPane getView() {
         return view;
     }
@@ -277,5 +303,9 @@ public class MainPageController {
 
     public ChoiceBox<String> getStrategyTypes() {
         return strategyTypes;
+    }
+
+    public void setRuntimeMeter(RuntimeMeter runtimeMeter) {
+        this.runtimeMeter = runtimeMeter;
     }
 }

@@ -1,6 +1,7 @@
 package com.btcalgo.ui;
 
 import com.btcalgo.service.LicenseService;
+import com.btcalgo.service.RuntimeMeter;
 import com.google.common.base.Strings;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -24,6 +26,7 @@ public class LicenseController {
     private VBox popupVBox;
 
     private LicenseService licenseService;
+    private RuntimeMeter runtimeMeter;
 
     private String paymentUrl;
     private String supportEmail;
@@ -44,6 +47,10 @@ public class LicenseController {
         popupScene.getStylesheets().add(
                 MainPageController.class.getResource("/ui/btcealgo.css").toExternalForm());
         licensePopup.setScene(popupScene);
+    }
+
+    public boolean hasValidLicense() {
+        return licenseService.hasValidLicense();
     }
 
     public void showLicensePopup() {
@@ -124,6 +131,8 @@ public class LicenseController {
                                 public void run() {
                                     if (validLicense) {
                                         showActivationCompletedPopup();
+                                        removeTrialTitle();
+                                        runtimeMeter.stopMeter();
                                     } else {
                                         showIncorrectKeyPopup();
                                     }
@@ -150,6 +159,14 @@ public class LicenseController {
         popupVBox.getChildren().add(vBox3);
 
         licensePopup.show();
+    }
+
+    private void removeTrialTitle() {
+        GridPane mainGrid = (GridPane) licensePopup.getOwner().getScene().lookup("#mainGrid");
+        VBox vBox = (VBox) licensePopup.getOwner().getScene().lookup("#trialVBox");
+        if (mainGrid != null && vBox != null) {
+            mainGrid.getChildren().remove(vBox);
+        }
     }
 
     private boolean isLicenseKeyTextValid(String key) {
@@ -303,5 +320,9 @@ public class LicenseController {
 
     public void setSupportEmail(String supportEmail) {
         this.supportEmail = supportEmail;
+    }
+
+    public void setRuntimeMeter(RuntimeMeter runtimeMeter) {
+        this.runtimeMeter = runtimeMeter;
     }
 }

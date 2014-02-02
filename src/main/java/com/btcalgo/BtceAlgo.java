@@ -4,6 +4,8 @@ import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.reactor.NameableConsumer;
 import com.btcalgo.reactor.Scheduler;
 import com.btcalgo.reactor.ThrowableHandler;
+import com.btcalgo.service.LicenseService;
+import com.btcalgo.service.RuntimeMeter;
 import com.btcalgo.service.marketdata.BtcBestMarketDataSource;
 import com.btcalgo.ui.MainPageController;
 import javafx.application.Application;
@@ -15,6 +17,8 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import reactor.core.Environment;
 import reactor.core.Reactor;
+
+import java.util.concurrent.ScheduledFuture;
 
 import static reactor.event.selector.Selectors.$;
 import static reactor.event.selector.Selectors.T;
@@ -69,6 +73,7 @@ public class BtceAlgo extends Application {
         makeConsumerRegistrations();
         invokeCommandLineProcessor();
         setUpMarketDataUpdating();
+        setUpMeter();
     }
 
     @Override
@@ -94,6 +99,17 @@ public class BtceAlgo extends Application {
 
         for (SymbolEnum symbolEnum : SymbolEnum.values()) {
             scheduler.scheduleAtFixedRate(marketDataSource.getId(), symbolEnum, MD_UPDATE_RATE_MS);
+        }
+    }
+
+    private void setUpMeter() {
+        LicenseService licenseService = context.getBean(LicenseService.class);
+        if (!licenseService.hasValidLicense()) {
+            RuntimeMeter meter = context.getBean(RuntimeMeter.class);
+            Scheduler scheduler = context.getBean(Scheduler.class);
+
+            ScheduledFuture scheduledFuture = scheduler.scheduleAtFixedRate(meter.getId(), "", 60_000);
+            meter.setScheduledFuture(scheduledFuture);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.btcalgo.ui;
 
 import com.btcalgo.execution.OrdersManager;
+import com.btcalgo.service.RuntimeMeter;
 import com.btcalgo.service.api.ApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
@@ -22,6 +23,8 @@ public class ControllerFactory {
     private ValidationController validationController;
     private LicenseController licenseController;
 
+    private RuntimeMeter runtimeMeter;
+
     public MainPageController createController(String url) throws IOException {
         InputStream fxmlStream = null;
         try {
@@ -40,6 +43,8 @@ public class ControllerFactory {
 
             controller.setKeysStatus(keysStatusHolder);
             controller.setMarketDataToShow(marketDataToShow);
+
+            controller.setRuntimeMeter(runtimeMeter);
 
             return controller;
         } finally {
@@ -75,5 +80,9 @@ public class ControllerFactory {
 
     public void setLicenseController(LicenseController licenseController) {
         this.licenseController = licenseController;
+    }
+
+    public void setRuntimeMeter(RuntimeMeter runtimeMeter) {
+        this.runtimeMeter = runtimeMeter;
     }
 }
