@@ -100,6 +100,7 @@
 
     <bean id="validation.controller" class="com.btcalgo.ui.ValidationController">
         <property name="apiService" ref="api.service"/>
+        <property name="paymentUrl" value="${payment.url}"/>
     </bean>
 
     <bean id="runtime.meter" class="com.btcalgo.service.RuntimeMeter"/>

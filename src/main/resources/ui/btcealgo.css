@@ -24,6 +24,18 @@
     -fx-text-fill: #ff0000;
 }
 
+.small_full {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #197e1f;
+}
+
+.small_trial {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff0000;
+}
+
 .trial_title {
     -fx-font-size: 12px;
     /*-fx-font-weight: bold;*/

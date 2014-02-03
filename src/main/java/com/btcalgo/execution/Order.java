@@ -4,6 +4,7 @@ import com.btcalgo.model.Direction;
 import com.btcalgo.model.IOrderBook;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.api.ApiService;
+import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.marketdata.IMarketDataListener;
 import com.btcalgo.service.marketdata.MarketDataProvider;
 import javafx.beans.property.ObjectProperty;
@@ -51,13 +52,13 @@ public class Order implements IMarketDataListener {
             marketDataProvider.removeListener(this, market, symbol);
 
             // TODO: remove next line. And uncomment code block below
-            status.set(OrderStatus.SENT);
-            /*NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(symbol, direction, limitPrice, amount);
+            //status.set(OrderStatus.SENT);
+            NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(symbol, direction, limitPrice, amount);
             if (newOrderTemplate.isSuccess()) {
                 status.set(OrderStatus.SENT);
             } else {
                 status.set(OrderStatus.ERROR);
-            }*/
+            }
             updateDisplayStatusAndAction();
         }
     }

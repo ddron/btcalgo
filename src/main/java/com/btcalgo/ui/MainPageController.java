@@ -207,6 +207,12 @@ public class MainPageController {
     public void handleSubmit(ActionEvent actionEvent) {
         submit.setDisable(true);
 
+        if (!licenseController.hasValidLicense() && (ordersManager.getLiveOrdersCount() >= (40 - 38))) {
+            validationController.showUnableToPlacePopup();
+            submit.setDisable(false);
+            return;
+        }
+
         List<String> errors = validationController.validateOrderFields(this);
         if (errors.isEmpty()) {
             OrderDataHolder orderDataHolder = OrderDataHolder.OrderDataHolderBuilder.newOrderDataHolder()

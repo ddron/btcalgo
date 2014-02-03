@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,6 +30,7 @@ public class ValidationController {
     private VBox errorsContent;
 
     private ApiService apiService;
+    private String paymentUrl;
 
     public void initValidationPopup(MainPageController main) {
         popup = new Stage();
@@ -72,6 +74,35 @@ public class ValidationController {
         for (String error : errors) {
             errorsContent.getChildren().add(new Label(error));
         }
+        popup.show();
+    }
+
+    public void showUnableToPlacePopup() {
+        errorsContent.getChildren().clear();
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.CENTER);
+        errorsContent.getChildren().add(vBox);
+
+        HBox hBox1 = new HBox();
+        hBox1.setAlignment(Pos.CENTER);
+        vBox.getChildren().add(hBox1);
+        hBox1.getChildren().add(new Label("with "));
+        Label trial_label = new Label("TRIAL");
+        trial_label.getStyleClass().add("small_trial");
+        hBox1.getChildren().add(trial_label);
+        hBox1.getChildren().add(new Label(" license"));
+
+        vBox.getChildren().add(new Label("only two orders can run simultaneously"));
+
+        HBox hBox2 = new HBox();
+        hBox2.setAlignment(Pos.CENTER);
+        vBox.getChildren().add(hBox2);
+        hBox2.getChildren().add(new Label("to get "));
+        Label full_label = new Label("FULL");
+        full_label.getStyleClass().add("small_full");
+        hBox2.getChildren().add(full_label);
+        hBox2.getChildren().add(new Label(" license go to " + paymentUrl));
+
         popup.show();
     }
 
@@ -132,5 +163,9 @@ public class ValidationController {
 
     public void setApiService(ApiService apiService) {
         this.apiService = apiService;
+    }
+
+    public void setPaymentUrl(String paymentUrl) {
+        this.paymentUrl = paymentUrl;
     }
 }
