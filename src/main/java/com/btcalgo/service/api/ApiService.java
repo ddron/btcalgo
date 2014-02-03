@@ -140,15 +140,7 @@ public class ApiService {
         args.put("rate", String.valueOf(price)) ;
         args.put("amount", String.valueOf(amount)) ;
 
-        NewOrderTemplate result = auth("Trade", args, NewOrderTemplate.class);
-
-        if (result.isSuccess()) {
-            log.info("order was sent to market. Result: {}");
-        } else {
-            log.error("order was NOT sent to market. Result: {}");
-        }
-
-        return result;
+        return auth("Trade", args, NewOrderTemplate.class);
     }
 
     public <T extends LoginTemplate> T auth(String method, Class<T> clazz) {
