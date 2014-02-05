@@ -4,27 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SymbolEnum {
-    BTCUSD("btc_usd", "BTC/USD"),
-    BTCRUR("btc_rur", "BTC/RUR"),
-    BTCEUR("btc_eur", "BTC/EUR"),
-    LTCBTC("ltc_btc", "LTC/BTC"),
-    LTCUSD("ltc_usd", "LTC/USD"),
-    LTCRUR("ltc_rur", "LTC/RUR"),
-    LTCEUR("ltc_eur", "LTC/EUR"),
-    NMCBTC("nmc_btc", "NMC/BTC"),
-    NMCUSD("nmc_usd", "NMC/USD"),
-    NVCBTC("nvc_btc", "NVC/BTC"),
-    NVCUSD("nvc_usd", "NVC/USD"),
-    USDRUR("usd_rur", "USD/RUR"),
-    EURUSD("eur_usd", "EUR/USD"),
-    TRCBTC("trc_btc", "TRC/BTC"),
-    PPCBTC("ppc_btc", "PPC/BTC"),
-    PPCUSD("ppc_usd", "PPC/USD"),
-    FTCBTC("ftc_btc", "FTC/BTC"),
-    XPMBTC("xpm_btc", "XPM/BTC");
+    BTCUSD("btc_usd", "BTC/USD", 0.01),
+    BTCRUR("btc_rur", "BTC/RUR", 0.01),
+    BTCEUR("btc_eur", "BTC/EUR", 0.01),
+
+    LTCBTC("ltc_btc", "LTC/BTC", 0.1),
+    LTCUSD("ltc_usd", "LTC/USD", 0.1),
+    LTCRUR("ltc_rur", "LTC/RUR", 0.1),
+    LTCEUR("ltc_eur", "LTC/EUR", 0.1),
+
+    NMCBTC("nmc_btc", "NMC/BTC", 0.1),
+    NMCUSD("nmc_usd", "NMC/USD", 0.1),
+
+    NVCBTC("nvc_btc", "NVC/BTC", 0.1),
+    NVCUSD("nvc_usd", "NVC/USD", 0.1),
+
+    USDRUR("usd_rur", "USD/RUR", 0.1),
+
+    EURUSD("eur_usd", "EUR/USD", 0.1),
+    EURRUR("eur_rur", "EUR/RUR", 0.1),
+
+    TRCBTC("trc_btc", "TRC/BTC", 0.1),
+
+    PPCBTC("ppc_btc", "PPC/BTC", 0.1),
+    PPCUSD("ppc_usd", "PPC/USD", 0.1),
+
+    FTCBTC("ftc_btc", "FTC/BTC", 0.1),
+
+    XPMBTC("xpm_btc", "XPM/BTC", 0.1);
 
     private String value;
     private String displayName;
+    private double minSize;
 
     private static List<String> displayNames = new ArrayList<>();
 
@@ -34,9 +45,10 @@ public enum SymbolEnum {
         }
     }
 
-    private SymbolEnum(String value, String displayName) {
+    private SymbolEnum(String value, String displayName, double minSize) {
         this.value = value;
         this.displayName = displayName;
+        this.minSize = minSize;
     }
 
     public String getValue() {
@@ -58,5 +70,13 @@ public enum SymbolEnum {
 
     public static List<String> getDisplayNames() {
         return displayNames;
+    }
+
+    public double getMinSize() {
+        return minSize;
+    }
+
+    public String getFirst() {
+        return getDisplayName().substring(0, 3);
     }
 }

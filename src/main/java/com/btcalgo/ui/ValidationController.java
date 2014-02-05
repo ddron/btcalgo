@@ -3,6 +3,7 @@ package com.btcalgo.ui;
 import com.btcalgo.execution.StrategyType;
 import com.btcalgo.model.Direction;
 import com.btcalgo.service.api.ApiService;
+import com.btcalgo.util.Precision;
 import com.btcalgo.util.StringUtils;
 import com.google.common.base.Strings;
 import javafx.event.ActionEvent;
@@ -129,6 +130,8 @@ public class ValidationController {
             result.add(ValidationErrors.getErrorValue(AMOUNT, EMPTY));
         } else if (!StringUtils.isNumber(amountValue)) {
             result.add(ValidationErrors.getErrorValue(AMOUNT, FORMAT));
+        } else if (Precision.isLess(Double.valueOf(amountValue), main.getSymbol().getMinSize())) {
+            result.add("Amount is less than " + main.getSymbol().getMinSize() + main.getSymbol().getFirst());
         }
 
         // stop price

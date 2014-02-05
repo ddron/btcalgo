@@ -314,4 +314,8 @@ public class MainPageController {
     public void setRuntimeMeter(RuntimeMeter runtimeMeter) {
         this.runtimeMeter = runtimeMeter;
     }
+
+    public SymbolEnum getSymbol() {
+        return SymbolEnum.valueByDisplayName(pairs.getSelectionModel().getSelectedItem());
+    }
 }
