@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class LicenseService {
@@ -108,11 +110,17 @@ public class LicenseService {
     public boolean loadLicense() {
         try {
             Properties properties = new Properties();
-            properties.load(new FileInputStream(configFile));
-            licenseKey = properties.getProperty(LICENSE_KEY_ID);
-            licenseText = properties.getProperty(LICENSE_TEXT_ID);
 
-            return !Strings.isNullOrEmpty(licenseKey) && !Strings.isNullOrEmpty(licenseText);
+            if (Files.exists(Paths.get(configFile))) {
+                properties.load(new FileInputStream(configFile));
+                licenseKey = properties.getProperty(LICENSE_KEY_ID);
+                licenseText = properties.getProperty(LICENSE_TEXT_ID);
+
+                return !Strings.isNullOrEmpty(licenseKey) && !Strings.isNullOrEmpty(licenseText);
+            } else {
+                return false;
+            }
+
         } catch (IOException e) {
             log.error("Exception during license loading: ", e);
             return false;

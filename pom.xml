@@ -8,6 +8,10 @@
     <name>btcalgo</name>
     <url>http://maven.apache.org</url>
 
+    <organization>
+        <name>BtcAlgo</name>
+    </organization>
+
     <properties>
         <spring.version>3.2.0.RELEASE</spring.version>
         <reactor.version>1.0.0.RELEASE</reactor.version>
@@ -38,6 +42,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.license4j</groupId>
+            <artifactId>license4j</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
@@ -83,6 +93,14 @@
     <build>
         <finalName>btce-algo</finalName>
         <plugins>
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <mainClass>com.btcalgo.BtceAlgo</mainClass>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
