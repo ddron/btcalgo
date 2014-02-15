@@ -30,7 +30,7 @@ public class RuntimeMeter implements NameableConsumer<Event<Void>> {
 
     @Override
     public void accept(Event<Void> voidEvent) {
-        if (scheduledFuture.isCancelled()) {
+        if (scheduledFuture!= null && scheduledFuture.isCancelled()) {
             return;
         }
 
