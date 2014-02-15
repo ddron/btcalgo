@@ -43,6 +43,7 @@ public class ApiService {
     private static AtomicInteger nonce = new AtomicInteger((int) (System.currentTimeMillis() / 1000));
 
     private Gson gson = new GsonBuilder().create();
+    private boolean logAll = false;
 
     public ApiService(String authBaseUrl, String publicBaseUrl) {
         this.authBaseUrl = authBaseUrl;
@@ -115,7 +116,12 @@ public class ApiService {
                 in.close();
                 result = gson.fromJson(response.toString(), clazz);
             } catch (IOException e) {
-                log.error("Request error: ", e);
+                /**
+                 * log only last error since btc-e often refuses connections to public API
+                 */
+                if (((i + 1) >= ATTEMPTS_NUMBER) || logAll) {
+                    log.error("Request error for pair: " + symbol + ". Attempt: " + (i +1), e);
+                }
                 result = null;
             }
         } while ((++i < ATTEMPTS_NUMBER) && result == null);
@@ -218,5 +224,9 @@ public class ApiService {
 
     public void setValidKeys(boolean validKeys) {
         this.validKeys = validKeys;
+    }
+
+    public void setLogAll(boolean logAll) {
+        this.logAll = logAll;
     }
 }
