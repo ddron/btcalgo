@@ -83,7 +83,7 @@ public class OrdersManager {
     public void remove(String internalOrderId) {
         Order order = orders.get(internalOrderId);
         if (order != null) {
-            if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.SENT) {
+            if (order.getStatus().isTerminal()) {
                 orders.remove(internalOrderId);
                 ordersView.remove(order);
             }
