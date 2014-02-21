@@ -54,7 +54,7 @@ public class LicenseController {
     }
 
     public void showLicensePopup() {
-        if (licenseService.hasValidLicense()) {
+        if (hasValidLicense()) {
             showActivatedLicensePage();
         } else {
             showTrialLicensePage();
@@ -214,13 +214,6 @@ public class LicenseController {
         });
         popupVBox.getChildren().add(ok);
 
-        validationPopup.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                licensePopup.hide();
-            }
-        });
-
         validationPopup.show();
     }
 
@@ -247,13 +240,6 @@ public class LicenseController {
             }
         });
         popupVBox.getChildren().add(ok);
-
-        incorrectKeyPopup.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                licensePopup.hide();
-            }
-        });
 
         incorrectKeyPopup.show();
     }
