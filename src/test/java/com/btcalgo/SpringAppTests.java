@@ -1,4 +1,4 @@
-package com.algo.btce;
+package com.btcalgo;
 
 import org.junit.Ignore;
 import org.junit.Test;
