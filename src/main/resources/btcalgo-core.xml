@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <bean id="env" class="reactor.core.Environment"/>
+    <bean id="reactor" class="com.btcalgo.reactor.ReactorFactory" factory-method="createReactor" scope="singleton">
+        <constructor-arg name="environment" ref="env"/>
+    </bean>
+
+    <bean id="btce.shutdown" class="com.btcalgo.BtceAlgoShutdown"/>
+
+    <bean id="command.processor" class="com.btcalgo.ConsoleCommandProcessor">
+        <constructor-arg ref="reactor"/>
+    </bean>
+
+    <bean id="reactor.scheduler" class="com.btcalgo.reactor.Scheduler">
+        <constructor-arg name="reactor" ref="reactor"/>
+        <constructor-arg name="taskScheduler" ref="scheduler"/>
+    </bean>
+
+    <task:scheduler id="scheduler" pool-size="10" />
+
+    <bean id="runtime.meter" class="com.btcalgo.service.RuntimeMeter"/>
+
+    <bean id="license.server" class="com.btcalgo.service.LicenseService" init-method="init">
+        <property name="configFile" value="${config.file}"/>
+    </bean>
+
+    <bean id="ticker.service" class="com.btcalgo.service.api.TickerService">
+        <constructor-arg name="apiService" ref="api.service"/>
+    </bean>
+
+    <bean id="order.manager" class="com.btcalgo.execution.OrdersManager">
+        <constructor-arg name="apiService" ref="api.service"/>
+        <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
+        <constructor-arg name="reactor" ref="reactor"/>
+    </bean>
+
+    <bean id="info.service" class="com.btcalgo.service.api.InfoService">
+        <constructor-arg name="apiService" ref="api.service"/>
+        <constructor-arg name="keysStatusHolder" ref="keys.status.holder"/>
+    </bean>
+
+</beans>

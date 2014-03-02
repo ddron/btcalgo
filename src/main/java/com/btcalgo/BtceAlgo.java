@@ -34,6 +34,8 @@ public class BtceAlgo extends Application {
     private static BtceAlgo app;
     private static final long MD_UPDATE_RATE_MS = 400;
 
+    private String contextFileName = "btcalgo-context.xml";
+
     public static void main(String[] args) throws InterruptedException {
         launch(args);
     }
@@ -67,7 +69,7 @@ public class BtceAlgo extends Application {
     }
 
     private void startContainer() throws InterruptedException {
-        context = new ClassPathXmlApplicationContext("btce-algo-config.xml");
+        context = new ClassPathXmlApplicationContext(contextFileName);
         context.registerShutdownHook();
 
         makeConsumerRegistrations();
@@ -132,5 +134,9 @@ public class BtceAlgo extends Application {
 
     public static BtceAlgo getApp() {
         return app;
+    }
+
+    public void setContextFileName(String contextFileName) {
+        this.contextFileName = contextFileName;
     }
 }

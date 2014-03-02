@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="controller.factory" class="com.btcalgo.ui.ControllerFactory">
+        <property name="reactor" ref="reactor"/>
+        <property name="apiService" ref="api.service"/>
+        <property name="keysStatusHolder" ref="keys.status.holder"/>
+        <property name="marketDataToShow" ref="market.data.to.show"/>
+        <property name="ordersManager" ref="order.manager"/>
+        <property name="licenseController" ref="license.controller"/>
+        <property name="validationController" ref="validation.controller"/>
+        <property name="runtimeMeter" ref="runtime.meter"/>
+    </bean>
+
+    <bean id="uiController" factory-bean="controller.factory" factory-method="createController">
+        <constructor-arg value="/ui/btcealgo.fxml"/>
+    </bean>
+
+    <bean id="license.controller" class="com.btcalgo.ui.LicenseController">
+        <property name="licenseService" ref="license.server"/>
+        <property name="runtimeMeter" ref="runtime.meter"/>
+        <property name="paymentUrl" value="${payment.url}"/>
+        <property name="supportEmail" value="${support.email}"/>
+    </bean>
+
+    <bean id="validation.controller" class="com.btcalgo.ui.ValidationController">
+        <property name="apiService" ref="api.service"/>
+        <property name="paymentUrl" value="${payment.url}"/>
+    </bean>
+
+    <bean id="keys.status.holder" class="com.btcalgo.ui.model.KeysStatusHolder"/>
+
+    <bean id="market.data.to.show" class="com.btcalgo.ui.model.MarketDataToShow">
+        <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
+    </bean>
+
+</beans>

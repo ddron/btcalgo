@@ -6,11 +6,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class KeysStatusHolder {
+public class KeysStatusHolder implements IKeyStatusHolder {
     private StringProperty keysStatus = new SimpleStringProperty();
     private BooleanProperty validateBtnDisabled = new SimpleBooleanProperty(false);
 
 
+    @Override
     public void updateStatus(InfoTemplate infoTemplate) {
         setValidateBtnDisabled(false);
         if (infoTemplate.hasAllRights()) {

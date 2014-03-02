@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="market.data.provider" class="com.btcalgo.service.marketdata.MarketDataProvider">
+        <constructor-arg name="reactor" ref="reactor"/>
+    </bean>
+
+    <bean id="market.data.source" class="com.btcalgo.service.marketdata.BtcBestMarketDataSource">
+        <constructor-arg name="tickerService" ref="ticker.service"/>
+        <constructor-arg name="reactor" ref="reactor"/>
+        <property name="listeners">
+            <set>
+                <ref bean="market.data.provider"/>
+            </set>
+        </property>
+    </bean>
+
+</beans>
