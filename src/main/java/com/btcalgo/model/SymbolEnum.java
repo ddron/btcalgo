@@ -35,8 +35,8 @@ public enum SymbolEnum {
 
     private String value;
     private String displayName;
-    private double minSize;
-    private double minStep;
+    private double minAmountSize;
+    private double minAmountStep;
 
     private static List<String> displayNames = new ArrayList<>();
 
@@ -46,11 +46,11 @@ public enum SymbolEnum {
         }
     }
 
-    private SymbolEnum(String value, String displayName, double minSize, double minStep) {
+    private SymbolEnum(String value, String displayName, double minAmountSize, double minAmountStep) {
         this.value = value;
         this.displayName = displayName;
-        this.minSize = minSize;
-        this.minStep = minStep;
+        this.minAmountSize = minAmountSize;
+        this.minAmountStep = minAmountStep;
     }
 
     public String getValue() {
@@ -74,12 +74,12 @@ public enum SymbolEnum {
         return displayNames;
     }
 
-    public double getMinSize() {
-        return minSize;
+    public double getMinAmountSize() {
+        return minAmountSize;
     }
 
-    public double getMinStep() {
-        return minStep;
+    public double getMinAmountStep() {
+        return minAmountStep;
     }
 
     public String getFirst() {

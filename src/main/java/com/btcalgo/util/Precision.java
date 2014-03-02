@@ -2,9 +2,13 @@ package com.btcalgo.util;
 
 public final class Precision {
 
-    private static final double EPSILON = 0.000000001;
+    private static final double EPSILON = 0.0000000001;
 
     private Precision() {
+    }
+
+    public static boolean isZero(double a) {
+        return areEqual(a, 0);
     }
 
     public static boolean isGreaterOrEqual(double a, double b) {
@@ -25,6 +29,10 @@ public final class Precision {
 
     public static boolean isLess(double a, double b) {
         return !isGreaterOrEqual(a, b);
+    }
+
+    public static boolean isAlignedAgainst(double value, double delta) {
+        return isZero(Math.IEEEremainder(value, delta));
     }
 
 }

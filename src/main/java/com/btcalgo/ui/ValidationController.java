@@ -3,7 +3,7 @@ package com.btcalgo.ui;
 import com.btcalgo.execution.StrategyType;
 import com.btcalgo.model.Direction;
 import com.btcalgo.service.api.ApiService;
-import com.btcalgo.util.Precision;
+import com.btcalgo.util.DoubleFormatter;
 import com.btcalgo.util.StringUtils;
 import com.google.common.base.Strings;
 import javafx.event.ActionEvent;
@@ -24,6 +24,8 @@ import java.util.List;
 import static com.btcalgo.ui.ValidationErrors.ErrorType.*;
 import static com.btcalgo.ui.ValidationErrors.Field.*;
 import static com.btcalgo.ui.ValidationErrors.getErrorValue;
+import static com.btcalgo.util.Precision.isAlignedAgainst;
+import static com.btcalgo.util.Precision.isLess;
 
 public class ValidationController {
 
@@ -130,8 +132,10 @@ public class ValidationController {
             result.add(ValidationErrors.getErrorValue(AMOUNT, EMPTY));
         } else if (!StringUtils.isNumber(amountValue)) {
             result.add(ValidationErrors.getErrorValue(AMOUNT, FORMAT));
-        } else if (Precision.isLess(Double.valueOf(amountValue), main.getSymbol().getMinSize())) {
-            result.add("Amount is less than " + main.getSymbol().getMinSize() + main.getSymbol().getFirst());
+        } else if (isLess(Double.valueOf(amountValue), main.getSymbol().getMinAmountSize())) {
+            result.add("Amount is less than " + main.getSymbol().getMinAmountSize() + main.getSymbol().getFirst());
+        } else if (!isAlignedAgainst(Double.valueOf(amountValue), main.getSymbol().getMinAmountStep())) {
+            result.add("Min amount step is " + DoubleFormatter.fmt(main.getSymbol().getMinAmountStep()) + main.getSymbol().getFirst());
         }
 
         // stop price
