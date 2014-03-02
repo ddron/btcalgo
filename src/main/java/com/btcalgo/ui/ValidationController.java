@@ -2,7 +2,7 @@ package com.btcalgo.ui;
 
 import com.btcalgo.execution.StrategyType;
 import com.btcalgo.model.Direction;
-import com.btcalgo.service.api.ApiService;
+import com.btcalgo.service.api.IApiService;
 import com.btcalgo.util.DoubleFormatter;
 import com.btcalgo.util.StringUtils;
 import com.google.common.base.Strings;
@@ -32,7 +32,7 @@ public class ValidationController {
     private Stage popup;
     private VBox errorsContent;
 
-    private ApiService apiService;
+    private IApiService apiService;
     private String paymentUrl;
 
     public void initValidationPopup(MainPageController main) {
@@ -168,7 +168,7 @@ public class ValidationController {
         return result;
     }
 
-    public void setApiService(ApiService apiService) {
+    public void setApiService(IApiService apiService) {
         this.apiService = apiService;
     }
 

@@ -3,7 +3,7 @@ package com.btcalgo.execution;
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.IOrderBook;
 import com.btcalgo.model.SymbolEnum;
-import com.btcalgo.service.api.ApiService;
+import com.btcalgo.service.api.IApiService;
 import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.marketdata.IMarketDataListener;
 import com.btcalgo.service.marketdata.MarketDataProvider;
@@ -31,7 +31,7 @@ public class Order implements IMarketDataListener {
     private final double stopPrice;
     private final double limitPrice;
 
-    private ApiService apiService;
+    private IApiService apiService;
     private MarketDataProvider marketDataProvider;
 
     private final AtomicReference<OrderStatus> status = new AtomicReference<>(OrderStatus.WAITING);
@@ -51,8 +51,6 @@ public class Order implements IMarketDataListener {
             updateDisplayStatusAndAction();
             marketDataProvider.removeListener(this, market, symbol);
 
-            // TODO: remove next line. And uncomment code block below
-            //status.set(OrderStatus.SENT);
             NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(symbol, direction, limitPrice, amount);
             if (newOrderTemplate.isSuccess()) {
                 log.info("order {} was successfully sent to market.", internalOrderId);
@@ -75,7 +73,7 @@ public class Order implements IMarketDataListener {
     }
 
     public static class OrderBuilder {
-        private ApiService apiService;
+        private IApiService apiService;
         private MarketDataProvider marketDataProvider;
 
         private Direction direction;
@@ -95,7 +93,7 @@ public class Order implements IMarketDataListener {
             return new OrderBuilder();
         }
 
-        public OrderBuilder setApiService(ApiService apiService) {
+        public OrderBuilder setApiService(IApiService apiService) {
             this.apiService = apiService;
             return this;
         }
@@ -146,7 +144,7 @@ public class Order implements IMarketDataListener {
         }
     }
 
-    private Order(ApiService apiService, MarketDataProvider marketDataProvider, Direction direction, SymbolEnum symbol,
+    private Order(IApiService apiService, MarketDataProvider marketDataProvider, Direction direction, SymbolEnum symbol,
                   String market,
                   StrategyType strategyType, double amount,
                  double stopPrice, double limitPrice) {

@@ -9,14 +9,12 @@ import reactor.event.Event;
 
 public class InfoService implements NameableConsumer<Event<Void>> {
 
-    private static final String API_METHOD_NAME = "getInfo";
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private ApiService apiService;
+    private IApiService apiService;
     private KeysStatusHolder keysStatusHolder;
 
-    public InfoService(ApiService apiService, KeysStatusHolder keysStatusHolder) {
+    public InfoService(IApiService apiService, KeysStatusHolder keysStatusHolder) {
         this.apiService = apiService;
         this.keysStatusHolder = keysStatusHolder;
     }
@@ -28,7 +26,7 @@ public class InfoService implements NameableConsumer<Event<Void>> {
 
     @Override
     public void accept(Event<Void> voidEvent) {
-        InfoTemplate infoTemplate = apiService.auth(API_METHOD_NAME, InfoTemplate.class);
+        InfoTemplate infoTemplate = apiService.getInfo();
         apiService.setValidKeys(infoTemplate.hasAllRights());
 
         keysStatusHolder.updateStatus(infoTemplate);

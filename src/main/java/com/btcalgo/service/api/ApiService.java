@@ -2,6 +2,7 @@ package com.btcalgo.service.api;
 
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.SymbolEnum;
+import com.btcalgo.service.api.templates.InfoTemplate;
 import com.btcalgo.service.api.templates.LoginTemplate;
 import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.api.templates.TickerTemplate;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ApiService {
+public class ApiService implements IApiService {
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     private String key;
@@ -50,6 +51,7 @@ public class ApiService {
         this.publicBaseUrl = publicBaseUrl;
     }
 
+    @Override
     public synchronized void updateKeys(String key, String secret) {
         initKeys(key, secret);
     }
@@ -92,6 +94,7 @@ public class ApiService {
     /////////////////////////////////////////
 
 
+    @Override
     public TickerTemplate getTicker(String symbol) {
         return request(symbol, "ticker", TickerTemplate.class);
     }
@@ -139,6 +142,7 @@ public class ApiService {
     //     AUTH REQUESTS START             //
     /////////////////////////////////////////
 
+    @Override
     public NewOrderTemplate sendNewOrder(SymbolEnum symbol, Direction direction, double price, double amount) {
         Map<String,String> args = new HashMap<>() ;
         args.put("pair", symbol.getValue()) ;
@@ -149,11 +153,16 @@ public class ApiService {
         return auth("Trade", args, NewOrderTemplate.class);
     }
 
-    public <T extends LoginTemplate> T auth(String method, Class<T> clazz) {
+    @Override
+    public InfoTemplate getInfo() {
+        return auth("getInfo", InfoTemplate.class);
+    }
+
+    private <T extends LoginTemplate> T auth(String method, Class<T> clazz) {
         return auth(method, null, clazz);
     }
 
-    public <T extends LoginTemplate> T auth(String method, Map<String, String> args, Class<T> clazz) {
+    private <T extends LoginTemplate> T auth(String method, Map<String, String> args, Class<T> clazz) {
         log.debug("auth() invoked. method: {}, args: {}", method, args);
 
         // add method and nonce to args
@@ -218,10 +227,12 @@ public class ApiService {
         return String.format("%040x", new BigInteger(1,b));
     }
 
+    @Override
     public boolean hasValidKeys() {
         return validKeys;
     }
 
+    @Override
     public void setValidKeys(boolean validKeys) {
         this.validKeys = validKeys;
     }

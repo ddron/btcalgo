@@ -8,7 +8,7 @@ import com.btcalgo.execution.StrategyType;
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.RuntimeMeter;
-import com.btcalgo.service.api.ApiService;
+import com.btcalgo.service.api.IApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
 import com.btcalgo.ui.model.OrderDataHolder;
@@ -65,7 +65,7 @@ public class MainPageController {
     private LicenseController licenseController;
 
     private Reactor reactor;
-    private ApiService apiService;
+    private IApiService apiService;
     private OrdersManager ordersManager;
     private RuntimeMeter runtimeMeter;
 
@@ -259,7 +259,7 @@ public class MainPageController {
         this.reactor = reactor;
     }
 
-    public void setApiService(ApiService apiService) {
+    public void setApiService(IApiService apiService) {
         this.apiService = apiService;
     }
 

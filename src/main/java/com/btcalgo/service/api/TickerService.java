@@ -7,9 +7,9 @@ import reactor.event.Event;
 
 public class TickerService implements NameableConsumer<Event<Void>> {
 
-    private ApiService apiService;
+    private IApiService apiService;
 
-    public TickerService(ApiService apiService) {
+    public TickerService(IApiService apiService) {
         this.apiService = apiService;
     }
 

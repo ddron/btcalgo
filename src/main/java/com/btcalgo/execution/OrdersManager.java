@@ -1,7 +1,7 @@
 package com.btcalgo.execution;
 
 import com.btcalgo.model.IOrderBook;
-import com.btcalgo.service.api.ApiService;
+import com.btcalgo.service.api.IApiService;
 import com.btcalgo.service.marketdata.MarketDataProvider;
 import com.btcalgo.service.marketdata.PriceIsWorseOrEqualThanCondition;
 import com.btcalgo.ui.model.OrderDataHolder;
@@ -21,11 +21,11 @@ public class OrdersManager {
     private Map<String, Order> orders = new ConcurrentHashMap<>();
     private ObservableList<Order> ordersView = FXCollections.observableArrayList(orders.values());
 
-    private ApiService apiService;
+    private IApiService apiService;
     private MarketDataProvider marketDataProvider;
     private Reactor reactor;
 
-    public OrdersManager(ApiService apiService, MarketDataProvider marketDataProvider, Reactor reactor) {
+    public OrdersManager(IApiService apiService, MarketDataProvider marketDataProvider, Reactor reactor) {
         this.apiService = apiService;
         this.marketDataProvider = marketDataProvider;
         this.reactor = reactor;
