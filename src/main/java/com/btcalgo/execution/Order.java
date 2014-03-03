@@ -6,7 +6,7 @@ import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.api.IApiService;
 import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.marketdata.IMarketDataListener;
-import com.btcalgo.service.marketdata.MarketDataProvider;
+import com.btcalgo.service.marketdata.IMarketDataProvider;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,7 +32,7 @@ public class Order implements IMarketDataListener {
     private final double limitPrice;
 
     private IApiService apiService;
-    private MarketDataProvider marketDataProvider;
+    private IMarketDataProvider marketDataProvider;
 
     private final AtomicReference<OrderStatus> status = new AtomicReference<>(OrderStatus.WAITING);
     private ObjectProperty<OrderStatus> displayStatus = new SimpleObjectProperty<>(status.get());
@@ -74,7 +74,7 @@ public class Order implements IMarketDataListener {
 
     public static class OrderBuilder {
         private IApiService apiService;
-        private MarketDataProvider marketDataProvider;
+        private IMarketDataProvider marketDataProvider;
 
         private Direction direction;
         private SymbolEnum symbol;
@@ -98,7 +98,7 @@ public class Order implements IMarketDataListener {
             return this;
         }
 
-        public OrderBuilder setMarketDataProvider(MarketDataProvider marketDataProvider) {
+        public OrderBuilder setMarketDataProvider(IMarketDataProvider marketDataProvider) {
             this.marketDataProvider = marketDataProvider;
             return this;
         }
@@ -144,7 +144,7 @@ public class Order implements IMarketDataListener {
         }
     }
 
-    private Order(IApiService apiService, MarketDataProvider marketDataProvider, Direction direction, SymbolEnum symbol,
+    private Order(IApiService apiService, IMarketDataProvider marketDataProvider, Direction direction, SymbolEnum symbol,
                   String market,
                   StrategyType strategyType, double amount,
                  double stopPrice, double limitPrice) {

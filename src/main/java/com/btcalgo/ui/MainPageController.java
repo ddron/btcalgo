@@ -318,4 +318,26 @@ public class MainPageController {
     public SymbolEnum getSymbol() {
         return SymbolEnum.valueByDisplayName(pairs.getSelectionModel().getSelectedItem());
     }
+
+
+
+    public void setAmountValue(String amountValue) {
+        amount.setText(amountValue);
+    }
+
+    public void setDirectionValue(String directionValue) {
+        direction.getSelectionModel().select(directionValue);
+    }
+
+    public void setSelectedPair(String pairValue) {
+        pairs.getSelectionModel().select(pairValue);
+    }
+
+    public void setStopPriceValue(String stopPriceValue) {
+        stopPrice.setText(stopPriceValue);
+    }
+
+    public void setLimitPriceValue(String limitPriceValue) {
+        limitPrice.setText(limitPriceValue);
+    }
 }

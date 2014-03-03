@@ -2,7 +2,7 @@ package com.btcalgo.execution;
 
 import com.btcalgo.model.IOrderBook;
 import com.btcalgo.service.api.IApiService;
-import com.btcalgo.service.marketdata.MarketDataProvider;
+import com.btcalgo.service.marketdata.IMarketDataProvider;
 import com.btcalgo.service.marketdata.PriceIsWorseOrEqualThanCondition;
 import com.btcalgo.ui.model.OrderDataHolder;
 import com.google.common.base.Predicate;
@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import reactor.core.Reactor;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,10 +23,10 @@ public class OrdersManager {
     private ObservableList<Order> ordersView = FXCollections.observableArrayList(orders.values());
 
     private IApiService apiService;
-    private MarketDataProvider marketDataProvider;
+    private IMarketDataProvider marketDataProvider;
     private Reactor reactor;
 
-    public OrdersManager(IApiService apiService, MarketDataProvider marketDataProvider, Reactor reactor) {
+    public OrdersManager(IApiService apiService, IMarketDataProvider marketDataProvider, Reactor reactor) {
         this.apiService = apiService;
         this.marketDataProvider = marketDataProvider;
         this.reactor = reactor;
@@ -92,5 +93,9 @@ public class OrdersManager {
 
     public ObservableList<Order> getOrdersView() {
         return ordersView;
+    }
+
+    public Collection<Order> getOrders() {
+        return orders.values();
     }
 }

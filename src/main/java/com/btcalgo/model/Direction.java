@@ -32,6 +32,15 @@ public enum Direction {
         return null;
     }
 
+    public static Direction valueByApiValue(String apiValue) {
+        for (Direction type : Direction.values()) {
+            if (type.apiValue.equals(apiValue)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public String getDisplayName() {
         return displayName;
     }

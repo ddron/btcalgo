@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding='UTF-8' ?>
+<configuration debug="true">
+    <!--<jmxConfiguratior/>-->
+
+    <appender name="STD_OUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <immediateFlush>true</immediateFlush>
+            <pattern>%date %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework" level="INFO"/>
+    <!--<logger name="org.springframework.web" level="ALL"/>-->
+
+    <!--<logger name="com.btcalgo.service.api.ApiService" level="DEBUG"/>-->
+    <!--<logger name="com.btcalgo.service.marketdata.MarketDataProvider" level="DEBUG"/>-->
+    <logger name="com.btcalgo.service.api.InfoService" level="DEBUG"/>
+
+    <root level="info">
+        <appender-ref ref="STD_OUT"/>
+    </root>
+</configuration>
