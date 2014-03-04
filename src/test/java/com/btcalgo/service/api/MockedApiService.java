@@ -1,21 +1,30 @@
 package com.btcalgo.service.api;
 
-import com.btcalgo.model.Direction;
+import com.btcalgo.execution.Order;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.api.templates.InfoTemplate;
 import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.api.templates.Ticker;
 import com.btcalgo.service.api.templates.TickerTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
-// TODO: add methods implementation
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class MockedApiService implements IApiService {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private volatile boolean validKeys = false;
 
     private Map<String, TickerTemplate> tickers = new ConcurrentHashMap<>();
+    private BlockingQueue<Order> sentOrders = new ArrayBlockingQueue<>(10);
 
     @Override
     public void updateKeys(String key, String secret) {
@@ -39,25 +48,33 @@ public class MockedApiService implements IApiService {
 
     public void setNewTicker(String pair, String buyPrice, String sellPrice) {
         Ticker ticker = new Ticker();
-        ticker.setSymbol(SymbolEnum.valueOf(pair));
+        SymbolEnum symbol = SymbolEnum.valueOf(pair);
+        ticker.setSymbol(symbol);
         ticker.setBuy(Double.valueOf(buyPrice));
         ticker.setSell(Double.valueOf(sellPrice));
 
         TickerTemplate tickerTemplate = new TickerTemplate();
         tickerTemplate.setTicker(ticker);
 
-        tickers.put(pair, tickerTemplate);
+        tickers.put(symbol.getValue(), tickerTemplate);
     }
 
     @Override
-    public NewOrderTemplate sendNewOrder(SymbolEnum symbol, Direction direction, double price, double amount) {
-        // TODO: implement it
-        return null;
+    public NewOrderTemplate sendNewOrder(Order order) {
+        log.info("New order received: {}", order);
+        sentOrders.add(order);
+        NewOrderTemplate newOrderTemplate = mock(NewOrderTemplate.class);
+        when(newOrderTemplate.isSuccess()).thenReturn(true);
+        return newOrderTemplate;
     }
 
     @Override
     public InfoTemplate getInfo() {
         // TODO: do we need to implement it?
         return null;
+    }
+
+    public BlockingQueue<Order> getSentOrders() {
+        return sentOrders;
     }
 }

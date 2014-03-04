@@ -51,7 +51,7 @@ public class Order implements IMarketDataListener {
             updateDisplayStatusAndAction();
             marketDataProvider.removeListener(this, market, symbol);
 
-            NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(symbol, direction, limitPrice, amount);
+            NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(this);
             if (newOrderTemplate.isSuccess()) {
                 log.info("order {} was successfully sent to market.", internalOrderId);
                 status.set(OrderStatus.SENT);

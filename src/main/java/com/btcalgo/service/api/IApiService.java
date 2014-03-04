@@ -1,7 +1,6 @@
 package com.btcalgo.service.api;
 
-import com.btcalgo.model.Direction;
-import com.btcalgo.model.SymbolEnum;
+import com.btcalgo.execution.Order;
 import com.btcalgo.service.api.templates.InfoTemplate;
 import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.api.templates.TickerTemplate;
@@ -17,7 +16,7 @@ public interface IApiService {
 
     TickerTemplate getTicker(String symbol);
 
-    NewOrderTemplate sendNewOrder(SymbolEnum symbol, Direction direction, double price, double amount);
+    NewOrderTemplate sendNewOrder(Order order);
 
     InfoTemplate getInfo();
 }

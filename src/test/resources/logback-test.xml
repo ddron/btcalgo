@@ -13,7 +13,7 @@
     <!--<logger name="org.springframework.web" level="ALL"/>-->
 
     <!--<logger name="com.btcalgo.service.api.ApiService" level="DEBUG"/>-->
-    <!--<logger name="com.btcalgo.service.marketdata.MarketDataProvider" level="DEBUG"/>-->
+    <logger name="com.btcalgo.service.marketdata.MarketDataProvider" level="DEBUG"/>
     <logger name="com.btcalgo.service.api.InfoService" level="DEBUG"/>
 
     <root level="info">

@@ -1,7 +1,6 @@
 package com.btcalgo.service.api;
 
-import com.btcalgo.model.Direction;
-import com.btcalgo.model.SymbolEnum;
+import com.btcalgo.execution.Order;
 import com.btcalgo.service.api.templates.InfoTemplate;
 import com.btcalgo.service.api.templates.LoginTemplate;
 import com.btcalgo.service.api.templates.NewOrderTemplate;
@@ -143,12 +142,12 @@ public class ApiService implements IApiService {
     /////////////////////////////////////////
 
     @Override
-    public NewOrderTemplate sendNewOrder(SymbolEnum symbol, Direction direction, double price, double amount) {
-        Map<String,String> args = new HashMap<>() ;
-        args.put("pair", symbol.getValue()) ;
-        args.put("type", direction.getApiValue()) ;
-        args.put("rate", String.valueOf(price)) ;
-        args.put("amount", String.valueOf(amount)) ;
+    public NewOrderTemplate sendNewOrder(Order order) {
+        Map<String, String> args = new HashMap<>();
+        args.put("pair", order.getSymbol().getValue());
+        args.put("type", order.getDirection().getApiValue());
+        args.put("rate", String.valueOf(order.getLimitPrice()));
+        args.put("amount", String.valueOf(order.getAmount()));
 
         return auth("Trade", args, NewOrderTemplate.class);
     }

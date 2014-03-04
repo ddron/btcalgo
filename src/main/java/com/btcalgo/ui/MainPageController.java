@@ -340,4 +340,8 @@ public class MainPageController {
     public void setLimitPriceValue(String limitPriceValue) {
         limitPrice.setText(limitPriceValue);
     }
+
+    public void setStrategyTypeValue(String strategyTypeValue) {
+        strategyTypes.getSelectionModel().select(strategyTypeValue);
+    }
 }
