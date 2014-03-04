@@ -62,6 +62,7 @@ public class CukesSteps {
     public void md_for_is_buy_sell(String pair, String buyPrice, String sellPrice) throws Throwable {
         MockedApiService apiService = getApiService();
         apiService.setNewTicker(pair, buyPrice, sellPrice);
+        Thread.sleep(500); // wait for md delivery
     }
 
     @Then(value = "^put new ([^\"]*) \"([^\"]*)\" order \"([^\"]*)\" of \"([^\"]*)\" with stopPrice = \"([^\"]*)\"$", timeout = STEP_TIMEOUT)
