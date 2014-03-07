@@ -12,6 +12,7 @@ import com.btcalgo.service.api.IApiService;
 import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
 import com.btcalgo.ui.model.OrderDataHolder;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -117,12 +118,32 @@ public class MainPageController {
         amountCol.setCellValueFactory(new PropertyValueFactory<Order, String>("amount"));
         amountCol.setPrefWidth(70);
 
+        // TODO: add formatting to price value
         TableColumn<Order, String> stopPriceCol = new TableColumn<>("Stop Price");
-        stopPriceCol.setCellValueFactory(new PropertyValueFactory<Order, String>("stopPrice"));
+        stopPriceCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> o) {
+                Order order = o.getValue();
+                if (order.getInitialStopPrice() != null) {
+                    return Bindings.concat(order.stopPriceProperty()).concat(" (").concat(order.initialStopPriceProperty()).concat(")");
+                } else {
+                    return order.stopPriceProperty();
+                }
+            }
+        });
         stopPriceCol.setPrefWidth(70);
 
+        // TODO: add formatting to price value
         TableColumn<Order, String> limitPriceCol = new TableColumn<>("Price");
-        limitPriceCol.setCellValueFactory(new PropertyValueFactory<Order, String>("limitPrice"));
+        limitPriceCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> o) {
+                Order order = o.getValue();
+                if (order.getInitialLimitPrice() != null) {
+                    return Bindings.concat(order.limitPriceProperty()).concat(" (").concat(order.initialLimitPriceProperty()).concat(")");
+                } else {
+                    return order.limitPriceProperty();
+                }
+            }
+        });
         limitPriceCol.setPrefWidth(70);
 
         TableColumn<Order, String> statusCol = new TableColumn<>("Status");

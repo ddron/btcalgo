@@ -1,13 +1,13 @@
 package com.btcalgo.execution;
 
-import com.btcalgo.model.IOrderBook;
 import com.btcalgo.service.api.IApiService;
+import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.marketdata.IMarketDataProvider;
-import com.btcalgo.service.marketdata.PriceIsWorseOrEqualThanCondition;
 import com.btcalgo.ui.model.OrderDataHolder;
-import com.google.common.base.Predicate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.Reactor;
 
 import java.util.Collection;
@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import static reactor.event.selector.Selectors.$;
 
 public class OrdersManager {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     /** 'internalOrderId' to 'order' map*/
     private Map<String, Order> orders = new ConcurrentHashMap<>();
@@ -34,18 +36,15 @@ public class OrdersManager {
 
     public void createNew(OrderDataHolder holder) {
         // create new order from holder object
-        Order order = Order.OrderBuilder.newOrder()
-                .setApiService(apiService)
-                .setMarketDataProvider(marketDataProvider)
-                .setDirection(holder.getDirection())
-                .setSymbol(holder.getSymbol())
-                .setMarket(holder.getMarket())
-                .setStrategyType(holder.getStrategyType())
-                .setAmount(holder.getAmount())
-                .setStopPrice(holder.getStopPrice())
-                .setLimitPrice(holder.getLimitPrice())
-                .build();
-
+        Order order;
+        if (holder.getStrategyType() == StrategyType.STOP_LOSS) {
+            order = new StopOrder(this, holder);
+        } else if (holder.getStrategyType() == StrategyType.TRAILING_STOP) {
+            order = new TrailingStopOrder(this, holder);
+        } else {
+            log.error("Unknown strategy type: {}", holder.getStrategyType());
+            return;
+        }
 
         // store reference to internal map
         orders.put(order.getInternalOrderId(), order);
@@ -55,9 +54,7 @@ public class OrdersManager {
         reactor.on($(order.getId()), order);
 
         // register new order as market data listener
-        Predicate<IOrderBook> condition =
-                new PriceIsWorseOrEqualThanCondition(order.getStopPrice(), order.getDirection());
-        marketDataProvider.addListener(order, order.getMarket(), order.getSymbol(), condition);
+        marketDataProvider.addListener(order, order.getMarket(), order.getSymbol(), order.getObCondition());
     }
 
     public int getLiveOrdersCount() {
@@ -69,6 +66,21 @@ public class OrdersManager {
             }
         }
         return result;
+    }
+
+    public void sendToMarket(Order order) {
+        order.updateDisplayStatusAndAction();
+        marketDataProvider.removeListener(order, order.getMarket(), order.getSymbol());
+
+        NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(order);
+        if (newOrderTemplate.isSuccess()) {
+            log.info("order {} was successfully sent to market.", order.getInternalOrderId());
+            order.setStatus(OrderStatus.SENT);
+        } else {
+            log.error("order {} was NOT sent to market. Result: {}", order.getInternalOrderId(), newOrderTemplate.getError());
+            order.setStatus(OrderStatus.ERROR);
+        }
+        order.updateDisplayStatusAndAction();
     }
 
     public void cancel(String internalOrderId) {

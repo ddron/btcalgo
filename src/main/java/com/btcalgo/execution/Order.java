@@ -3,10 +3,9 @@ package com.btcalgo.execution;
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.IOrderBook;
 import com.btcalgo.model.SymbolEnum;
-import com.btcalgo.service.api.IApiService;
-import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.marketdata.IMarketDataListener;
-import com.btcalgo.service.marketdata.IMarketDataProvider;
+import com.btcalgo.ui.model.OrderDataHolder;
+import com.google.common.base.Predicate;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,10 +16,10 @@ import reactor.event.Event;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Order implements IMarketDataListener {
+public abstract class Order implements IMarketDataListener {
 
     private final String internalOrderId = OrderIdGenerator.nextId();
-    private Logger log = LoggerFactory.getLogger(getClass() + internalOrderId);
+    protected Logger log = LoggerFactory.getLogger(getClass() + internalOrderId);
 
     private final Direction direction;
     private final SymbolEnum symbol;
@@ -28,38 +27,37 @@ public class Order implements IMarketDataListener {
     private final StrategyType strategyType;
 
     private final double amount;
-    private final double stopPrice;
-    private final double limitPrice;
 
-    private IApiService apiService;
-    private IMarketDataProvider marketDataProvider;
+    private OrdersManager ordersManager;
 
     private final AtomicReference<OrderStatus> status = new AtomicReference<>(OrderStatus.WAITING);
     private ObjectProperty<OrderStatus> displayStatus = new SimpleObjectProperty<>(status.get());
     private StringProperty validAction = new SimpleStringProperty(status.get().getValidAction().name());
+
+    private StringProperty stopPrice = new SimpleStringProperty();
+    private StringProperty limitPrice = new SimpleStringProperty();
+
+    private StringProperty initialStopPrice = new SimpleStringProperty(null);
+    private StringProperty initialLimitPrice = new SimpleStringProperty(null);
 
     @Override
     public String getId() {
         return internalOrderId;
     }
 
+    public abstract Predicate<IOrderBook> getObCondition();
+
+    public abstract boolean checkRule(IOrderBook book);
+
     @Override
     public void accept(Event<IOrderBook> iOrderBookEvent) {
         IOrderBook book = iOrderBookEvent.getData();
-        if (book != null && status.compareAndSet(OrderStatus.WAITING, OrderStatus.SENDING)) {
-            log.info("Order {} was triggered by {} update", this, book);
-            updateDisplayStatusAndAction();
-            marketDataProvider.removeListener(this, market, symbol);
 
-            NewOrderTemplate newOrderTemplate = apiService.sendNewOrder(this);
-            if (newOrderTemplate.isSuccess()) {
-                log.info("order {} was successfully sent to market.", internalOrderId);
-                status.set(OrderStatus.SENT);
-            } else {
-                log.error("order {} was NOT sent to market. Result: {}", internalOrderId, newOrderTemplate.getError());
-                status.set(OrderStatus.ERROR);
+        if (book != null && checkRule(book)) {
+            if (status.compareAndSet(OrderStatus.WAITING, OrderStatus.SENDING)) {
+                log.info("Order {} was triggered by {} update", this, book);
+                ordersManager.sendToMarket(this);
             }
-            updateDisplayStatusAndAction();
         }
     }
 
@@ -72,93 +70,15 @@ public class Order implements IMarketDataListener {
         validAction.set(displayStatus.get().getValidAction().name());
     }
 
-    public static class OrderBuilder {
-        private IApiService apiService;
-        private IMarketDataProvider marketDataProvider;
-
-        private Direction direction;
-        private SymbolEnum symbol;
-        private String market;
-        private StrategyType strategyType;
-
-        private double amount;
-        private double stopPrice;
-        private double limitPrice;
-
-        /** use {@link com.btcalgo.execution.Order.OrderBuilder#newOrder()} */
-        private OrderBuilder() {
-        }
-
-        public static OrderBuilder newOrder() {
-            return new OrderBuilder();
-        }
-
-        public OrderBuilder setApiService(IApiService apiService) {
-            this.apiService = apiService;
-            return this;
-        }
-
-        public OrderBuilder setMarketDataProvider(IMarketDataProvider marketDataProvider) {
-            this.marketDataProvider = marketDataProvider;
-            return this;
-        }
-
-        public OrderBuilder setDirection(Direction direction) {
-            this.direction = direction;
-            return this;
-        }
-
-        public OrderBuilder setSymbol(SymbolEnum symbol) {
-            this.symbol = symbol;
-            return this;
-        }
-
-        public OrderBuilder setMarket(String market) {
-            this.market = market;
-            return this;
-        }
-
-        public OrderBuilder setStrategyType(StrategyType strategyType) {
-            this.strategyType = strategyType;
-            return this;
-        }
-
-        public OrderBuilder setAmount(double amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public OrderBuilder setStopPrice(double stopPrice) {
-            this.stopPrice = stopPrice;
-            return this;
-        }
-
-        public OrderBuilder setLimitPrice(double limitPrice) {
-            this.limitPrice = limitPrice;
-            return this;
-        }
-
-        public Order build() {
-            return new Order(apiService, marketDataProvider, direction, symbol, market, strategyType,
-                    amount, stopPrice, limitPrice);
-        }
-    }
-
-    private Order(IApiService apiService, IMarketDataProvider marketDataProvider, Direction direction, SymbolEnum symbol,
-                  String market,
-                  StrategyType strategyType, double amount,
-                 double stopPrice, double limitPrice) {
-        this.apiService = apiService;
-        this.marketDataProvider = marketDataProvider;
-        this.direction = direction;
-        this.symbol = symbol;
-        this.market = market;
-        this.strategyType = strategyType;
-        this.amount = amount;
-        this.stopPrice = stopPrice;
-        this.limitPrice = limitPrice;
-
-        log.info("New order created: {}", this);
+    public Order(OrdersManager ordersManager, OrderDataHolder holder) {
+        this.ordersManager = ordersManager;
+        this.direction = holder.getDirection();
+        this.symbol = holder.getSymbol();
+        this.market = holder.getMarket();
+        this.strategyType = holder.getStrategyType();
+        this.amount = holder.getAmount();
+        setStopPrice(String.valueOf(holder.getStopPrice()));
+        setLimitPrice(String.valueOf(holder.getLimitPrice()));
     }
 
     public Direction getDirection() {
@@ -201,12 +121,28 @@ public class Order implements IMarketDataListener {
         return amount;
     }
 
-    public double getStopPrice() {
+    public String getStopPrice() {
+        return stopPrice.get();
+    }
+
+    public StringProperty stopPriceProperty() {
         return stopPrice;
     }
 
-    public double getLimitPrice() {
+    public void setStopPrice(String stopPrice) {
+        this.stopPrice.set(stopPrice);
+    }
+
+    public String getLimitPrice() {
+        return limitPrice.get();
+    }
+
+    public StringProperty limitPriceProperty() {
         return limitPrice;
+    }
+
+    public void setLimitPrice(String limitPrice) {
+        this.limitPrice.set(limitPrice);
     }
 
     public String getSymbolAsString() {
@@ -239,6 +175,30 @@ public class Order implements IMarketDataListener {
 
     public void setValidAction(String validAction) {
         this.validAction.set(validAction);
+    }
+
+    public String getInitialStopPrice() {
+        return initialStopPrice.get();
+    }
+
+    public StringProperty initialStopPriceProperty() {
+        return initialStopPrice;
+    }
+
+    public void setInitialStopPrice(String initialStopPrice) {
+        this.initialStopPrice.set(initialStopPrice);
+    }
+
+    public String getInitialLimitPrice() {
+        return initialLimitPrice.get();
+    }
+
+    public StringProperty initialLimitPriceProperty() {
+        return initialLimitPrice;
+    }
+
+    public void setInitialLimitPrice(String initialLimitPrice) {
+        this.initialLimitPrice.set(initialLimitPrice);
     }
 
     @Override

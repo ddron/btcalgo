@@ -98,8 +98,8 @@ public class CukesSteps {
 
         for (Order order : ordersManager.getOrders()) {
             if (areEqual(order.getAmount(), amount)
-                    && areEqual(order.getLimitPrice(), limitPrice)
-                    && areEqual(order.getStopPrice(), stopPrice)
+                    && areEqual(Double.valueOf(order.getLimitPrice()), limitPrice)
+                    && areEqual(Double.valueOf(order.getStopPrice()), stopPrice)
                     && symbol == order.getSymbol()
                     && direction == order.getDirection()
                     && strategyType == order.getStrategyType()
@@ -128,7 +128,7 @@ public class CukesSteps {
         while (!orderFound) {
             Order order = sentOrders.take();
             if (areEqual(order.getAmount(), amount)
-                    && areEqual(order.getLimitPrice(), limitPrice)
+                    && areEqual(Double.valueOf(order.getLimitPrice()), limitPrice)
                     && symbol == order.getSymbol()
                     && direction == order.getDirection()) {
                 log.info("Success. Order sent to market: {}", order);

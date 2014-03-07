@@ -117,7 +117,8 @@ public class ValidationController {
         }
 
         // check strategy type
-        if (StrategyType.valueByDisplayName(main.getStrategyTypes().getSelectionModel().getSelectedItem()) != StrategyType.STOP_LOSS) {
+        if (StrategyType.valueByDisplayName(main.getStrategyTypes().getSelectionModel().getSelectedItem()) != StrategyType.STOP_LOSS
+                && StrategyType.valueByDisplayName(main.getStrategyTypes().getSelectionModel().getSelectedItem()) != StrategyType.TRAILING_STOP) {
             result.add(ValidationErrors.getErrorValue(STRATEGY_TYPE, INCORRECT_VALUE));
         }
 

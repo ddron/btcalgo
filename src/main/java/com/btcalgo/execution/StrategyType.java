@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum StrategyType {
-    STOP_LOSS("Stop Loss");
+    STOP_LOSS("Stop Loss"),
+    TRAILING_STOP("Trailing Stop");
 
     private String displayName;
     private static List<String> displayNames = new ArrayList<>();
