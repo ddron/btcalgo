@@ -67,4 +67,24 @@ public class PrecisionTest {
         assertFalse(isAlignedAgainst(1.24,  0.1));
     }
 
+    @Test
+    public void roundDownValueToStepTest() {
+        assertTrue(0.2 == roundDownValueToStep(0.20000000000000107, EPSILON));
+        assertTrue(0.1999999999 == roundDownValueToStep(0.19999999999999107, EPSILON));
+        assertTrue(2.11 == roundDownValueToStep(2.11, EPSILON));
+    }
+
+    @Test
+    public void roundUpValueToStepTest() {
+        assertTrue(0.2000000001 == roundUpValueToStep(0.20000000000000107, EPSILON));
+        assertTrue(0.2 == roundUpValueToStep(0.19999999999999107, EPSILON));
+        assertTrue(2.11 == roundUpValueToStep(2.11, EPSILON));
+    }
+
+    @Test
+    public void roundValueToStepTest() {
+        assertTrue(0.2 == roundValueToStep(0.20000000000000107, EPSILON));
+        assertTrue(0.2 == roundValueToStep(0.19999999999999107, EPSILON));
+        assertTrue(2.11 == roundValueToStep(2.11, EPSILON));
+    }
 }

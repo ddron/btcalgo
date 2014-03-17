@@ -2,7 +2,7 @@ package com.btcalgo.util;
 
 public final class Precision {
 
-    private static final double EPSILON = 0.0000000001;
+    public static final double EPSILON = 0.0000000001;
 
     private Precision() {
     }
@@ -33,6 +33,27 @@ public final class Precision {
 
     public static boolean isAlignedAgainst(double value, double delta) {
         return isZero(Math.IEEEremainder(value, delta));
+    }
+
+    public static double roundDownValueToStep(double rawValue, double valueStep) {
+        valueStep = 1 / valueStep;
+        return Math.floor(rawValue * valueStep + EPSILON) / valueStep;
+    }
+
+    public static double roundUpValueToStep(double rawValue, double valueStep) {
+        valueStep = 1 / valueStep;
+        return Math.ceil(rawValue * valueStep - EPSILON) / valueStep;
+    }
+
+    public static double roundValueToStep(double rawValue, double valueStep) {
+        double remainder = Math.IEEEremainder(rawValue, valueStep);
+        if (remainder > 0) {
+            return roundDownValueToStep(rawValue, valueStep);
+        } else if (remainder < 0) {
+            return roundUpValueToStep(rawValue, valueStep);
+        } else {
+            return rawValue;
+        }
     }
 
 }

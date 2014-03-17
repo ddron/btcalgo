@@ -6,6 +6,7 @@ import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.marketdata.IMarketDataListener;
 import com.btcalgo.ui.model.OrderDataHolder;
 import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.AtomicDouble;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,6 +16,10 @@ import org.slf4j.LoggerFactory;
 import reactor.event.Event;
 
 import java.util.concurrent.atomic.AtomicReference;
+
+import static com.btcalgo.util.DoubleFormatter.fmt;
+import static com.btcalgo.util.Precision.EPSILON;
+import static com.btcalgo.util.Precision.roundValueToStep;
 
 public abstract class Order implements IMarketDataListener {
 
@@ -33,6 +38,9 @@ public abstract class Order implements IMarketDataListener {
     private final AtomicReference<OrderStatus> status = new AtomicReference<>(OrderStatus.WAITING);
     private ObjectProperty<OrderStatus> displayStatus = new SimpleObjectProperty<>(status.get());
     private StringProperty validAction = new SimpleStringProperty(status.get().getValidAction().name());
+
+    private AtomicDouble stopPriceAsDouble = new AtomicDouble();
+    private AtomicDouble limitPriceAsDouble = new AtomicDouble();
 
     private StringProperty stopPrice = new SimpleStringProperty();
     private StringProperty limitPrice = new SimpleStringProperty();
@@ -77,8 +85,8 @@ public abstract class Order implements IMarketDataListener {
         this.market = holder.getMarket();
         this.strategyType = holder.getStrategyType();
         this.amount = holder.getAmount();
-        setStopPrice(String.valueOf(holder.getStopPrice()));
-        setLimitPrice(String.valueOf(holder.getLimitPrice()));
+        setStopPriceAsDouble(holder.getStopPrice());
+        setLimitPriceAsDouble(holder.getLimitPrice());
     }
 
     public Direction getDirection() {
@@ -129,20 +137,12 @@ public abstract class Order implements IMarketDataListener {
         return stopPrice;
     }
 
-    public void setStopPrice(String stopPrice) {
-        this.stopPrice.set(stopPrice);
-    }
-
     public String getLimitPrice() {
         return limitPrice.get();
     }
 
     public StringProperty limitPriceProperty() {
         return limitPrice;
-    }
-
-    public void setLimitPrice(String limitPrice) {
-        this.limitPrice.set(limitPrice);
     }
 
     public String getSymbolAsString() {
@@ -201,6 +201,36 @@ public abstract class Order implements IMarketDataListener {
         this.initialLimitPrice.set(initialLimitPrice);
     }
 
+    public double getStopPriceAsDouble() {
+        return stopPriceAsDouble.get();
+    }
+
+    public void setStopPriceAsDouble(double newStopPriceAsDouble) {
+        stopPriceAsDouble.set(roundValueToStep(newStopPriceAsDouble, EPSILON));
+        stopPriceProperty().set(fmt(getStopPriceAsDouble()));
+/*
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
+*/
+    }
+
+    public double getLimitPriceAsDouble() {
+        return limitPriceAsDouble.get();
+    }
+
+    public void setLimitPriceAsDouble(double newLimitPriceAsDouble) {
+        limitPriceAsDouble.set(roundValueToStep(newLimitPriceAsDouble, EPSILON));
+        limitPriceProperty().set(fmt(getLimitPriceAsDouble()));
+        /*Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });*/
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Order{");
@@ -213,7 +243,6 @@ public abstract class Order implements IMarketDataListener {
         sb.append(", stopPrice=").append(stopPrice);
         sb.append(", limitPrice=").append(limitPrice);
         sb.append(", status=").append(status);
-        sb.append('}');
         return sb.toString();
     }
 }

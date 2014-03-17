@@ -118,7 +118,6 @@ public class MainPageController {
         amountCol.setCellValueFactory(new PropertyValueFactory<Order, String>("amount"));
         amountCol.setPrefWidth(70);
 
-        // TODO: add formatting to price value
         TableColumn<Order, String> stopPriceCol = new TableColumn<>("Stop Price");
         stopPriceCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> o) {
@@ -132,7 +131,6 @@ public class MainPageController {
         });
         stopPriceCol.setPrefWidth(70);
 
-        // TODO: add formatting to price value
         TableColumn<Order, String> limitPriceCol = new TableColumn<>("Price");
         limitPriceCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> o) {

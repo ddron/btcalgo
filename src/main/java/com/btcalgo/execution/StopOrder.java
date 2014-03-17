@@ -12,7 +12,7 @@ public class StopOrder extends Order {
     public StopOrder(OrdersManager ordersManager, OrderDataHolder holder) {
         super(ordersManager, holder);
 
-        obCondition = new PriceIsWorseOrEqualThanCondition(Double.valueOf(getStopPrice()), getDirection());
+        obCondition = new PriceIsWorseOrEqualThanCondition(getStopPriceAsDouble(), getDirection());
         log.info("New order created: {}", this);
     }
 
@@ -24,5 +24,12 @@ public class StopOrder extends Order {
     @Override
     public boolean checkRule(IOrderBook book) {
         return obCondition != null && obCondition.apply(book);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(super.toString());
+        sb.append('}');
+        return sb.toString();
     }
 }

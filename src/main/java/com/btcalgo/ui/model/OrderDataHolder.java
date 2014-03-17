@@ -15,6 +15,9 @@ public class OrderDataHolder {
     private final double stopPrice;
     private final double limitPrice;
 
+    /* This for trailing stop loss algo */
+    private final double offset;
+
     public static class OrderDataHolderBuilder {
         private Direction direction;
         private SymbolEnum symbol;
@@ -23,6 +26,8 @@ public class OrderDataHolder {
         private double amount;
         private double stopPrice;
         private double limitPrice;
+
+        private double offset;
 
         private OrderDataHolderBuilder() {
         }
@@ -61,19 +66,25 @@ public class OrderDataHolder {
             return this;
         }
 
+        public OrderDataHolderBuilder setOffset(double offset) {
+            this.offset = offset;
+            return this;
+        }
+
         public OrderDataHolder build() {
-            return new OrderDataHolder(direction, symbol, strategyType, amount, stopPrice, limitPrice);
+            return new OrderDataHolder(direction, symbol, strategyType, amount, stopPrice, limitPrice, offset);
         }
     }
 
     private OrderDataHolder(Direction direction, SymbolEnum symbol, StrategyType strategyType,
-                           double amount, double stopPrice, double limitPrice) {
+                           double amount, double stopPrice, double limitPrice, double offset) {
         this.direction = direction;
         this.symbol = symbol;
         this.strategyType = strategyType;
         this.amount = amount;
         this.stopPrice = stopPrice;
         this.limitPrice = limitPrice;
+        this.offset = offset;
     }
 
     public Direction getDirection() {
@@ -102,5 +113,9 @@ public class OrderDataHolder {
 
     public double getLimitPrice() {
         return limitPrice;
+    }
+
+    public double getOffset() {
+        return offset;
     }
 }

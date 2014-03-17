@@ -146,7 +146,7 @@ public class ApiService implements IApiService {
         Map<String, String> args = new HashMap<>();
         args.put("pair", order.getSymbol().getValue());
         args.put("type", order.getDirection().getApiValue());
-        args.put("rate", String.valueOf(order.getLimitPrice()));
+        args.put("rate", String.valueOf(order.getLimitPriceAsDouble()));
         args.put("amount", String.valueOf(order.getAmount()));
 
         return auth("Trade", args, NewOrderTemplate.class);
