@@ -13,18 +13,25 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ApiService implements IApiService {
     protected Logger log = LoggerFactory.getLogger(getClass());
+    private static Logger initLogger = LoggerFactory.getLogger(ApiService.class + "_init");
 
     private String key;
 
@@ -44,6 +51,27 @@ public class ApiService implements IApiService {
 
     private Gson gson = new GsonBuilder().create();
     private boolean logAll = false;
+
+
+    static {
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }};
+
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception e) {
+            initLogger.error("", e);
+        }
+    }
 
     public ApiService(String authBaseUrl, String publicBaseUrl) {
         this.authBaseUrl = authBaseUrl;
