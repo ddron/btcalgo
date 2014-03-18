@@ -24,7 +24,7 @@ import static com.btcalgo.util.Precision.roundValueToStep;
 public abstract class Order implements IMarketDataListener {
 
     private final String internalOrderId = OrderIdGenerator.nextId();
-    protected Logger log = LoggerFactory.getLogger(getClass() + internalOrderId);
+    protected Logger log = LoggerFactory.getLogger(getClass() + "_" + internalOrderId);
 
     private final Direction direction;
     private final SymbolEnum symbol;
@@ -234,15 +234,15 @@ public abstract class Order implements IMarketDataListener {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Order{");
-        sb.append("internalOrderId='").append(internalOrderId).append('\'');
-        sb.append(", direction=").append(direction);
+        sb.append("id='").append(internalOrderId).append('\'');
+        sb.append(", side=").append(direction);
         sb.append(", symbol=").append(symbol);
-        sb.append(", market='").append(market).append('\'');
-        sb.append(", strategyType=").append(strategyType);
-        sb.append(", amount=").append(amount);
-        sb.append(", stopPrice=").append(stopPrice);
-        sb.append(", limitPrice=").append(limitPrice);
+        sb.append(", mkt='").append(market).append('\'');
+        sb.append(", orderType=").append(strategyType);
         sb.append(", status=").append(status);
+        sb.append(", amount=").append(amount);
+        sb.append(", stopPrice=").append(stopPrice.get());
+        sb.append(", limitPrice=").append(limitPrice.get());
         return sb.toString();
     }
 }
