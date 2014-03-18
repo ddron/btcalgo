@@ -117,8 +117,8 @@ public class ValidationController {
         }
 
         // check strategy type
-        if (StrategyType.valueByDisplayName(main.getStrategyTypes().getSelectionModel().getSelectedItem()) != StrategyType.STOP_LOSS
-                && StrategyType.valueByDisplayName(main.getStrategyTypes().getSelectionModel().getSelectedItem()) != StrategyType.TRAILING_STOP) {
+        StrategyType type = StrategyType.valueByDisplayName(main.getStrategyTypes().getSelectionModel().getSelectedItem());
+        if (type != StrategyType.STOP_LOSS && type != StrategyType.TRAILING_STOP) {
             result.add(ValidationErrors.getErrorValue(STRATEGY_TYPE, INCORRECT_VALUE));
         }
 
@@ -153,6 +153,16 @@ public class ValidationController {
             result.add(ValidationErrors.getErrorValue(LIMIT_PRICE, EMPTY));
         } else if (!StringUtils.isNumber(limitPriceValue)) {
             result.add(ValidationErrors.getErrorValue(LIMIT_PRICE, FORMAT));
+        }
+
+        // offset value
+        if (type == StrategyType.TRAILING_STOP) {
+            String offsetValue = main.getOffset().getText();
+            if (Strings.isNullOrEmpty(offsetValue)) {
+                result.add(ValidationErrors.getErrorValue(OFFSET, EMPTY));
+            } else if (!StringUtils.isNumber(offsetValue)) {
+                result.add(ValidationErrors.getErrorValue(OFFSET, FORMAT));
+            }
         }
 
         return result;

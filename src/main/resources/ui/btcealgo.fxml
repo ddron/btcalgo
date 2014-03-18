@@ -14,7 +14,7 @@
 
     <GridPane fx:id="mainGrid" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER" vgap="10" hgap="10">
         <padding>
-            <Insets top="0" right="25" bottom="10" left="25"/>
+            <Insets top="0" right="10" bottom="10" left="10"/>
         </padding>
 
         <!-- credentials -->
@@ -111,7 +111,10 @@
                 </padding>
             </VBox>
 
-            <VBox spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <VBox id="orderParams" spacing="10" styleClass="block" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                <padding>
+                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+                </padding>
                 <HBox spacing="10">
                     <Label prefWidth="60" text="Stop Price">
                         <tooltip><Tooltip text="Price to trigger order submission to market"/></tooltip>
@@ -124,9 +127,12 @@
                     </Label>
                     <TextField fx:id="limitPrice" minHeight="22" prefWidth="80"/>
                 </HBox>
-                <padding>
-                    <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
-                </padding>
+<!--                <HBox fx:id="offsetHBox" spacing="10" >
+                    <Label prefWidth="60" text="Offset: ">
+                        <tooltip><Tooltip text="Price offset between stop price and best market price"/></tooltip>
+                    </Label>
+                    <TextField fx:id="offset" minHeight="22" prefWidth="80"/>
+                </HBox>-->
             </VBox>
 
             <HBox spacing="10" alignment="CENTER" GridPane.rowIndex="1" GridPane.columnIndex="2">
@@ -137,7 +143,7 @@
         <!-- your orders -->
         <GridPane GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="block">
             <padding>
-                <Insets top="10" right="25" bottom="10" left="25"/>
+                <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
             <TableView fx:id="ordersView" GridPane.columnIndex="0" GridPane.rowIndex="0" minHeight="60">
 

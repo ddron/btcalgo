@@ -3,6 +3,8 @@ package com.btcalgo.ui.model;
 import com.btcalgo.execution.StrategyType;
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.SymbolEnum;
+import com.btcalgo.util.StringUtils;
+import com.google.common.base.Strings;
 
 public class OrderDataHolder {
     private final Direction direction;
@@ -27,7 +29,7 @@ public class OrderDataHolder {
         private double stopPrice;
         private double limitPrice;
 
-        private double offset;
+        private double offset = Double.NaN;
 
         private OrderDataHolderBuilder() {
         }
@@ -66,8 +68,10 @@ public class OrderDataHolder {
             return this;
         }
 
-        public OrderDataHolderBuilder setOffset(double offset) {
-            this.offset = offset;
+        public OrderDataHolderBuilder setOffset(String offsetAsString) {
+            if (!Strings.isNullOrEmpty(offsetAsString) && StringUtils.isNumber(offsetAsString)) {
+                this.offset = Double.valueOf(offsetAsString);
+            }
             return this;
         }
 

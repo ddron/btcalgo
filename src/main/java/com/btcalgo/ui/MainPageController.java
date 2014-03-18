@@ -13,6 +13,7 @@ import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
 import com.btcalgo.ui.model.OrderDataHolder;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -22,6 +23,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -55,8 +57,12 @@ public class MainPageController {
     @FXML private ChoiceBox<String> direction;
     @FXML private Label symbol;
     @FXML private TextField amount;
+
     @FXML private TextField stopPrice;
     @FXML private TextField limitPrice;
+    @FXML private TextField offset;
+    @FXML private HBox offsetHBox;
+
     @FXML private Button submit;
 
     // orders
@@ -88,10 +94,29 @@ public class MainPageController {
         // strategy types
         strategyTypes.setItems(FXCollections.<String>observableArrayList(StrategyType.getDisplayNames()));
         strategyTypes.getSelectionModel().selectFirst();
+        strategyTypes.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String oldOrderType, String newOrderType) {
+                StrategyType type = StrategyType.valueByDisplayName(newOrderType);
+                VBox orderParams = (VBox) view.lookup("#orderParams");
+                switch (type) {
+                    case STOP_LOSS:
+                        orderParams.getChildren().remove(offsetHBox);
+                        break;
+                    case TRAILING_STOP:
+                        orderParams.getChildren().add(offsetHBox);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
         // direction (i.e. side)
         direction.setItems(FXCollections.<String>observableArrayList(Direction.getDisplayNames()));
         direction.getSelectionModel().selectFirst();
+
+        initOffsetHBox();
 
         initOrdersViewTable();
         validationController.initValidationPopup(this);
@@ -100,6 +125,22 @@ public class MainPageController {
         if (!licenseController.hasValidLicense()) {
             addTrialTitle();
         }
+    }
+
+    private void initOffsetHBox() {
+        offsetHBox = new HBox();
+        offsetHBox.setSpacing(10);
+
+        Label offsetLabel = new Label("Offset: ");
+        offsetLabel.setPrefWidth(60);
+        offsetLabel.setTooltip(new Tooltip("Price offset between stop price and best market price"));
+
+        offset = new TextField();
+        offset.setMinHeight(22);
+        offset.setPrefWidth(80);
+
+        offsetHBox.getChildren().add(offsetLabel);
+        offsetHBox.getChildren().add(offset);
     }
 
     private void initOrdersViewTable() {
@@ -129,7 +170,7 @@ public class MainPageController {
                 }
             }
         });
-        stopPriceCol.setPrefWidth(70);
+        stopPriceCol.setPrefWidth(110);
 
         TableColumn<Order, String> limitPriceCol = new TableColumn<>("Price");
         limitPriceCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
@@ -142,7 +183,7 @@ public class MainPageController {
                 }
             }
         });
-        limitPriceCol.setPrefWidth(70);
+        limitPriceCol.setPrefWidth(110);
 
         TableColumn<Order, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<Order, String>("displayStatus"));
@@ -173,6 +214,7 @@ public class MainPageController {
         ordersView.setPlaceholder(new Label("Your orders will be displayed here"));
     }
 
+    @SuppressWarnings("UnusedParameters")
     public void handleLicensing(ActionEvent actionEvent) {
         licenseController.showLicensePopup();
     }
@@ -241,14 +283,16 @@ public class MainPageController {
                     .setAmount(amount.getText())
                     .setStopPrice(stopPrice.getText())
                     .setLimitPrice(limitPrice.getText())
+                    .setOffset(offset.getText())
                     .build();
 
             ordersManager.createNew(orderDataHolder);
 
             // clear prices and amount fields
+            amount.clear();
             stopPrice.clear();
             limitPrice.clear();
-            amount.clear();
+            offset.clear();
         } else {
             validationController.showValidationPopup(errors);
         }
@@ -318,6 +362,10 @@ public class MainPageController {
         return key;
     }
 
+    public TextField getOffset() {
+        return offset;
+    }
+
     public PasswordField getSecret() {
         return secret;
     }
@@ -354,6 +402,10 @@ public class MainPageController {
 
     public void setStopPriceValue(String stopPriceValue) {
         stopPrice.setText(stopPriceValue);
+    }
+
+    public void setOffsetValue(String offsetValue) {
+        offset.setText(offsetValue);
     }
 
     public void setLimitPriceValue(String limitPriceValue) {

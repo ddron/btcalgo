@@ -17,8 +17,11 @@ public class ValidationErrors {
         STRATEGY_TYPE,
         DIRECTION,
         AMOUNT,
+
         STOP_PRICE,
         LIMIT_PRICE,
+        OFFSET,
+
         GENERAL
     }
 
@@ -77,6 +80,13 @@ public class ValidationErrors {
                     put(EMPTY, "Price is empty");
                     put(FORMAT, "Price is not a number");
                     put(INCORRECT_VALUE, "Price is incorrect");
+                }
+            });
+            put(OFFSET, new HashMap<ErrorType, String>() {
+                {
+                    put(EMPTY, "Offset is empty");
+                    put(FORMAT, "Offset is not a number");
+                    put(INCORRECT_VALUE, "Offset is incorrect");
                 }
             });
             put(GENERAL, new HashMap<ErrorType, String>() {
