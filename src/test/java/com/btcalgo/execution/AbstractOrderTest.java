@@ -67,7 +67,7 @@ public class AbstractOrderTest {
         if (type == StrategyType.TRAILING_STOP) {
             TrailingStopOrder trailingStopOrder = (TrailingStopOrder) order;
             assertEquals(offset, trailingStopOrder.getOffset(), EPSILON);
-            assertEquals(Math.abs(stopPrice - limitPrice), trailingStopOrder.getLimitPriceOffset(), EPSILON);
+            assertEquals(limitPrice - stopPrice, trailingStopOrder.getLimitPriceOffset(), EPSILON);
 
             assertEquals(fmt(stopPrice), order.getInitialStopPrice());
             assertEquals(fmt(limitPrice), order.getInitialLimitPrice());
