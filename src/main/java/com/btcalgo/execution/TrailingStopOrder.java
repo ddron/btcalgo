@@ -21,8 +21,7 @@ public class TrailingStopOrder extends Order {
         setInitialLimitPrice(getLimitPrice());
 
         offset = holder.getOffset();
-        limitPriceOffset = roundValueToStep(Math.abs(getStopPriceAsDouble() - getLimitPriceAsDouble()),
-                EPSILON);
+        limitPriceOffset = roundValueToStep(getLimitPriceAsDouble() - getStopPriceAsDouble(), EPSILON);
 
         log.info("New order created: {}", this);
     }
@@ -52,11 +51,10 @@ public class TrailingStopOrder extends Order {
             if (Math.abs(obPrice - currentStopPrice) > offset) {
                 if (getDirection() == Direction.BID) {
                     setStopPriceAsDouble(obPrice + offset);
-                    setLimitPriceAsDouble(getStopPriceAsDouble() + limitPriceOffset);
                 } else {
                     setStopPriceAsDouble(obPrice - offset);
-                    setLimitPriceAsDouble(getStopPriceAsDouble() - limitPriceOffset);
                 }
+                setLimitPriceAsDouble(getStopPriceAsDouble() + limitPriceOffset);
 
                 log.info("Best market price({}): {}. New stopPrice={}, new limitPrice={}",
                         getDirection(), obPrice, getStopPrice(), getLimitPrice());

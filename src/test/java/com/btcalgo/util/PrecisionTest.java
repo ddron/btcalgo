@@ -72,6 +72,8 @@ public class PrecisionTest {
         assertTrue(0.2 == roundDownValueToStep(0.20000000000000107, EPSILON));
         assertTrue(0.1999999999 == roundDownValueToStep(0.19999999999999107, EPSILON));
         assertTrue(2.11 == roundDownValueToStep(2.11, EPSILON));
+
+        assertTrue(-4.0 == roundDownValueToStep(-3.2, 1));
     }
 
     @Test
@@ -79,6 +81,8 @@ public class PrecisionTest {
         assertTrue(0.2000000001 == roundUpValueToStep(0.20000000000000107, EPSILON));
         assertTrue(0.2 == roundUpValueToStep(0.19999999999999107, EPSILON));
         assertTrue(2.11 == roundUpValueToStep(2.11, EPSILON));
+
+        assertTrue(-3.0 == roundUpValueToStep(-3.2, 1));
     }
 
     @Test
@@ -86,5 +90,8 @@ public class PrecisionTest {
         assertTrue(0.2 == roundValueToStep(0.20000000000000107, EPSILON));
         assertTrue(0.2 == roundValueToStep(0.19999999999999107, EPSILON));
         assertTrue(2.11 == roundValueToStep(2.11, EPSILON));
+
+        assertTrue(-3.0 == roundValueToStep(-3.2, 1));
+        assertTrue(-4.0 == roundValueToStep(-3.8, 1));
     }
 }

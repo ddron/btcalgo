@@ -58,6 +58,34 @@ public class TrailingStopOrderTest extends AbstractOrderTest {
     }
 
     @Test
+    public void testBuyTrailingOrderWithNegativeLimitPriceOffset() {
+        double stopPrice = 10;
+        double limitPrice = 8;
+        double offset = 3;
+
+        createOrder(StrategyType.TRAILING_STOP, Direction.BID, stopPrice, limitPrice, offset);
+        checkState(stopPrice, limitPrice);
+
+        assertFalse(checkRule(7.4, 6.5));
+        checkState(stopPrice, limitPrice);
+
+        assertFalse(checkRule(6.7, 6.3));
+        checkState(9.7, 7.7);
+
+        assertFalse(checkRule(4.5, 2.3));
+        checkState(7.5, 5.5);
+
+        assertFalse(checkRule(7.2, 7.1));
+        checkState(7.5, 5.5);
+
+        assertTrue(checkRule(7.5, 5.2));
+        checkState(7.5, 5.5);
+
+        assertTrue(checkRule(9.0, 8.2));
+        checkState(7.5, 5.5);
+    }
+
+    @Test
     public void testSellTrailingOrder() {
         double stopPrice = 10.5;
         double limitPrice = 9.5;
@@ -89,6 +117,37 @@ public class TrailingStopOrderTest extends AbstractOrderTest {
 
         assertTrue(checkRule(15, 10.3));
         checkState(12.3, 11.3);
+    }
+
+    @Test
+    public void testSellTrailingOrderWithNegativeLimitPriceOffset() {
+        double stopPrice = 10;
+        double limitPrice = 12;
+        double offset = 3;
+
+        createOrder(StrategyType.TRAILING_STOP, Direction.ASK, stopPrice, limitPrice, offset);
+        checkState(stopPrice, limitPrice);
+
+        assertFalse(checkRule(12, 11.2));
+        checkState(stopPrice, limitPrice);
+
+        assertFalse(checkRule(13.8, 12.8));
+        checkState(stopPrice, limitPrice);
+
+        assertFalse(checkRule(15.1, 13.1));
+        checkState(10.1, 12.1);
+
+        assertFalse(checkRule(15.3, 14.5));
+        checkState(11.5, 13.5);
+
+        assertFalse(checkRule(12.7, 11.7));
+        checkState(11.5, 13.5);
+
+        assertTrue(checkRule(13.5, 11.5));
+        checkState(11.5, 13.5);
+
+        assertTrue(checkRule(11.5, 10.5));
+        checkState(11.5, 13.5);
     }
 
 }
