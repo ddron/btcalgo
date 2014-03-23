@@ -3,6 +3,7 @@ package com.btcalgo.execution;
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.IOrderBook;
 import com.btcalgo.ui.model.OrderDataHolder;
+import com.btcalgo.util.Precision;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
@@ -48,7 +49,9 @@ public class TrailingStopOrder extends Order {
                 return true;
             }
 
-            if (Math.abs(obPrice - currentStopPrice) > offset) {
+            // TODO: write jUnit for following case (check we're not going inside if with current code):
+            // System.out.println(Precision.isGreater(Math.abs(565.987 - 565.988), 0.001));
+            if (Precision.isGreater(Math.abs(obPrice - currentStopPrice), offset)) {
                 if (getDirection() == Direction.BID) {
                     setStopPriceAsDouble(obPrice + offset);
                 } else {
