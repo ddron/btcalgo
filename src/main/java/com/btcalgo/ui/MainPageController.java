@@ -88,7 +88,7 @@ public class MainPageController {
         // select symbols and bind with market data
         pairs.setItems(FXCollections.<String>observableArrayList(SymbolEnum.getDisplayNames()));
         pairs.getSelectionModel().selectedItemProperty().addListener(marketDataToShow);
-        pairs.getSelectionModel().selectFirst();
+        pairs.getSelectionModel().select(SymbolEnum.BTCUSD.getDisplayName());
         symbol.textProperty().bind(pairs.getSelectionModel().selectedItemProperty());
 
         // strategy types
