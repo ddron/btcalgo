@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class KeysController {
 
@@ -21,9 +22,9 @@ public class KeysController {
 
     private volatile boolean validatingNow;
 
-    public void initKeysPopup(MainPageController main) {
+    public void initKeysPopup(Window window) {
         keysPopup = new Stage();
-        keysPopup.initOwner(main.getView().getScene().getWindow());
+        keysPopup.initOwner(window);
         keysPopup.initModality(Modality.WINDOW_MODAL);
         keysPopup.setResizable(false);
         keysPopup.setTitle("BtcAlgo License");
@@ -35,7 +36,7 @@ public class KeysController {
 
         Scene popupScene = new Scene(popupVBox);
         popupScene.getStylesheets().add(
-                MainPageController.class.getResource("/ui/btcealgo.css").toExternalForm());
+                TradingTab.class.getResource("/ui/btcealgo.css").toExternalForm());
         keysPopup.setScene(popupScene);
     }
 

@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 public class LicenseController {
@@ -31,9 +32,9 @@ public class LicenseController {
     private String paymentUrl;
     private String supportEmail;
 
-    public void initLicensePopup(MainPageController main) {
+    public void initLicensePopup(Window window) {
         licensePopup = new Stage();
-        licensePopup.initOwner(main.getView().getScene().getWindow());
+        licensePopup.initOwner(window);
         licensePopup.initModality(Modality.WINDOW_MODAL);
         licensePopup.setResizable(false);
         licensePopup.setTitle("BtcAlgo License");
@@ -45,7 +46,7 @@ public class LicenseController {
 
         Scene popupScene = new Scene(popupVBox);
         popupScene.getStylesheets().add(
-                MainPageController.class.getResource("/ui/btcealgo.css").toExternalForm());
+                TradingTab.class.getResource("/ui/btcealgo.css").toExternalForm());
         licensePopup.setScene(popupScene);
     }
 
@@ -290,7 +291,7 @@ public class LicenseController {
 
         Scene popupScene = new Scene(popupVBox);
         popupScene.getStylesheets().add(
-                MainPageController.class.getResource("/ui/btcealgo.css").toExternalForm());
+                TradingTab.class.getResource("/ui/btcealgo.css").toExternalForm());
         licensePopupChild.setScene(popupScene);
 
         return licensePopupChild;

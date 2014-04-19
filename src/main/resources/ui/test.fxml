@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<GridPane fx:id="view" fx:controller="com.btcalgo.ui.MainPageController"
+<GridPane fx:id="view" fx:controller="com.btcalgo.ui.TradingTab"
           xmlns:fx="http://javafx.com/fxml" styleClass="root">
 
     <MenuBar GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="10000" styleClass="menu">

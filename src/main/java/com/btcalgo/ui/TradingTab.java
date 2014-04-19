@@ -26,12 +26,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import reactor.core.Reactor;
 
 import java.util.List;
 
-public class MainPageController {
+public class TradingTab {
 
     @FXML private GridPane view;
 
@@ -76,7 +77,7 @@ public class MainPageController {
     private OrdersManager ordersManager;
     private RuntimeMeter runtimeMeter;
 
-    public void initController() {
+    public void initController(Window window) {
         // market data
         bestBuy.textProperty().bind(marketDataToShow.bestBidPriceProperty());
         bestSell.textProperty().bind(marketDataToShow.bestAskPriceProperty());
@@ -115,9 +116,9 @@ public class MainPageController {
         initOffsetHBox();
 
         initOrdersViewTable();
-        validationController.initValidationPopup(this);
-        licenseController.initLicensePopup(this);
-        keysController.initKeysPopup(this);
+        validationController.initValidationPopup(window);
+        licenseController.initLicensePopup(window);
+        keysController.initKeysPopup(window);
 
         if (!licenseController.hasValidLicense()) {
             addTrialTitle();

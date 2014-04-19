@@ -7,9 +7,8 @@ import com.btcalgo.reactor.ThrowableHandler;
 import com.btcalgo.service.LicenseService;
 import com.btcalgo.service.RuntimeMeter;
 import com.btcalgo.service.marketdata.BtcBestMarketDataSource;
-import com.btcalgo.ui.MainPageController;
+import com.btcalgo.ui.TabsManager;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,15 +48,7 @@ public class BtceAlgo extends Application {
         startContainer();
 
         // start ui frontend
-/*        Parent root = FXMLLoader.load(getClass().getResource("/ui/btcealgo.fxml"));
-        stage.setScene(new Scene(root, 300, 275));*/
-        MainPageController controller = context.getBean(MainPageController.class);
-        stage.setScene(new Scene(controller.getView(), 660, 600));
-        //controller.getView().setGridLinesVisible(true);
-        stage.setTitle("BtcAlgo");
-        controller.initController();
-        stage.show();
-
+        context.getBean(TabsManager.class).init(stage);
 
         log.info("btce algo started!");
 /*        // wait :-)

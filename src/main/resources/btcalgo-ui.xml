@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="controller.factory" class="com.btcalgo.ui.ControllerFactory">
+    <bean id="trading.tab.factory" class="com.btcalgo.ui.TradingTabFactory">
         <property name="reactor" ref="reactor"/>
         <property name="apiService" ref="api.service"/>
         <property name="keysController" ref="keys.controller"/>
@@ -14,8 +14,12 @@
         <property name="runtimeMeter" ref="runtime.meter"/>
     </bean>
 
-    <bean id="uiController" factory-bean="controller.factory" factory-method="createController">
+    <bean id="trading.tab" factory-bean="trading.tab.factory" factory-method="createTradingTab">
         <constructor-arg value="/ui/btcealgo.fxml"/>
+    </bean>
+
+    <bean id="tabs.manager" class="com.btcalgo.ui.TabsManager">
+        <property name="tradingTab" ref="trading.tab"/>
     </bean>
 
     <bean id="license.controller" class="com.btcalgo.ui.LicenseController">

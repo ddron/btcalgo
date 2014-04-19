@@ -5,7 +5,7 @@ import com.btcalgo.execution.*;
 import com.btcalgo.model.Direction;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.api.MockedApiService;
-import com.btcalgo.ui.MainPageController;
+import com.btcalgo.ui.TradingTab;
 import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -81,21 +81,21 @@ public class CukesSteps {
         final Direction direction = Direction.valueByApiValue(side);
         StrategyType strategyType = StrategyType.valueByDisplayName(orderType);
 
-        final MainPageController mainPageController = BtceAlgo.getApp().getContext().getBean(MainPageController.class);
+        final TradingTab tradingTab = BtceAlgo.getApp().getContext().getBean(TradingTab.class);
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                mainPageController.setStrategyTypeValue(orderType);
-                mainPageController.setAmountValue(amountAndPrice.split("@")[0]);
-                mainPageController.setLimitPriceValue(amountAndPrice.split("@")[1]);
-                mainPageController.setStopPriceValue(stopPriceAsString);
-                mainPageController.setDirectionValue(direction.getDisplayName());
-                mainPageController.setSelectedPair(symbol.getDisplayName());
+                tradingTab.setStrategyTypeValue(orderType);
+                tradingTab.setAmountValue(amountAndPrice.split("@")[0]);
+                tradingTab.setLimitPriceValue(amountAndPrice.split("@")[1]);
+                tradingTab.setStopPriceValue(stopPriceAsString);
+                tradingTab.setDirectionValue(direction.getDisplayName());
+                tradingTab.setSelectedPair(symbol.getDisplayName());
                 if (offsetAsString != null) {
-                    mainPageController.setOffsetValue(offsetAsString);
+                    tradingTab.setOffsetValue(offsetAsString);
                 }
-                mainPageController.handleSubmit(null);
+                tradingTab.handleSubmit(null);
             }
         });
         Thread.sleep(200); // wait for order creation

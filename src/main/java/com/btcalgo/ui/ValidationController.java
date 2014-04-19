@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,9 @@ public class ValidationController {
     private IApiService apiService;
     private String paymentUrl;
 
-    public void initValidationPopup(MainPageController main) {
+    public void initValidationPopup(Window window) {
         popup = new Stage();
-        popup.initOwner(main.getView().getScene().getWindow());
+        popup.initOwner(window);
         popup.initModality(Modality.WINDOW_MODAL);
         //popup.setResizable(false);
         popup.setTitle("Error!");
@@ -68,7 +69,7 @@ public class ValidationController {
 
         Scene popupScene = new Scene(popupVBox);
         popupScene.getStylesheets().add(
-                MainPageController.class.getResource("/ui/btcealgo.css").toExternalForm());
+                TradingTab.class.getResource("/ui/btcealgo.css").toExternalForm());
         popup.setScene(popupScene);
     }
 
@@ -109,7 +110,7 @@ public class ValidationController {
         popup.show();
     }
 
-    public List<String> validateOrderFields(MainPageController main) {
+    public List<String> validateOrderFields(TradingTab main) {
         List<String> result = new ArrayList<>();
         if (!apiService.hasValidKeys()) {
             result.add("Enter and validate correct keys before submitting an order");
@@ -168,7 +169,7 @@ public class ValidationController {
         return result;
     }
 
-    public List<String> validateKeys(MainPageController main) {
+    public List<String> validateKeys(TradingTab main) {
         List<String> result = new ArrayList<>();
         if (Strings.isNullOrEmpty(main.getKey().getText())) {
             result.add(getErrorValue(KEY, EMPTY));

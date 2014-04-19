@@ -10,7 +10,7 @@ import reactor.core.Reactor;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ControllerFactory {
+public class TradingTabFactory {
 
     private Reactor reactor;
     private IApiService apiService;
@@ -24,7 +24,7 @@ public class ControllerFactory {
 
     private RuntimeMeter runtimeMeter;
 
-    public MainPageController createController(String url) throws IOException {
+    public TradingTab createTradingTab(String url) throws IOException {
         InputStream fxmlStream = null;
         try {
             fxmlStream = getClass().getResourceAsStream(url);
@@ -32,7 +32,7 @@ public class ControllerFactory {
             loader.setLocation(getClass().getResource(url));
             loader.load(fxmlStream);
 
-            MainPageController controller = loader.getController();
+            TradingTab controller = loader.getController();
             controller.setReactor(reactor);
             controller.setApiService(apiService);
             controller.setOrdersManager(ordersManager);
