@@ -6,7 +6,7 @@
     <bean id="controller.factory" class="com.btcalgo.ui.ControllerFactory">
         <property name="reactor" ref="reactor"/>
         <property name="apiService" ref="api.service"/>
-        <property name="keysStatusHolder" ref="keys.status.holder"/>
+        <property name="keysController" ref="keys.controller"/>
         <property name="marketDataToShow" ref="market.data.to.show"/>
         <property name="ordersManager" ref="order.manager"/>
         <property name="licenseController" ref="license.controller"/>
@@ -30,7 +30,7 @@
         <property name="paymentUrl" value="${payment.url}"/>
     </bean>
 
-    <bean id="keys.status.holder" class="com.btcalgo.ui.model.KeysStatusHolder"/>
+    <bean id="keys.controller" class="com.btcalgo.ui.KeysController"/>
 
     <bean id="market.data.to.show" class="com.btcalgo.ui.model.MarketDataToShow">
         <constructor-arg name="marketDataProvider" ref="market.data.provider"/>

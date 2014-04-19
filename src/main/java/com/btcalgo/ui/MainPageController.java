@@ -9,13 +9,14 @@ import com.btcalgo.model.Direction;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.RuntimeMeter;
 import com.btcalgo.service.api.IApiService;
-import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
 import com.btcalgo.ui.model.OrderDataHolder;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,7 +26,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
 import reactor.core.Reactor;
 
@@ -37,14 +37,14 @@ public class MainPageController {
 
     // trial title
     @FXML private GridPane mainGrid;
+    @SuppressWarnings("FieldCanBeLocal")
     private VBox trialVBox;
 
     // credentials
     @FXML private TextField key;
     @FXML private PasswordField secret;
-    @FXML private Text keysStatus;
     @FXML private Button validate;
-    private KeysStatusHolder keysStatusHolder;
+    private KeysController keysController;
 
     // market data
     @FXML private ChoiceBox<String> pairs;
@@ -77,10 +77,6 @@ public class MainPageController {
     private RuntimeMeter runtimeMeter;
 
     public void initController() {
-        // keys
-        keysStatus.textProperty().bind(keysStatusHolder.keysStatusProperty());
-        validate.disableProperty().bind(keysStatusHolder.validateBtnDisabledProperty());
-
         // market data
         bestBuy.textProperty().bind(marketDataToShow.bestBidPriceProperty());
         bestSell.textProperty().bind(marketDataToShow.bestAskPriceProperty());
@@ -121,6 +117,7 @@ public class MainPageController {
         initOrdersViewTable();
         validationController.initValidationPopup(this);
         licenseController.initLicensePopup(this);
+        keysController.initKeysPopup(this);
 
         if (!licenseController.hasValidLicense()) {
             addTrialTitle();
@@ -251,16 +248,70 @@ public class MainPageController {
 
     @SuppressWarnings("UnusedParameters")
     public void handleValidate(ActionEvent actionEvent) {
+        validate.setDisable(true);
         List<String> errors = validationController.validateKeys(this);
 
         if (errors.isEmpty()) {
-            keysStatusHolder.setValidateBtnDisabled(true);
-            keysStatusHolder.setValidatingStatus();
+            // test keys
+            keysController.setValidatingNow(true);
 
-            apiService.updateKeys(key.getText(), secret.getText());
-            reactor.notify(CommandEnum.INFO.getCommandText());
+            new Thread(new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    apiService.updateKeys(key.getText(), secret.getText());
+                    reactor.notify(CommandEnum.INFO.getCommandText());
+                    return true;
+                }
+            }).start();
+
+            new Thread() {
+                @Override
+                public void run() {
+                    while (keysController.isValidatingNow()) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                String text = validate.getText();
+                                final String validating = "Validating";
+                                switch (text) {
+                                    case "Validate":
+                                        text = validating;
+                                        break;
+                                    case validating:
+                                        text = validating + ".";
+                                        break;
+                                    case validating + ".":
+                                        text = validating + "..";
+                                        break;
+                                    case validating + "..":
+                                        text = validating + "...";
+                                        break;
+                                    case validating + "...":
+                                        text = validating;
+                                        break;
+                                }
+                                validate.setText(text);
+                            }
+                        });
+                        //noinspection EmptyCatchBlock
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                        }
+                    }
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            validate.setDisable(false);
+                            validate.setText("Validate");
+                            keysController.showKeysPopup();
+                        }
+                    });
+                }
+            }.start();
         } else {
             validationController.showValidationPopup(errors);
+            validate.setDisable(false);
         }
     }
 
@@ -326,8 +377,8 @@ public class MainPageController {
         this.apiService = apiService;
     }
 
-    public void setKeysStatus(KeysStatusHolder keysStatusHolder) {
-        this.keysStatusHolder = keysStatusHolder;
+    public void setKeysController(KeysController keysController) {
+        this.keysController = keysController;
     }
 
     public void setMarketDataToShow(MarketDataToShow marketDataToShow) {
@@ -385,8 +436,6 @@ public class MainPageController {
     public SymbolEnum getSymbol() {
         return SymbolEnum.valueByDisplayName(pairs.getSelectionModel().getSelectedItem());
     }
-
-
 
     public void setAmountValue(String amountValue) {
         amount.setText(amountValue);

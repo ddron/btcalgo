@@ -39,7 +39,7 @@
 
     <bean id="info.service" class="com.btcalgo.service.api.InfoService">
         <constructor-arg name="apiService" ref="api.service"/>
-        <constructor-arg name="keysStatusHolder" ref="keys.status.holder"/>
+        <constructor-arg name="keysController" ref="keys.controller"/>
     </bean>
 
 </beans>

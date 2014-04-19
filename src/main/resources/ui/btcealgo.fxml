@@ -42,10 +42,6 @@
             <Button GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER"
                     prefHeight="40" prefWidth="120"
                     fx:id="validate" text="Validate" onAction="#handleValidate"/>
-
-            <HBox spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                <Text fx:id="keysStatus"/>
-            </HBox>
         </GridPane>
 
         <!-- market data -->

@@ -2,7 +2,7 @@ package com.btcalgo.service.api;
 
 import com.btcalgo.reactor.NameableConsumer;
 import com.btcalgo.service.api.templates.InfoTemplate;
-import com.btcalgo.ui.model.KeysStatusHolder;
+import com.btcalgo.ui.KeysController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.event.Event;
@@ -12,11 +12,11 @@ public class InfoService implements NameableConsumer<Event<Void>> {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private IApiService apiService;
-    private KeysStatusHolder keysStatusHolder;
+    private KeysController keysController;
 
-    public InfoService(IApiService apiService, KeysStatusHolder keysStatusHolder) {
+    public InfoService(IApiService apiService, KeysController keysController) {
         this.apiService = apiService;
-        this.keysStatusHolder = keysStatusHolder;
+        this.keysController = keysController;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class InfoService implements NameableConsumer<Event<Void>> {
         InfoTemplate infoTemplate = apiService.getInfo();
         apiService.setValidKeys(infoTemplate.hasAllRights());
 
-        keysStatusHolder.updateStatus(infoTemplate);
+        keysController.updateStatus(infoTemplate);
 
         log.debug("{}", infoTemplate);
     }

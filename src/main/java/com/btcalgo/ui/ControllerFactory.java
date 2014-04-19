@@ -3,7 +3,6 @@ package com.btcalgo.ui;
 import com.btcalgo.execution.OrdersManager;
 import com.btcalgo.service.RuntimeMeter;
 import com.btcalgo.service.api.IApiService;
-import com.btcalgo.ui.model.KeysStatusHolder;
 import com.btcalgo.ui.model.MarketDataToShow;
 import javafx.fxml.FXMLLoader;
 import reactor.core.Reactor;
@@ -17,7 +16,7 @@ public class ControllerFactory {
     private IApiService apiService;
     private OrdersManager ordersManager;
 
-    private KeysStatusHolder keysStatusHolder;
+    private KeysController keysController;
     private MarketDataToShow marketDataToShow;
 
     private ValidationController validationController;
@@ -41,7 +40,7 @@ public class ControllerFactory {
             controller.setValidationController(validationController);
             controller.setLicenseController(licenseController);
 
-            controller.setKeysStatus(keysStatusHolder);
+            controller.setKeysController(keysController);
             controller.setMarketDataToShow(marketDataToShow);
 
             controller.setRuntimeMeter(runtimeMeter);
@@ -62,8 +61,8 @@ public class ControllerFactory {
         this.apiService = apiService;
     }
 
-    public void setKeysStatusHolder(KeysStatusHolder keysStatusHolder) {
-        this.keysStatusHolder = keysStatusHolder;
+    public void setKeysController(KeysController keysController) {
+        this.keysController = keysController;
     }
 
     public void setMarketDataToShow(MarketDataToShow marketDataToShow) {
