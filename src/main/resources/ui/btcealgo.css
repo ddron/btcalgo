@@ -72,7 +72,3 @@
 .button:hover {
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
-
-.menu {
-    -fx-background-color: linear-gradient(#b9b9b9, #7c7c7c);
-}

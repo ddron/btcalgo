@@ -1,8 +1,10 @@
 package com.btcalgo.ui;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class TabsManager {
@@ -11,7 +13,18 @@ public class TabsManager {
     private FinancesTab financesTab;
 
     public void init(Stage stage) {
+        GridPane gridPane = new GridPane();
+
+        Scene scene = new Scene(gridPane, 660, 600);
+        scene.getStylesheets().add(getClass().getResource("/ui/background.css").toExternalForm());
+        stage.setScene(scene);
+        stage.setTitle("BtcAlgo");
+
+        MenuBar menuBar = createMenuBar();
+        gridPane.add(menuBar, 0, 0);
+
         TabPane tabPane = new TabPane();
+        gridPane.add(tabPane, 0, 1);
 
         Tab trade = new Tab();
         trade.setClosable(false);
@@ -24,14 +37,28 @@ public class TabsManager {
         finances.setText("My Finances");
         tabPane.getTabs().add(finances);
 
-        Scene scene = new Scene(tabPane, 660, 600);
-        scene.getStylesheets().add(
-                TabsManager.class.getResource("/ui/btcealgo.css").toExternalForm());
-        stage.setScene(scene);
-        stage.setTitle("BtcAlgo");
-
         tradingTab.initController(stage.getScene().getWindow());
         stage.show();
+    }
+
+    private MenuBar createMenuBar() {
+        MenuBar menuBar = new MenuBar();
+        menuBar.setPrefWidth(10000);
+        menuBar.getStyleClass().add("menu");
+
+        Menu btcAlgo = new Menu("BtcAlgo");
+        MenuItem licensing = new MenuItem("BtcAlgo Licensing");
+        licensing.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                tradingTab.handleLicensing();
+            }
+        });
+
+        btcAlgo.getItems().add(licensing);
+        menuBar.getMenus().add(btcAlgo);
+
+        return menuBar;
     }
 
     public void setTradingTab(TradingTab tradingTab) {

@@ -36,8 +36,6 @@ public class TradingTab {
 
     @FXML private GridPane view;
 
-    // trial title
-    @FXML private GridPane mainGrid;
     @SuppressWarnings("FieldCanBeLocal")
     private VBox trialVBox;
 
@@ -212,8 +210,7 @@ public class TradingTab {
         ordersView.setPlaceholder(new Label("Your orders will be displayed here"));
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void handleLicensing(ActionEvent actionEvent) {
+    public void handleLicensing() {
         licenseController.showLicensePopup();
     }
 
@@ -363,7 +360,7 @@ public class TradingTab {
         trialInfo.textProperty().bind(runtimeMeter.titleProperty());
         trialVBox.getChildren().add(trialInfo);
 
-        mainGrid.getChildren().add(0, trialVBox);
+        view.getChildren().add(0, trialVBox);
     }
 
     public GridPane getView() {

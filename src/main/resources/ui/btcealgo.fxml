@@ -3,18 +3,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.net.URL?>
-<GridPane fx:id="view" fx:controller="com.btcalgo.ui.TradingTab"
-          xmlns:fx="http://javafx.com/fxml" styleClass="root">
-
-    <MenuBar GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="10000" styleClass="menu">
-        <Menu text="BtcAlgo">
-            <MenuItem text="BtcAlgo Licensing" onAction="#handleLicensing"/>
-        </Menu>
-    </MenuBar>
-
-    <GridPane fx:id="mainGrid" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER" vgap="10" hgap="10">
+    <GridPane fx:id="view" fx:controller="com.btcalgo.ui.TradingTab"
+              xmlns:fx="http://javafx.com/fxml" styleClass="root"
+              GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER" vgap="10" hgap="10">
         <padding>
-            <Insets top="0" right="10" bottom="10" left="10"/>
+            <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
 
         <!-- credentials -->
@@ -146,9 +139,8 @@
             </TableView>
         </GridPane>
 
-    </GridPane>
+        <stylesheets>
+            <URL value="@btcealgo.css"/>
+        </stylesheets>
 
-    <stylesheets>
-        <URL value="@btcealgo.css"/>
-    </stylesheets>
-</GridPane>
+    </GridPane>

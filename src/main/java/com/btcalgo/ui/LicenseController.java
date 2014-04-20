@@ -163,10 +163,10 @@ public class LicenseController {
     }
 
     private void removeTrialTitle() {
-        GridPane mainGrid = (GridPane) licensePopup.getOwner().getScene().lookup("#mainGrid");
+        GridPane view = (GridPane) licensePopup.getOwner().getScene().lookup("#view");
         VBox vBox = (VBox) licensePopup.getOwner().getScene().lookup("#trialVBox");
-        if (mainGrid != null && vBox != null) {
-            mainGrid.getChildren().remove(vBox);
+        if (view != null && vBox != null) {
+            view.getChildren().remove(vBox);
         }
     }
 
