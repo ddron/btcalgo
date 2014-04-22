@@ -79,6 +79,15 @@ public enum SymbolEnum {
         return null;
     }
 
+    public static SymbolEnum getByValue(String value) {
+        for (SymbolEnum type : SymbolEnum.values()) {
+            if (type.value.equals(value)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public static List<String> getDisplayNames() {
         return displayNames;
     }

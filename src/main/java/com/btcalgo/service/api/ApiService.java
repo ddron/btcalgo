@@ -1,10 +1,7 @@
 package com.btcalgo.service.api;
 
 import com.btcalgo.execution.Order;
-import com.btcalgo.service.api.templates.InfoTemplate;
-import com.btcalgo.service.api.templates.LoginTemplate;
-import com.btcalgo.service.api.templates.NewOrderTemplate;
-import com.btcalgo.service.api.templates.TickerTemplate;
+import com.btcalgo.service.api.templates.*;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,7 +46,7 @@ public class ApiService implements IApiService {
     */
     private static AtomicInteger nonce = new AtomicInteger((int) (System.currentTimeMillis() / 1000));
 
-    private Gson gson = new GsonBuilder().create();
+    private Gson gson = new GsonBuilder().registerTypeAdapter(ActiveOrdersTemplate.class, new ActiveOrdersAdapter()).create();
     private boolean logAll = false;
 
 
@@ -183,6 +180,11 @@ public class ApiService implements IApiService {
     @Override
     public InfoTemplate getInfo() {
         return auth("getInfo", InfoTemplate.class);
+    }
+
+    @Override
+    public ActiveOrdersTemplate getActiveOrders() {
+        return auth("ActiveOrders", ActiveOrdersTemplate.class);
     }
 
     private <T extends LoginTemplate> T auth(String method, Class<T> clazz) {

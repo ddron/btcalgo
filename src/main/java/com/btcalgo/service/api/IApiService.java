@@ -1,6 +1,7 @@
 package com.btcalgo.service.api;
 
 import com.btcalgo.execution.Order;
+import com.btcalgo.service.api.templates.ActiveOrdersTemplate;
 import com.btcalgo.service.api.templates.InfoTemplate;
 import com.btcalgo.service.api.templates.NewOrderTemplate;
 import com.btcalgo.service.api.templates.TickerTemplate;
@@ -19,4 +20,6 @@ public interface IApiService {
     NewOrderTemplate sendNewOrder(Order order);
 
     InfoTemplate getInfo();
+
+    ActiveOrdersTemplate getActiveOrders();
 }

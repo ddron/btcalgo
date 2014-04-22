@@ -2,10 +2,7 @@ package com.btcalgo.service.api;
 
 import com.btcalgo.execution.Order;
 import com.btcalgo.model.SymbolEnum;
-import com.btcalgo.service.api.templates.InfoTemplate;
-import com.btcalgo.service.api.templates.NewOrderTemplate;
-import com.btcalgo.service.api.templates.Ticker;
-import com.btcalgo.service.api.templates.TickerTemplate;
+import com.btcalgo.service.api.templates.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +67,12 @@ public class MockedApiService implements IApiService {
 
     @Override
     public InfoTemplate getInfo() {
+        // TODO: do we need to implement it?
+        return null;
+    }
+
+    @Override
+    public ActiveOrdersTemplate getActiveOrders() {
         // TODO: do we need to implement it?
         return null;
     }

@@ -12,6 +12,8 @@ public class Funds {
     private double usd;
     private double rur;
     private double eur;
+    private double cnh;
+    private double gbp;
 
     public double getBtc() {
         return btc;
@@ -101,6 +103,22 @@ public class Funds {
         this.eur = eur;
     }
 
+    public double getCnh() {
+        return cnh;
+    }
+
+    public void setCnh(double cnh) {
+        this.cnh = cnh;
+    }
+
+    public double getGbp() {
+        return gbp;
+    }
+
+    public void setGbp(double gbp) {
+        this.gbp = gbp;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Funds{");
@@ -115,6 +133,8 @@ public class Funds {
         sb.append(", usd=").append(usd);
         sb.append(", rur=").append(rur);
         sb.append(", eur=").append(eur);
+        sb.append(", cnh=").append(cnh);
+        sb.append(", gbp=").append(gbp);
         sb.append('}');
         return sb.toString();
     }

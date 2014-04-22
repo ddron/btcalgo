@@ -42,4 +42,16 @@
         <constructor-arg name="keysController" ref="keys.controller"/>
     </bean>
 
+    <bean id="funds.service" class="com.btcalgo.service.api.FundsService">
+        <constructor-arg name="apiService" ref="api.service"/>
+        <constructor-arg name="finances" ref="finances"/>
+    </bean>
+
+    <bean id="active.orders.service" class="com.btcalgo.service.api.ActiveOrdersService">
+        <constructor-arg name="apiService" ref="api.service"/>
+        <constructor-arg name="finances" ref="finances"/>
+    </bean>
+
+    <bean id="finances" class="com.btcalgo.model.Finances"/>
+
 </beans>

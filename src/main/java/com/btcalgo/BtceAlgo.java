@@ -6,6 +6,8 @@ import com.btcalgo.reactor.Scheduler;
 import com.btcalgo.reactor.ThrowableHandler;
 import com.btcalgo.service.LicenseService;
 import com.btcalgo.service.RuntimeMeter;
+import com.btcalgo.service.api.ActiveOrdersService;
+import com.btcalgo.service.api.FundsService;
 import com.btcalgo.service.marketdata.BtcBestMarketDataSource;
 import com.btcalgo.ui.TabsManager;
 import javafx.application.Application;
@@ -67,6 +69,8 @@ public class BtceAlgo extends Application {
         invokeCommandLineProcessor();
         setUpMarketDataUpdating();
         setUpMeter();
+        setUpFundService();
+        setUpFundActiveOrdersService();
     }
 
     @Override
@@ -104,6 +108,20 @@ public class BtceAlgo extends Application {
             ScheduledFuture scheduledFuture = scheduler.scheduleAtFixedRate(meter.getId(), "", 60_000);
             meter.setScheduledFuture(scheduledFuture);
         }
+    }
+
+    private void setUpFundService() {
+        FundsService fundsService = context.getBean(FundsService.class);
+        Scheduler scheduler = context.getBean(Scheduler.class);
+
+        scheduler.scheduleAtFixedRate(fundsService.getId(), "", 10_000);
+    }
+
+    private void setUpFundActiveOrdersService() {
+        ActiveOrdersService activeOrdersService = context.getBean(ActiveOrdersService.class);
+        Scheduler scheduler = context.getBean(Scheduler.class);
+
+        scheduler.scheduleAtFixedRate(activeOrdersService.getId(), "", 10_000);
     }
 
     private void invokeCommandLineProcessor() {

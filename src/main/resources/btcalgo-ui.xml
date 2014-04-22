@@ -14,13 +14,16 @@
         <property name="runtimeMeter" ref="runtime.meter"/>
     </bean>
 
+    <bean id="tabs.manager" class="com.btcalgo.ui.TabsManager">
+        <property name="tradingTab" ref="trading.tab"/>
+        <property name="financesTab" ref="finances.tab"/>
+    </bean>
+
     <bean id="trading.tab" factory-bean="trading.tab.factory" factory-method="createTradingTab">
         <constructor-arg value="/ui/btcealgo.fxml"/>
     </bean>
 
-    <bean id="tabs.manager" class="com.btcalgo.ui.TabsManager">
-        <property name="tradingTab" ref="trading.tab"/>
-    </bean>
+    <bean id="finances.tab" class="com.btcalgo.ui.FinancesTab"/>
 
     <bean id="license.controller" class="com.btcalgo.ui.LicenseController">
         <property name="licenseService" ref="license.server"/>

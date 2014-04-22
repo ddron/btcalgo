@@ -35,6 +35,7 @@ public class TabsManager {
         Tab finances = new Tab();
         finances.setClosable(false);
         finances.setText("My Finances");
+        finances.setContent(financesTab.getView());
         tabPane.getTabs().add(finances);
 
         tradingTab.initController(stage.getScene().getWindow());
