@@ -28,8 +28,8 @@
     <!--<logger name="com.btcalgo.service.api.ApiService" level="DEBUG"/>-->
     <!--<logger name="com.btcalgo.service.marketdata.MarketDataProvider" level="DEBUG"/>-->
     <logger name="com.btcalgo.service.api.InfoService" level="DEBUG"/>
-<!--    <logger name="com.btcalgo.service.api.FundsService" level="DEBUG"/>
-    <logger name="com.btcalgo.service.api.ActiveOrdersService" level="DEBUG"/>-->
+    <!--<logger name="com.btcalgo.service.api.FundsService" level="DEBUG"/>-->
+   <!--<logger name="com.btcalgo.service.api.ActiveOrdersService" level="DEBUG"/>-->
 
     <root level="info">
         <appender-ref ref="ASYNC_FILE"/>

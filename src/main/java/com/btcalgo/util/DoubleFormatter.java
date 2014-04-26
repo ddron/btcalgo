@@ -12,4 +12,8 @@ public class DoubleFormatter {
     public static String fmt(double number) {
         return formatter.get().format(number);
     }
+
+    public static String fmt(Double number) {
+        return (number == null || Double.isNaN(number)) ? "" : fmt(number.doubleValue());
+    }
 }

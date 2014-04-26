@@ -32,11 +32,16 @@ public class ActiveOrdersService implements NameableConsumer<Event<Void>> {
     public void accept(Event<Void> voidEvent) {
         if (apiService.hasValidKeys()) {
             ActiveOrdersTemplate activeOrders = apiService.getActiveOrders();
-            Map<Long, ActiveOrder> orders = activeOrders.getOrders();
 
-            log.debug("Active orders received: {}", orders);
-
-            finances.updateOnOrdersFunds(orders.values());
+            if (activeOrders.isSuccess()) {
+                Map<Long, ActiveOrder> orders = activeOrders.getOrders();
+                log.debug("Active orders received: {}", orders);
+                finances.updateOnOrdersFunds(orders.values());
+            } else if ("no orders".equals(activeOrders.getError())){
+                finances.clearOnOrdersFunds();
+            } else {
+                log.error("Error getting active orders: {}", activeOrders.getError());
+            }
         }
     }
 

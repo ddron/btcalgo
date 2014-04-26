@@ -52,6 +52,8 @@
         <constructor-arg name="finances" ref="finances"/>
     </bean>
 
-    <bean id="finances" class="com.btcalgo.model.Finances"/>
+    <bean id="finances" class="com.btcalgo.model.Finances">
+        <property name="financesToShow" ref="finances.to.show"/>
+    </bean>
 
 </beans>

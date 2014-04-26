@@ -29,11 +29,14 @@ public class FundsService implements NameableConsumer<Event<Void>> {
     public void accept(Event<Void> voidEvent) {
         if (apiService.hasValidKeys()) {
             InfoTemplate infoTemplate = apiService.getInfo();
-            Funds funds = infoTemplate.getInfo().getFunds();
 
-            log.debug("Funds received: {}", funds);
-
-            finances.updateAvailableFunds(funds);
+            if (infoTemplate.isSuccess()) {
+                Funds funds = infoTemplate.getInfo().getFunds();
+                log.debug("Funds received: {}", funds);
+                finances.updateAvailableFunds(funds);
+            } else {
+                log.error("Error getting funds: {}", infoTemplate.getError());
+            }
         }
 
     }

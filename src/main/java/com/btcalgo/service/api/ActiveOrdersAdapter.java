@@ -1,5 +1,6 @@
 package com.btcalgo.service.api;
 
+import com.btcalgo.model.Direction;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.api.templates.ActiveOrder;
 import com.btcalgo.service.api.templates.ActiveOrdersTemplate;
@@ -31,6 +32,8 @@ public class ActiveOrdersAdapter extends TypeAdapter<ActiveOrdersTemplate> {
             String name1 = in.nextName();
             if (name1.equals("success")) {
                 result.setSuccess(in.nextInt());
+            } else if (name1.equals("error")) {
+                result.setError(in.nextString());
             } else if (name1.equals("return")) {
                 in.beginObject();
                 while (in.hasNext()) {
@@ -43,7 +46,7 @@ public class ActiveOrdersAdapter extends TypeAdapter<ActiveOrdersTemplate> {
                         if (name2.equals("pair")) {
                             order.setSymbol(SymbolEnum.getByValue(in.nextString()));
                         } else if (name2.equals("type")) {
-                            order.setType(in.nextString());
+                            order.setDirection(Direction.valueByApiValue(in.nextString()));
                         } else if (name2.equals("amount")) {
                             order.setAmount(in.nextDouble());
                         } else if (name2.equals("rate")) {

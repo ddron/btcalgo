@@ -23,7 +23,9 @@
         <constructor-arg value="/ui/btcealgo.fxml"/>
     </bean>
 
-    <bean id="finances.tab" class="com.btcalgo.ui.FinancesTab"/>
+    <bean id="finances.tab" class="com.btcalgo.ui.FinancesTab">
+        <constructor-arg name="financesToShow" ref="finances.to.show"/>
+    </bean>
 
     <bean id="license.controller" class="com.btcalgo.ui.LicenseController">
         <property name="licenseService" ref="license.server"/>
@@ -41,6 +43,10 @@
 
     <bean id="market.data.to.show" class="com.btcalgo.ui.model.MarketDataToShow">
         <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
+    </bean>
+
+    <bean id="finances.to.show" class="com.btcalgo.ui.model.FinancesToShow">
+        <property name="finances" ref="finances"/>
     </bean>
 
 </beans>

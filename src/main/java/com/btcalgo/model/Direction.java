@@ -38,7 +38,7 @@ public enum Direction {
                 return type;
             }
         }
-        return null;
+        return Direction.NONE;
     }
 
     public String getDisplayName() {

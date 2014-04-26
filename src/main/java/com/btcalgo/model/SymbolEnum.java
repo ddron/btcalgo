@@ -103,4 +103,8 @@ public enum SymbolEnum {
     public String getFirst() {
         return getDisplayName().substring(0, 3);
     }
+
+    public String getSecond() {
+        return getDisplayName().substring(4, 7);
+    }
 }
