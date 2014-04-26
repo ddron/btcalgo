@@ -1,7 +1,7 @@
 package com.btcalgo.service.api.templates;
 
 import com.btcalgo.model.Direction;
-import com.btcalgo.model.FundsEnum;
+import com.btcalgo.finances.FundsEnum;
 import com.btcalgo.model.SymbolEnum;
 
 public class ActiveOrder {

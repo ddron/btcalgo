@@ -1,4 +1,4 @@
-package com.btcalgo.model;
+package com.btcalgo.finances;
 
 public enum FundsEnum {
     BTC,

@@ -7,6 +7,7 @@ import com.btcalgo.reactor.ThrowableHandler;
 import com.btcalgo.service.LicenseService;
 import com.btcalgo.service.RuntimeMeter;
 import com.btcalgo.service.api.ActiveOrdersService;
+import com.btcalgo.service.api.FeeService;
 import com.btcalgo.service.api.FundsService;
 import com.btcalgo.service.marketdata.BtcBestMarketDataSource;
 import com.btcalgo.ui.TabsManager;
@@ -19,6 +20,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import reactor.core.Environment;
 import reactor.core.Reactor;
 
+import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 
 import static reactor.event.selector.Selectors.$;
@@ -34,6 +36,7 @@ public class BtceAlgo extends Application {
 
     private static BtceAlgo app;
     private static final long MD_UPDATE_RATE_MS = 400;
+    private static final long FEE_UPDATE_RATE_MS = 55_000;
 
     private static String CONTEXT_FILE_NAME = "btcalgo-context.xml";
 
@@ -68,6 +71,7 @@ public class BtceAlgo extends Application {
         makeConsumerRegistrations();
         invokeCommandLineProcessor();
         setUpMarketDataUpdating();
+        setUpFeeUpdating();
         setUpMeter();
         setUpFundService();
         setUpFundActiveOrdersService();
@@ -96,6 +100,18 @@ public class BtceAlgo extends Application {
 
         for (SymbolEnum symbolEnum : SymbolEnum.values()) {
             scheduler.scheduleAtFixedRate(marketDataSource.getId(), symbolEnum, MD_UPDATE_RATE_MS);
+        }
+    }
+
+    private void setUpFeeUpdating() {
+        Random r = new Random();
+        FeeService feeService = context.getBean(FeeService.class);
+        Scheduler scheduler = context.getBean(Scheduler.class);
+
+        for (SymbolEnum symbolEnum : SymbolEnum.values()) {
+            // we need this random number to reduce simultaneous threads usage.
+            // At the moment we've got about 25 ccy pairs
+            scheduler.scheduleAtFixedRate(feeService.getId(), symbolEnum, FEE_UPDATE_RATE_MS + r.nextInt(5_000));
         }
     }
 

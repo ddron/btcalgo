@@ -52,8 +52,15 @@
         <constructor-arg name="finances" ref="finances"/>
     </bean>
 
-    <bean id="finances" class="com.btcalgo.model.Finances">
+    <bean id="fee.service" class="com.btcalgo.service.api.FeeService">
+        <constructor-arg name="apiService" ref="api.service"/>
+        <constructor-arg name="feeInfo" ref="fee.info"/>
+    </bean>
+
+    <bean id="finances" class="com.btcalgo.finances.Finances">
         <property name="financesToShow" ref="finances.to.show"/>
     </bean>
+
+    <bean id="fee.info" class="com.btcalgo.finances.FeeInfo"/>
 
 </beans>

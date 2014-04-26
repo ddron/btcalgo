@@ -123,6 +123,11 @@ public class ApiService implements IApiService {
         return request(symbol, "ticker", TickerTemplate.class);
     }
 
+    @Override
+    public FeeTemplate getFee(String symbol) {
+        return request(symbol, "fee", FeeTemplate.class);
+    }
+
     private <T> T request(String symbol, String method, Class<T> clazz) {
         T result;
         int i = 0;

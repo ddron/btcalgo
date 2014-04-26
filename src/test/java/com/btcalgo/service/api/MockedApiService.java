@@ -77,6 +77,12 @@ public class MockedApiService implements IApiService {
         return null;
     }
 
+    @Override
+    public FeeTemplate getFee(String symbol) {
+        // TODO: do we need to implement it?
+        return null;
+    }
+
     public BlockingQueue<Order> getSentOrders() {
         return sentOrders;
     }

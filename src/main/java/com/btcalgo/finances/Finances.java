@@ -1,4 +1,4 @@
-package com.btcalgo.model;
+package com.btcalgo.finances;
 
 import com.btcalgo.service.api.templates.ActiveOrder;
 import com.btcalgo.service.api.templates.Funds;
@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.btcalgo.model.FundsEnum.*;
+import static com.btcalgo.finances.FundsEnum.*;
 
 public class Finances {
 

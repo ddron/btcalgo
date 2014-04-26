@@ -1,7 +1,7 @@
 package com.btcalgo.ui.model;
 
-import com.btcalgo.model.Finances;
-import com.btcalgo.model.FundsEnum;
+import com.btcalgo.finances.Finances;
+import com.btcalgo.finances.FundsEnum;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

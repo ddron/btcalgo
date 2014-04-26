@@ -1,6 +1,6 @@
 package com.btcalgo.service.api;
 
-import com.btcalgo.model.Finances;
+import com.btcalgo.finances.Finances;
 import com.btcalgo.reactor.NameableConsumer;
 import com.btcalgo.service.api.templates.Funds;
 import com.btcalgo.service.api.templates.InfoTemplate;
