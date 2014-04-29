@@ -63,4 +63,8 @@
 
     <bean id="fee.info" class="com.btcalgo.finances.FeeInfo"/>
 
+    <bean id="funds.converter" class="com.btcalgo.finances.FundsConverter">
+        <constructor-arg name="feeInfo" ref="fee.info"/>
+        <constructor-arg name="marketDataProvider" ref="market.data.provider"/>
+    </bean>
 </beans>
