@@ -4,7 +4,7 @@
     <groupId>com.btcalgo</groupId>
     <artifactId>btcalgo</artifactId>
     <packaging>jar</packaging>
-    <version>btcalgo-2.3</version>
+    <version>btcalgo-2.4</version>
     <name>btcalgo</name>
     <url>http://maven.apache.org</url>
 
