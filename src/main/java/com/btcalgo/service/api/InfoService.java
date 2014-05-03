@@ -14,6 +14,9 @@ public class InfoService implements NameableConsumer<Event<Void>> {
     private IApiService apiService;
     private KeysController keysController;
 
+    private FundsService fundsService;
+    private ActiveOrdersService activeOrdersService;
+
     public InfoService(IApiService apiService, KeysController keysController) {
         this.apiService = apiService;
         this.keysController = keysController;
@@ -27,10 +30,27 @@ public class InfoService implements NameableConsumer<Event<Void>> {
     @Override
     public void accept(Event<Void> voidEvent) {
         InfoTemplate infoTemplate = apiService.getInfo();
-        apiService.setValidKeys(infoTemplate.hasAllRights());
 
+        apiService.setValidKeys(infoTemplate.hasAllRights());
         keysController.updateStatus(infoTemplate);
 
+        if (apiService.hasValidKeys()) {
+            if (fundsService != null) {
+                fundsService.accept(null);
+            }
+            if (activeOrdersService != null) {
+                activeOrdersService.accept(null);
+            }
+        }
+
         log.debug("{}", infoTemplate);
+    }
+
+    public void setFundsService(FundsService fundsService) {
+        this.fundsService = fundsService;
+    }
+
+    public void setActiveOrdersService(ActiveOrdersService activeOrdersService) {
+        this.activeOrdersService = activeOrdersService;
     }
 }

@@ -1,5 +1,6 @@
 package com.btcalgo.finances;
 
+import com.btcalgo.model.IOrderBook;
 import com.btcalgo.model.SymbolEnum;
 import com.btcalgo.service.marketdata.IMarketDataProvider;
 
@@ -44,12 +45,16 @@ public class FundsConverter {
         double fee = feeInfo.getFee(conversionPair);
         double price;
 
-        if (isDirectConversionPair) {
-            price = mpd.getIOrderBook(MARKET, conversionPair).getBestAskPrice();
-        } else {
-            price = 1 / mpd.getIOrderBook(MARKET, conversionPair).getBestBidPrice();
+        IOrderBook book = mpd.getIOrderBook(MARKET, conversionPair);
+        if (book == null) {
+            return 0;
         }
 
+        if (isDirectConversionPair) {
+            price = book.getBestAskPrice();
+        } else {
+            price = 1 / book.getBestBidPrice();
+        }
         return amount * (1 - fee / 100) * price;
     }
 

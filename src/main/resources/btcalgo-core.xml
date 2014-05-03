@@ -40,6 +40,8 @@
     <bean id="info.service" class="com.btcalgo.service.api.InfoService">
         <constructor-arg name="apiService" ref="api.service"/>
         <constructor-arg name="keysController" ref="keys.controller"/>
+        <property name="fundsService" ref="funds.service"/>
+        <property name="activeOrdersService" ref="active.orders.service"/>
     </bean>
 
     <bean id="funds.service" class="com.btcalgo.service.api.FundsService">

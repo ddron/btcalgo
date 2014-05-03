@@ -26,7 +26,7 @@ public class FinancesToShow implements NameableConsumer<Event<Void>>, ChangeList
     private FundsConverter converter;
 
     private ObservableList<FinancesInfo> dataToShow = FXCollections.observableArrayList(new ArrayList<FinancesInfo>());
-    private StringProperty totalFinances = new SimpleStringProperty("0.00");
+    private StringProperty totalFinances = new SimpleStringProperty("0.0000");
     private FundsEnum fundOfTotalAmount = FundsEnum.USD;
 
     public void updateFinancesToShow() {
@@ -83,7 +83,7 @@ public class FinancesToShow implements NameableConsumer<Event<Void>>, ChangeList
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                totalFinances.set(String.format("%.2f", finalTotalAmount));
+                totalFinances.set(String.format("%.4f", finalTotalAmount));
             }
         });
     }
@@ -97,15 +97,7 @@ public class FinancesToShow implements NameableConsumer<Event<Void>>, ChangeList
         }
     }
 
-    public String getTotalFinances() {
-        return totalFinances.get();
-    }
-
     public StringProperty totalFinancesProperty() {
         return totalFinances;
-    }
-
-    public void setTotalFinances(String totalFinances) {
-        this.totalFinances.set(totalFinances);
     }
 }
