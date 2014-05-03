@@ -50,6 +50,8 @@ public class Finances {
             result.put(coverFund, existentAmount + coverAmount);
         }
         this.onOrdersFunds = ImmutableMap.copyOf(result);
+
+        financesToShow.updateFinancesToShow();
     }
 
     public void clearOnOrdersFunds() {

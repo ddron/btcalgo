@@ -47,6 +47,7 @@
 
     <bean id="finances.to.show" class="com.btcalgo.ui.model.FinancesToShow">
         <property name="finances" ref="finances"/>
+        <property name="converter" ref="funds.converter"/>
     </bean>
 
 </beans>

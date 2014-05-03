@@ -1,14 +1,22 @@
 package com.btcalgo.ui;
 
+import com.btcalgo.finances.FundsEnum;
 import com.btcalgo.ui.model.FinancesInfo;
 import com.btcalgo.ui.model.FinancesToShow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 public class FinancesTab {
 
@@ -23,13 +31,36 @@ public class FinancesTab {
         view.getStylesheets().add(getClass().getResource("/ui/btcealgo.css").toExternalForm());
         view.getStyleClass().add("root");
 
-        VBox vBox = new VBox();
-        vBox.setMinWidth(400);
-        vBox.setMinHeight(400);
-        view.add(vBox, 0, 0);
+        VBox basicBox = new VBox();
+        basicBox.setMinWidth(400);
+        basicBox.setMinHeight(400);
+        view.add(basicBox, 0, 0);
 
-        vBox.getChildren().add(tableView);
+        basicBox.getChildren().add(tableView);
         initTableView();
+
+        HBox totalFinances = new HBox();
+        basicBox.getChildren().add(totalFinances);
+        initTotalFinancesBox(totalFinances);
+    }
+
+    private void initTotalFinancesBox(HBox totalFinances) {
+        ChoiceBox<String> fundsPairs = new ChoiceBox<>();
+        Set<String> funds = new TreeSet<>();
+        funds.add(FundsEnum.USD.name());
+        funds.add(FundsEnum.EUR.name());
+        funds.add(FundsEnum.RUR.name());
+        funds.add(FundsEnum.CNH.name());
+        funds.add(FundsEnum.GBP.name());
+        funds.add(FundsEnum.BTC.name());
+        fundsPairs.setItems(FXCollections.observableArrayList(funds));
+        totalFinances.getChildren().add(fundsPairs);
+        fundsPairs.getSelectionModel().selectedItemProperty().addListener(financesToShow);
+        fundsPairs.getSelectionModel().select(FundsEnum.USD.name());
+
+        Label totalFunds = new Label();
+        totalFunds.textProperty().bind(financesToShow.totalFinancesProperty());
+        totalFinances.getChildren().add(totalFunds);
     }
 
     private void initTableView() {
@@ -41,7 +72,7 @@ public class FinancesTab {
 
             }
         });
-        currency.setPrefWidth(70);
+        currency.setPrefWidth(150);
 
         TableColumn<FinancesInfo, String> amountOnOrders = new TableColumn<>("Amount on orders");
         amountOnOrders.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FinancesInfo, String>, ObservableValue<String>>() {
@@ -51,7 +82,7 @@ public class FinancesTab {
 
             }
         });
-        amountOnOrders.setPrefWidth(70);
+        amountOnOrders.setPrefWidth(150);
 
         TableColumn<FinancesInfo, String> amountTotal = new TableColumn<>("Total amount");
         amountTotal.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FinancesInfo, String>, ObservableValue<String>>() {
@@ -61,7 +92,7 @@ public class FinancesTab {
 
             }
         });
-        amountTotal.setPrefWidth(70);
+        amountTotal.setPrefWidth(150);
 
         tableView.setItems(financesToShow.getDataToShow());
         tableView.getColumns().addAll(currency, amountOnOrders, amountTotal);

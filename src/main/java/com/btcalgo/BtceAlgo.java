@@ -11,6 +11,7 @@ import com.btcalgo.service.api.FeeService;
 import com.btcalgo.service.api.FundsService;
 import com.btcalgo.service.marketdata.BtcBestMarketDataSource;
 import com.btcalgo.ui.TabsManager;
+import com.btcalgo.ui.model.FinancesToShow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ public class BtceAlgo extends Application {
     private static BtceAlgo app;
     private static final long MD_UPDATE_RATE_MS = 400;
     private static final long FEE_UPDATE_RATE_MS = 55_000;
+    private static final long TOTAL_FINANCES_UPDATE_RATE_MS = 1_000;
 
     private static String CONTEXT_FILE_NAME = "btcalgo-context.xml";
 
@@ -72,6 +74,7 @@ public class BtceAlgo extends Application {
         invokeCommandLineProcessor();
         setUpMarketDataUpdating();
         setUpFeeUpdating();
+        setUpFinancesUpdating();
         setUpMeter();
         setUpFundService();
         setUpFundActiveOrdersService();
@@ -113,6 +116,12 @@ public class BtceAlgo extends Application {
             // At the moment we've got about 25 ccy pairs
             scheduler.scheduleAtFixedRate(feeService.getId(), symbolEnum, FEE_UPDATE_RATE_MS + r.nextInt(5_000));
         }
+    }
+
+    private void setUpFinancesUpdating() {
+        FinancesToShow financesToShow = context.getBean(FinancesToShow.class);
+        Scheduler scheduler = context.getBean(Scheduler.class);
+        scheduler.scheduleAtFixedRate(financesToShow.getId(), "", TOTAL_FINANCES_UPDATE_RATE_MS);
     }
 
     private void setUpMeter() {
