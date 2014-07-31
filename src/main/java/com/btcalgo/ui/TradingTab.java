@@ -13,12 +13,9 @@ import com.btcalgo.ui.model.MarketDataToShow;
 import com.btcalgo.ui.model.OrderDataHolder;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -27,7 +24,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
-import javafx.util.Callback;
 import reactor.core.Reactor;
 
 import java.util.List;
@@ -81,34 +77,31 @@ public class TradingTab {
         bestSell.textProperty().bind(marketDataToShow.bestAskPriceProperty());
 
         // select symbols and bind with market data
-        pairs.setItems(FXCollections.<String>observableArrayList(SymbolEnum.getDisplayNames()));
+        pairs.setItems(FXCollections.observableArrayList(SymbolEnum.getDisplayNames()));
         pairs.getSelectionModel().selectedItemProperty().addListener(marketDataToShow);
         pairs.getSelectionModel().select(SymbolEnum.BTCUSD.getDisplayName());
         symbol.textProperty().bind(pairs.getSelectionModel().selectedItemProperty());
 
         // strategy types
-        strategyTypes.setItems(FXCollections.<String>observableArrayList(StrategyType.getDisplayNames()));
+        strategyTypes.setItems(FXCollections.observableArrayList(StrategyType.getDisplayNames()));
         strategyTypes.getSelectionModel().selectFirst();
-        strategyTypes.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String oldOrderType, String newOrderType) {
-                StrategyType type = StrategyType.valueByDisplayName(newOrderType);
-                VBox orderParams = (VBox) view.lookup("#orderParams");
-                switch (type) {
-                    case STOP_LOSS:
-                        orderParams.getChildren().remove(offsetHBox);
-                        break;
-                    case TRAILING_STOP:
-                        orderParams.getChildren().add(offsetHBox);
-                        break;
-                    default:
-                        break;
-                }
+        strategyTypes.getSelectionModel().selectedItemProperty().addListener((observableValue, oldOrderType, newOrderType) -> {
+            StrategyType type = StrategyType.valueByDisplayName(newOrderType);
+            VBox orderParams = (VBox) view.lookup("#orderParams");
+            switch (type) {
+                case STOP_LOSS:
+                    orderParams.getChildren().remove(offsetHBox);
+                    break;
+                case TRAILING_STOP:
+                    orderParams.getChildren().add(offsetHBox);
+                    break;
+                default:
+                    break;
             }
         });
 
         // direction (i.e. side)
-        direction.setItems(FXCollections.<String>observableArrayList(Direction.getDisplayNames()));
+        direction.setItems(FXCollections.observableArrayList(Direction.getDisplayNames()));
         direction.getSelectionModel().selectFirst();
 
         initOffsetHBox();
@@ -141,67 +134,51 @@ public class TradingTab {
 
     private void initOrdersViewTable() {
         TableColumn<Order, String> typeCol = new TableColumn<>("Order Type");
-        typeCol.setCellValueFactory(new PropertyValueFactory<Order, String>("strategyTypeAsString"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("strategyTypeAsString"));
 
         TableColumn<Order, String> directionCol = new TableColumn<>("Side");
-        directionCol.setCellValueFactory(new PropertyValueFactory<Order, String>("directionAsString"));
+        directionCol.setCellValueFactory(new PropertyValueFactory<>("directionAsString"));
         directionCol.setPrefWidth(35);
 
         TableColumn<Order, String> symbolCol = new TableColumn<>("Currency");
-        symbolCol.setCellValueFactory(new PropertyValueFactory<Order, String>("symbolAsString"));
+        symbolCol.setCellValueFactory(new PropertyValueFactory<>("symbolAsString"));
         symbolCol.setPrefWidth(70);
 
         TableColumn<Order, String> amountCol = new TableColumn<>("Amount");
-        amountCol.setCellValueFactory(new PropertyValueFactory<Order, String>("amount"));
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
         amountCol.setPrefWidth(70);
 
         TableColumn<Order, String> stopPriceCol = new TableColumn<>("Stop Price");
-        stopPriceCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> o) {
-                Order order = o.getValue();
-                if (order.getInitialStopPrice() != null) {
-                    return Bindings.concat(order.stopPriceProperty()).concat(" (").concat(order.initialStopPriceProperty()).concat(")");
-                } else {
-                    return order.stopPriceProperty();
-                }
+        stopPriceCol.setCellValueFactory(o -> {
+            Order order = o.getValue();
+            if (order.getInitialStopPrice() != null) {
+                return Bindings.concat(order.stopPriceProperty()).concat(" (").concat(order.initialStopPriceProperty()).concat(")");
+            } else {
+                return order.stopPriceProperty();
             }
         });
         stopPriceCol.setPrefWidth(110);
 
         TableColumn<Order, String> limitPriceCol = new TableColumn<>("Price");
-        limitPriceCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> o) {
-                Order order = o.getValue();
-                if (order.getInitialLimitPrice() != null) {
-                    return Bindings.concat(order.limitPriceProperty()).concat(" (").concat(order.initialLimitPriceProperty()).concat(")");
-                } else {
-                    return order.limitPriceProperty();
-                }
+        limitPriceCol.setCellValueFactory(o -> {
+            Order order = o.getValue();
+            if (order.getInitialLimitPrice() != null) {
+                return Bindings.concat(order.limitPriceProperty()).concat(" (").concat(order.initialLimitPriceProperty()).concat(")");
+            } else {
+                return order.limitPriceProperty();
             }
         });
         limitPriceCol.setPrefWidth(110);
 
         TableColumn<Order, String> statusCol = new TableColumn<>("Status");
-        statusCol.setCellValueFactory(new PropertyValueFactory<Order, String>("displayStatus"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("displayStatus"));
         statusCol.setPrefWidth(70);
 
         //Insert Button
         TableColumn<Order, String> actionCol = new TableColumn<>("Action");
         actionCol.setSortable(false);
-        actionCol.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<Order, String>, ObservableValue<String>>() {
-                    @Override
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<Order, String> p) {
-                        return p.getValue().validActionProperty();
-                    }
-                });
-        actionCol.setCellFactory(
-                new Callback<TableColumn<Order, String>, TableCell<Order, String>>() {
-                    @Override
-                    public TableCell<Order, String> call(TableColumn<Order, String> p) {
-                        return new ButtonCell();
-                    }
-                });
+        actionCol.setCellValueFactory(p -> p.getValue().validActionProperty());
+        actionCol.setCellFactory(p -> new ButtonCell());
         actionCol.setPrefWidth(70);
 
         ordersView.setItems(ordersManager.getOrdersView());
@@ -220,16 +197,13 @@ public class TradingTab {
         ButtonCell(){
             cellButton.textProperty().bind(itemProperty());
 
-            cellButton.setOnAction(new EventHandler<ActionEvent>(){
-                @Override
-                public void handle(ActionEvent t) {
-                    String id = ((Order) getTableRow().getItem()).getId();
-                    Action action = Action.valueOf(getItem());
-                    if (action == Action.CANCEL) {
-                        ordersManager.cancel(id);
-                    } else if (action == Action.REMOVE) {
-                        ordersManager.remove(id);
-                    }
+            cellButton.setOnAction(t -> {
+                String id = ((Order) getTableRow().getItem()).getId();
+                Action action = Action.valueOf(getItem());
+                if (action == Action.CANCEL) {
+                    ordersManager.cancel(id);
+                } else if (action == Action.REMOVE) {
+                    ordersManager.remove(id);
                 }
             });
         }
@@ -266,30 +240,27 @@ public class TradingTab {
                 @Override
                 public void run() {
                     while (keysController.isValidatingNow()) {
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                String text = validate.getText();
-                                final String validating = "Validating";
-                                switch (text) {
-                                    case "Validate":
-                                        text = validating;
-                                        break;
-                                    case validating:
-                                        text = validating + ".";
-                                        break;
-                                    case validating + ".":
-                                        text = validating + "..";
-                                        break;
-                                    case validating + "..":
-                                        text = validating + "...";
-                                        break;
-                                    case validating + "...":
-                                        text = validating;
-                                        break;
-                                }
-                                validate.setText(text);
+                        Platform.runLater(() -> {
+                            String text = validate.getText();
+                            final String validating = "Validating";
+                            switch (text) {
+                                case "Validate":
+                                    text = validating;
+                                    break;
+                                case validating:
+                                    text = validating + ".";
+                                    break;
+                                case validating + ".":
+                                    text = validating + "..";
+                                    break;
+                                case validating + "..":
+                                    text = validating + "...";
+                                    break;
+                                case validating + "...":
+                                    text = validating;
+                                    break;
                             }
+                            validate.setText(text);
                         });
                         //noinspection EmptyCatchBlock
                         try {
@@ -297,13 +268,10 @@ public class TradingTab {
                         } catch (InterruptedException e) {
                         }
                     }
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            validate.setDisable(false);
-                            validate.setText("Validate");
-                            keysController.showKeysPopup();
-                        }
+                    Platform.runLater(() -> {
+                        validate.setDisable(false);
+                        validate.setText("Validate");
+                        keysController.showKeysPopup();
                     });
                 }
             }.start();

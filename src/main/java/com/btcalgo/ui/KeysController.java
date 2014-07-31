@@ -1,8 +1,6 @@
 package com.btcalgo.ui;
 
 import com.btcalgo.service.api.templates.InfoTemplate;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -49,12 +47,7 @@ public class KeysController {
         final Button ok = new Button("OK");
         ok.setMinHeight(40);
         ok.setMinWidth(120);
-        ok.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                keysPopup.hide();
-            }
-        });
+        ok.setOnAction(actionEvent -> keysPopup.hide());
         popupVBox.getChildren().add(ok);
 
         keysPopup.show();

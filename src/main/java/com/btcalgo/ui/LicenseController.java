@@ -5,8 +5,6 @@ import com.btcalgo.service.RuntimeMeter;
 import com.google.common.base.Strings;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 public class LicenseController {
 
@@ -117,38 +114,32 @@ public class LicenseController {
         final Button activate = new Button("Activate");
         activate.setPrefHeight(40);
         activate.setPrefWidth(120);
-        activate.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                activate.setDisable(true);
-                activate.setText("Activating...");
-                if (isLicenseKeyTextValid(licenseKey.getText())) {
-                    new Thread(new Task<Boolean>() {
-                        @Override
-                        protected Boolean call() throws Exception {
-                            final boolean validLicense = licenseService.activateLicense(licenseKey.getText());
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (validLicense) {
-                                        showActivationCompletedPopup();
-                                        removeTrialTitle();
-                                        runtimeMeter.stopMeter();
-                                    } else {
-                                        showIncorrectKeyPopup();
-                                    }
-                                    activate.setText("Activate");
-                                    activate.setDisable(false);
-                                }
-                            });
-                            return validLicense;
-                        }
-                    }).start();
-                } else {
-                    showValidationPopup(licenseKey.getText());
-                    activate.setText("Activate");
-                    activate.setDisable(false);
-                }
+        activate.setOnAction(actionEvent -> {
+            activate.setDisable(true);
+            activate.setText("Activating...");
+            if (isLicenseKeyTextValid(licenseKey.getText())) {
+                new Thread(new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        final boolean validLicense = licenseService.activateLicense(licenseKey.getText());
+                        Platform.runLater(() -> {
+                            if (validLicense) {
+                                showActivationCompletedPopup();
+                                removeTrialTitle();
+                                runtimeMeter.stopMeter();
+                            } else {
+                                showIncorrectKeyPopup();
+                            }
+                            activate.setText("Activate");
+                            activate.setDisable(false);
+                        });
+                        return validLicense;
+                    }
+                }).start();
+            } else {
+                showValidationPopup(licenseKey.getText());
+                activate.setText("Activate");
+                activate.setDisable(false);
             }
         });
 
@@ -207,12 +198,7 @@ public class LicenseController {
         final Button ok = new Button("OK");
         ok.setMinHeight(40);
         ok.setMinWidth(120);
-        ok.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                validationPopup.hide();
-            }
-        });
+        ok.setOnAction(actionEvent -> validationPopup.hide());
         popupVBox.getChildren().add(ok);
 
         validationPopup.show();
@@ -234,12 +220,7 @@ public class LicenseController {
         final Button ok = new Button("OK");
         ok.setMinHeight(40);
         ok.setMinWidth(120);
-        ok.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                incorrectKeyPopup.hide();
-            }
-        });
+        ok.setOnAction(actionEvent -> incorrectKeyPopup.hide());
         popupVBox.getChildren().add(ok);
 
         incorrectKeyPopup.show();
@@ -258,21 +239,13 @@ public class LicenseController {
         final Button ok = new Button("OK");
         ok.setMinHeight(40);
         ok.setMinWidth(120);
-        ok.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                completePopup.hide();
-                licensePopup.hide();
-            }
+        ok.setOnAction(actionEvent -> {
+            completePopup.hide();
+            licensePopup.hide();
         });
         popupVBox.getChildren().add(ok);
 
-        completePopup.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                licensePopup.hide();
-            }
-        });
+        completePopup.setOnCloseRequest(windowEvent -> licensePopup.hide());
 
         completePopup.show();
     }

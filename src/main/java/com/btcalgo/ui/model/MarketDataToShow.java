@@ -68,12 +68,7 @@ public class MarketDataToShow implements IMarketDataListener, ChangeListener<Str
     }
 
     public void setBestBidPrice(final double price) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                bestBidPrice.set(fmt(price));
-            }
-        });
+        Platform.runLater(() -> bestBidPrice.set(fmt(price)));
     }
 
     public String getBestAskPrice() {
@@ -85,12 +80,7 @@ public class MarketDataToShow implements IMarketDataListener, ChangeListener<Str
     }
 
     public void setBestAskPrice(final double price) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                bestAskPrice.set(fmt(price));
-            }
-        });
+        Platform.runLater(() -> bestAskPrice.set(fmt(price)));
     }
 
 }

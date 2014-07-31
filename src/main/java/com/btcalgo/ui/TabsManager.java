@@ -1,7 +1,5 @@
 package com.btcalgo.ui;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -49,12 +47,7 @@ public class TabsManager {
 
         Menu btcAlgo = new Menu("BtcAlgo");
         MenuItem licensing = new MenuItem("BtcAlgo Licensing");
-        licensing.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                tradingTab.handleLicensing();
-            }
-        });
+        licensing.setOnAction(actionEvent -> tradingTab.handleLicensing());
 
         btcAlgo.getItems().add(licensing);
         menuBar.getMenus().add(btcAlgo);

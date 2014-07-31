@@ -4,7 +4,6 @@ import com.btcalgo.finances.FundsEnum;
 import com.btcalgo.ui.model.FinancesInfo;
 import com.btcalgo.ui.model.FinancesToShow;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -98,48 +96,27 @@ public class FinancesTab {
 
     private void initTableView() {
         TableColumn<FinancesInfo, String> currency = new TableColumn<>("Currency");
-        currency.setCellFactory(new Callback<TableColumn<FinancesInfo, String>, TableCell<FinancesInfo, String>>() {
-            @Override
-            public TableCell<FinancesInfo, String> call(TableColumn<FinancesInfo, String> p) {
-                TableCell<FinancesInfo, String> tc = new TableCell<FinancesInfo, String>(){
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        if (item != null){
-                            setText(item);
-                        }
+        currency.setCellFactory(p -> {
+            TableCell<FinancesInfo, String> tc = new TableCell<FinancesInfo, String>(){
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    if (item != null){
+                        setText(item);
                     }
-                };
-                tc.setAlignment(Pos.CENTER);
-                return tc;
-            }
+                }
+            };
+            tc.setAlignment(Pos.CENTER);
+            return tc;
         });
-        currency.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FinancesInfo, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<FinancesInfo, String> p) {
-                return new SimpleStringProperty(p.getValue().getFundEnumName());
-
-            }
-        });
+        currency.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getFundEnumName()));
         currency.setPrefWidth(150);
 
         TableColumn<FinancesInfo, String> amountOnOrders = new TableColumn<>("Amount on orders");
-        amountOnOrders.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FinancesInfo, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<FinancesInfo, String> p) {
-                return new SimpleStringProperty(p.getValue().getFinancesOnOrders());
-
-            }
-        });
+        amountOnOrders.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getFinancesOnOrders()));
         amountOnOrders.setPrefWidth(150);
 
         TableColumn<FinancesInfo, String> amountTotal = new TableColumn<>("Total amount");
-        amountTotal.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<FinancesInfo, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<FinancesInfo, String> p) {
-                return new SimpleStringProperty(p.getValue().getFinancesTotal());
-
-            }
-        });
+        amountTotal.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getFinancesTotal()));
         amountTotal.setPrefWidth(150);
 
         tableView.setItems(financesToShow.getDataToShow());

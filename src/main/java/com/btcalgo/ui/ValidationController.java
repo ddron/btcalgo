@@ -6,8 +6,6 @@ import com.btcalgo.service.api.IApiService;
 import com.btcalgo.util.DoubleFormatter;
 import com.btcalgo.util.StringUtils;
 import com.google.common.base.Strings;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -59,12 +57,7 @@ public class ValidationController {
         Button okBtn = new Button("OK");
         okBtn.setPrefHeight(40);
         okBtn.setPrefWidth(120);
-        okBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                popup.hide();
-            }
-        });
+        okBtn.setOnAction(actionEvent -> popup.hide());
         popupVBox.getChildren().add(okBtn);
 
         Scene popupScene = new Scene(popupVBox);

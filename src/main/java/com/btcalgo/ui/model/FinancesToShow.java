@@ -25,27 +25,24 @@ public class FinancesToShow implements NameableConsumer<Event<Void>>, ChangeList
     private Finances finances;
     private FundsConverter converter;
 
-    private ObservableList<FinancesInfo> dataToShow = FXCollections.observableArrayList(new ArrayList<FinancesInfo>());
+    private ObservableList<FinancesInfo> dataToShow = FXCollections.observableArrayList(new ArrayList<>());
     private StringProperty totalFinances = new SimpleStringProperty("0.0000");
     private FundsEnum fundOfTotalAmount = FundsEnum.USD;
 
     public void updateFinancesToShow() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                dataToShow.clear();
-                Map<FundsEnum, Double> availableFunds = finances.getAvailableFunds();
-                Map<FundsEnum, Double> onOrdersFunds = finances.getOnOrdersFunds();
+        Platform.runLater(() -> {
+            dataToShow.clear();
+            Map<FundsEnum, Double> availableFunds = finances.getAvailableFunds();
+            Map<FundsEnum, Double> onOrdersFunds = finances.getOnOrdersFunds();
 
-                for (FundsEnum fundsEnum : FundsEnum.values()) {
-                    double onOrdersAmount = onOrdersFunds.get(fundsEnum) == null ? 0 : onOrdersFunds.get(fundsEnum);
-                    double totalAmount = onOrdersAmount + (availableFunds.get(fundsEnum) == null ? 0 : availableFunds.get(fundsEnum));
-                    dataToShow.add(new FinancesInfo(fundsEnum.name(), onOrdersAmount, totalAmount));
-                }
-
-                FXCollections.sort(dataToShow);
-                log.debug("Finances to show: {}", dataToShow);
+            for (FundsEnum fundsEnum : FundsEnum.values()) {
+                double onOrdersAmount = onOrdersFunds.get(fundsEnum) == null ? 0 : onOrdersFunds.get(fundsEnum);
+                double totalAmount = onOrdersAmount + (availableFunds.get(fundsEnum) == null ? 0 : availableFunds.get(fundsEnum));
+                dataToShow.add(new FinancesInfo(fundsEnum.name(), onOrdersAmount, totalAmount));
             }
+
+            FXCollections.sort(dataToShow);
+            log.debug("Finances to show: {}", dataToShow);
         });
     }
 
@@ -80,12 +77,7 @@ public class FinancesToShow implements NameableConsumer<Event<Void>>, ChangeList
         }
 
         final double finalTotalAmount = totalAmount;
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                totalFinances.set(String.format("%.4f", finalTotalAmount));
-            }
-        });
+        Platform.runLater(() -> totalFinances.set(String.format("%.4f", finalTotalAmount)));
     }
 
     @Override

@@ -43,11 +43,6 @@ public class Scheduler {
     }
 
     private <T> Runnable createRunnable(final Object key, final T event) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                reactor.notify(key, Event.wrap(event));
-            }
-        };
+        return () -> reactor.notify(key, Event.wrap(event));
     }
 }

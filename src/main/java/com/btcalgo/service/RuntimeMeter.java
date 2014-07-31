@@ -46,12 +46,7 @@ public class RuntimeMeter implements NameableConsumer<Event<Void>> {
     }
 
     private void updateTitle(final int minsLeft) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                setTitle(TITLE_BASE + minsLeft + (minsLeft == 1 ? MINUTE : MINUTES));
-            }
-        });
+        Platform.runLater(() -> setTitle(TITLE_BASE + minsLeft + (minsLeft == 1 ? MINUTE : MINUTES)));
     }
 
     public String getTitle() {

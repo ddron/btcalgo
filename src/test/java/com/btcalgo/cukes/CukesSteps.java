@@ -35,15 +35,12 @@ public class CukesSteps {
 
     @Given(value = "^btcalgo engine$", timeout = STEP_TIMEOUT + TIME_TO_START_BTCALGO_MS)
     public void btcalgo_engine() throws Throwable {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    BtceAlgo.setContextFileName(contextFileName);
-                    BtceAlgo.main(new String[]{});
-                } catch (InterruptedException e) {
-                    log.error("", e);
-                }
+        new Thread(() -> {
+            try {
+                BtceAlgo.setContextFileName(contextFileName);
+                BtceAlgo.main(new String[]{});
+            } catch (InterruptedException e) {
+                log.error("", e);
             }
         }).start();
 
@@ -83,20 +80,17 @@ public class CukesSteps {
 
         final TradingTab tradingTab = BtceAlgo.getApp().getContext().getBean(TradingTab.class);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                tradingTab.setStrategyTypeValue(orderType);
-                tradingTab.setAmountValue(amountAndPrice.split("@")[0]);
-                tradingTab.setLimitPriceValue(amountAndPrice.split("@")[1]);
-                tradingTab.setStopPriceValue(stopPriceAsString);
-                tradingTab.setDirectionValue(direction.getDisplayName());
-                tradingTab.setSelectedPair(symbol.getDisplayName());
-                if (offsetAsString != null) {
-                    tradingTab.setOffsetValue(offsetAsString);
-                }
-                tradingTab.handleSubmit(null);
+        Platform.runLater(() -> {
+            tradingTab.setStrategyTypeValue(orderType);
+            tradingTab.setAmountValue(amountAndPrice.split("@")[0]);
+            tradingTab.setLimitPriceValue(amountAndPrice.split("@")[1]);
+            tradingTab.setStopPriceValue(stopPriceAsString);
+            tradingTab.setDirectionValue(direction.getDisplayName());
+            tradingTab.setSelectedPair(symbol.getDisplayName());
+            if (offsetAsString != null) {
+                tradingTab.setOffsetValue(offsetAsString);
             }
+            tradingTab.handleSubmit(null);
         });
         Thread.sleep(200); // wait for order creation
 
