@@ -46,7 +46,7 @@ public class Finances {
             FundsEnum coverFund = activeOrder.getCoverFund();
             Double coverAmount = activeOrder.getCoverFundAmount();
 
-            Double existentAmount = result.get(coverFund) == null ? 0 : result.get(coverFund);
+            Double existentAmount = result.get(coverFund) == null ? 0.0 : result.get(coverFund);
             result.put(coverFund, existentAmount + coverAmount);
         }
         this.onOrdersFunds = ImmutableMap.copyOf(result);
